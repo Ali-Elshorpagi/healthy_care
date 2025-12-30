@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="Src/utilities/userAuth.js"></script>
+    <script src="Src/utilities/redirectTo.js"></script>
+</head>
+
+<body>
+    <h1>Authed Home</h1>
+    <h2 id="welcome-msg"></h2>
+    <button id="logout-btn">Logout</button>
+
+    <script>
+        async function checkAuth() {
+
+            const sessionEmail = sessionStorage.getItem("email");
+            const sessionPassword = sessionStorage.getItem("password");
+
+            if (sessionEmail && sessionPassword) {
+                const isValid = await checkPassword(sessionEmail, sessionPassword);
+                if (isValid) {
+                    showWelcome(sessionEmail);
+                    return;
+                } else {
+                    clearSession();
+                }
+            }
+
+            const cookieEmail = getCookie("email");
+            const cookiePassword = getCookie("password");
+
+            if (cookieEmail && cookiePassword) {
+                const isValid = await checkPassword(cookieEmail, cookiePassword);
+                if (isValid) {
+                    showWelcome(cookieEmail);
+                    return;
+                } else {
+                    clearCookies();
+                }
+            }
+
+            redirectTo("Src/components/auth/login/login.html");
+        }
+
+        function showWelcome(email) {
+            document.getElementById("welcome-msg").textContent = `Welcome, ${email}`;
+        }
+
+        document.getElementById("logout-btn").addEventListener("click", () => {
+            clearSessionAndCookies();
+            redirectTo("Src/components/auth/login/login.html");
+        });
+
+        checkAuth();
+    </script>
+
+</body>
+
+</html>

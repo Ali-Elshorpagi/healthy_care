@@ -25,8 +25,21 @@ doctorBtn.addEventListener("click", () => {
 patientForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const password = document.getElementById("patientPassword").value;
-    const confirmPassword = document.getElementById("patientConfirmPassword").value;
+    const password = document.getElementById("patientPassword").value.trim();
+    const confirmPassword = document.getElementById("patientConfirmPassword").value.trim();
+    const email = document.getElementById("patientEmail").value.trim();
+    const fullName = document.getElementById("patientName").value.trim();
+
+    if (fullName === "" || email === "" || password === "" || confirmPassword === "") {
+        alert("All fields are required!");
+        return;
+    }
+
+    let isExist = await isUserExist(email);
+    if (isExist) {
+        alert("User already exists!");
+        return;
+    }
 
     if (password !== confirmPassword) {
         alert("Passwords do not match");
@@ -38,25 +51,41 @@ patientForm.addEventListener("submit", async (e) => {
     const patient = {
         id: `p_${Date.now()}`,
         role: "patient",
-        fullName: document.getElementById("patientName").value,
-        email: document.getElementById("patientEmail").value,
+        fullName: fullName,
+        email: email,
         password: hashedPassword,
         appointments: [],
         medicalRecords: [],
         createdAt: new Date()
     };
 
-    // saveUser(patient);
+    await saveUserInJson(patient);
     alert("Patient registered successfully!");
     patientForm.reset();
+
 });
 
 // Doctor Register
 doctorForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const password = document.getElementById("doctorPassword").value;
-    const confirmPassword = document.getElementById("doctorConfirmPassword").value;
+    const password = document.getElementById("doctorPassword").value.trim();
+    const confirmPassword = document.getElementById("doctorConfirmPassword").value.trim();
+    const email = document.getElementById("doctorEmail").value.trim();
+    const licenseNo = document.getElementById("licenseNo").value.trim();
+    const specialization = document.getElementById("specialization").value.trim();
+    const fullName = document.getElementById("doctorName").value.trim();
+
+    if (fullName === "" || email === "" || password === "" || confirmPassword === "" || licenseNo === "" || specialization === "") {
+        alert("All fields are required!");
+        return;
+    }
+
+    let isExist = await isUserExist(email);
+    if (isExist) {
+        alert("User already exists!");
+        return;
+    }
 
     if (password !== confirmPassword) {
         alert("Passwords do not match");
@@ -68,11 +97,11 @@ doctorForm.addEventListener("submit", async (e) => {
     const doctor = {
         id: `d_${Date.now()}`,
         role: "doctor",
-        fullName: document.getElementById("doctorName").value,
-        email: document.getElementById("doctorEmail").value,
+        fullName: fullName,
+        email: email,
         password: hashedPassword,
-        medicalLicenseNo: document.getElementById("licenseNo").value,
-        specialization: document.getElementById("specialization").value,
+        medicalLicenseNo: licenseNo,
+        specialization: specialization,
         isApproved: false,
         schedule: [],
         appointments: [],
@@ -80,7 +109,8 @@ doctorForm.addEventListener("submit", async (e) => {
         createdAt: new Date()
     };
 
-    // saveUser(doctor);
+    await saveUserInJson(doctor);
     alert("Doctor registered! Waiting for admin approval.");
     doctorForm.reset();
 });
+
