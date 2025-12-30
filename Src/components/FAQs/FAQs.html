@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../navbar-unauth.css">
+    <link rel="stylesheet" href="../footer.css">
+    <link rel="stylesheet" href="FAQs.css">
+    <title>FAQs - Healthy Care</title>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav id="navbar">
+    <div class="nav-left">
+        <img src="../../Assests/images/logo.png" alt="Healthy Logo" class="nav-logo">
+        <span class="brand">Healthy</span>
+    </div>
+
+    <ul class="nav-center">
+        <li><a href="../../index.html">Home</a></li>
+        <li><a href="../AboutUs/AboutUs.html">About Us</a></li>
+        <li><a href="FAQs.html">FAQs</a></li>
+        <li><a href="../Contact/Contact.html">Contact Us</a></li>
+    </ul>
+
+    <div class="nav-right">
+        <button id="loginBtn">Login</button>
+        <button id="registerBtn" class="btn-primary">Register</button>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1>Frequently Asked Questions</h1>
+        <p class="hero-subtitle">Find answers to common questions about appointments, insurance, and our rehabilitation specialists.</p>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search questions...">
+            <button id="searchBtn">Search</button>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Content Section -->
+<section class="faq-content">
+    <div class="container">
+        <div class="category-tabs">
+            <button class="tab-btn active" data-category="General">General</button>
+        </div>
+
+        <div id="faqAccordion">
+        </div>
+
+        <div id="noResults" style="display: none;">
+            <p>No questions found matching your search.</p>
+        </div>
+    </div>
+</section>
+
+<section class="contact-section">
+    <div class="contact-container">
+        <div class="contact-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <h2>Still have questions?</h2>
+        <p class="contact-subtitle">Can't find what you're looking for? Our friendly support team is here to help you via chat or email.</p>
+        <button id="contactSupportBtn">Contact Support</button>
+    </div>
+</section>
+
+<!-- Add Question Modal -->
+<div id="addQuestionModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Submit Your Question</h3>
+            <button id="closeModal">&times;</button>
+        </div>
+        <form id="addQuestionForm">
+            <div class="form-group">
+                <label for="questionInput">Your Question</label>
+                <input type="text" id="questionInput" placeholder="What would you like to know?" required>
+            </div>
+            <div class="form-actions">
+                <button type="button" id="cancelBtn">Cancel</button>
+                <button type="submit" id="submitBtn">Submit Question</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer id="footer">
+    <div class="footer-container">
+        <div class="footer-brand">
+            <div class="footer-logo">
+                <img src="../../Assests/images/logo.png" alt="Healthy Logo" class="footer-logo-img">
+                <span class="brand">Healthy</span>
+            </div>
+            <p class="footer-tagline">Connecting you with top rehabilitation specialists for a faster, better recovery.</p>
+        </div>
+
+        <div class="footer-links">
+            <div class="footer-column">
+                <h4>PLATFORM</h4>
+                <ul>
+                    <li><a href="#">Find a Specialist</a></li>
+                    <li><a href="#">How it Works</a></li>
+                    <li><a href="#">Pricing</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>COMPANY</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>SUPPORT</h4>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="FAQs.js"></script>
+</body>
+</html>
