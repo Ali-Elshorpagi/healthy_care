@@ -57,6 +57,27 @@ form input:focus {
     box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.2);
 }
 
+.form-group.remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.form-group.remember input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.form-group.remember label {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
 
 .submit-btn {
     width: 100%;
