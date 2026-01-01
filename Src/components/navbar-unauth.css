@@ -57,7 +57,8 @@
 }
 
 #loginBtn,
-#registerBtn {
+#registerBtn,
+#navbar-logout-btn {
     padding: 0.6rem 1.8rem;
     border-radius: 5px;
     font-size: 0.9rem;
@@ -68,7 +69,8 @@
 }
 
 #loginBtn:hover,
-#registerBtn:hover {
+#registerBtn:hover,
+#navbar-logout-btn:hover {
     opacity: 0.85;
 }
 

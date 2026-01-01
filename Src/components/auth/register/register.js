@@ -102,7 +102,7 @@ doctorForm.addEventListener("submit", async (e) => {
         password: hashedPassword,
         medicalLicenseNo: licenseNo,
         specialization: specialization,
-        isApproved: false,
+        approved: "pending",
         schedule: [],
         appointments: [],
         patients: [],
