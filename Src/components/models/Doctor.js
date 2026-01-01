@@ -1,13 +1,13 @@
 import User from "./User.js";
 
 class Doctor extends User {
-    constructor({ id, fullName, email, password, specialization, medicalLicenseNo, clinicId, country }) {
+    constructor({ id, fullName, email, password, specialization, medicalLicenseNo, clinicId, country, approved = "pending" }) {
         super({ id, fullName, email, password, role: "doctor", isActive: false /* inactive until admin approval*/ });
         this.specialization = specialization;
         this.medicalLicenseNo = medicalLicenseNo;
         this.clinicId = clinicId;
         this.country = country;
-        this.isApproved = false;
+        this.approved = approved;
 
         this.schedule = []; // Array<Schedule>
         this.appointments = []; // Array<Appointment>

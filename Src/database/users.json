@@ -9,6 +9,44 @@
       "appointments": [],
       "medicalRecords": [],
       "createdAt": "2025-12-30T21:44:28.065Z"
+    },
+    {
+      "id": "p_1767263003762",
+      "role": "admin",
+      "fullName": "Ahmed",
+      "email": "ahmedesm416@gmail.com",
+      "password": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+      "appointments": [],
+      "medicalRecords": [],
+      "createdAt": "2026-01-01T10:23:23.762Z"
+    },
+    {
+      "id": "d_1767266500001",
+      "role": "doctor",
+      "fullName": "Dr. Mona Hassan",
+      "email": "mona.doctor@demo.local",
+      "password": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+      "medicalLicenseNo": "LIC-EG-1001",
+      "specialization": "Cardiology",
+      "approved": "approved",
+      "schedule": [],
+      "appointments": [],
+      "patients": [],
+      "createdAt": "2026-01-01T11:20:00.001Z"
+    },
+    {
+      "id": "d_1767266500002",
+      "role": "doctor",
+      "fullName": "Dr. Omar Adel",
+      "email": "omar.doctor@demo.local",
+      "password": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+      "medicalLicenseNo": "LIC-EG-1002",
+      "specialization": "Dermatology",
+      "approved": "approved",
+      "schedule": [],
+      "appointments": [],
+      "patients": [],
+      "createdAt": "2026-01-01T11:20:00.002Z"
     }
   ]
 }
