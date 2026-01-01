@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Healthy</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <link rel="stylesheet" href="../shared/styles.css" />
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+  <body>
+    <div id="header" class="header"></div>
+    <div id="sidebar" class="sidebar"></div>
+
+    <div class="main-content">
+      <div class="welcome-banner">
+        <h1 id="welcomeText">Welcome Back, Sarah</h1>
+        <p>Search for rehabilitation specialists or clinics near you.</p>
+        <div class="search-bar">
+          <div class="input-wrap">
+            <span class="material-symbols-outlined search-icon">search</span>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search by Doctor Name..."
+            />
+          </div>
+          <div class="select-wrap">
+            <span class="material-symbols-outlined select-icon"
+              >local_hospital</span
+            >
+            <select id="clinicTypeSelect">
+              <option value="">All Clinic Types</option>
+              <option value="general">General Practice</option>
+              <option value="cardiology">Cardiology</option>
+              <option value="orthopedics">Orthopedics</option>
+            </select>
+            <span class="material-symbols-outlined arrow-icon"
+              >expand_more</span
+            >
+          </div>
+          <div class="btn-wrap">
+            <button class="btn btn-primary" id="searchBtn">Search</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-icon blue">
+            <span class="material-symbols-outlined">group</span>
+          </span>
+          <div class="stat-info">
+            <span class="stat-label">Number of Patients</span>
+            <span class="stat-value" id="patientsCount">12,450</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon green">
+            <span class="material-symbols-outlined">stethoscope</span>
+          </span>
+          <div class="stat-info">
+            <span class="stat-label">Number of Doctors</span>
+            <span class="stat-value" id="doctorsCount">342</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon purple">
+            <span class="material-symbols-outlined">local_hospital</span>
+          </span>
+          <div class="stat-info">
+            <span class="stat-label">Number of Clinics</span>
+            <span class="stat-value" id="clinicsCount">86</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="main-col">
+          <div class="section-header">
+            <h2>
+              <span class="material-symbols-outlined icon">event_available</span
+              >Upcoming Appointments
+            </h2>
+            <a href="../appointments/appointments.html" class="link"
+              >View Calendar</a
+            >
+          </div>
+
+          <div class="featured-appt">
+            <div class="top">
+              <div class="img-col">
+                <img
+                  src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400"
+                  alt="Dr. Ali"
+                />
+              </div>
+              <div class="info-col">
+                <div class="badges">
+                  <span class="badge badge-green">Confirmed</span>
+                  <span class="badge badge-purple">Video</span>
+                </div>
+                <h3>Physiotherapy Session with Dr. Ali</h3>
+                <p class="desc">Post-surgery follow up and assessment.</p>
+                <div class="meta-row">
+                  <span class="material-symbols-outlined icon">schedule</span>
+                  Tomorrow, 10:00 AM - 11:00 AM
+                </div>
+                <div class="meta-row">
+                  <span class="material-symbols-outlined icon">videocam</span>
+                  Remote via Zoom
+                </div>
+                <div class="actions">
+                  <button class="btn btn-primary">Join Session</button>
+                  <button class="btn btn-secondary">Reschedule</button>
+                </div>
+              </div>
+            </div>
+            <div class="simple-list-item">
+              <div class="icon-col">
+                <span class="list-icon purple">
+                  <span class="material-symbols-outlined">accessibility</span>
+                </span>
+              </div>
+              <div class="content-col">
+                <h4>Spinal Adjustment</h4>
+                <p>Nov 15, 2023 • City Wellness Center</p>
+              </div>
+              <div class="arrow-col">
+                <span class="material-symbols-outlined">chevron_right</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-col">
+          <div class="section-header">
+            <h2>
+              <span class="material-symbols-outlined icon">star</span>Featured
+              Clinics
+            </h2>
+            <a href="#" class="link">View All</a>
+          </div>
+
+          <div class="clinic-card">
+            <div
+              class="image"
+              style="
+                background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400');
+              "
+            >
+              <span class="rating"><span class="star">★</span> 4.9</span>
+              <div class="overlay">
+                <h4>Advanced Rehab Center</h4>
+                <p>Sports Injury Specialists</p>
+              </div>
+            </div>
+            <div class="footer">
+              <span class="location">
+                <span class="material-symbols-outlined icon">location_on</span>
+                Downtown, 2.5km away
+              </span>
+              <a href="#" class="book-link">Book Now</a>
+            </div>
+          </div>
+
+          <div class="clinic-card">
+            <div
+              class="image"
+              style="
+                background-image: url('https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=400');
+              "
+            >
+              <span class="rating"><span class="star">★</span> 4.8</span>
+              <div class="overlay">
+                <h4>City Wellness</h4>
+                <p>Post-Op Care & Mobility</p>
+              </div>
+            </div>
+            <div class="footer">
+              <span class="location">
+                <span class="material-symbols-outlined icon">location_on</span>
+                Westside, 5.0km away
+              </span>
+              <a href="#" class="book-link">Book Now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-footer">
+        <p>© 2025 Healthy. All rights reserved.</p>
+      </div>
+    </div>
+
+    <script src="../shared/sidebar.js"></script>
+    <script src="dashboard.js"></script>
+  </body>
+</html>
