@@ -26,7 +26,8 @@ loginForm.addEventListener("submit", async (e) => {
         return;
     }
 
-    saveUserInSession(email, hashedPassword);
+    const user = await getUserByEmail(email);
+    saveUserInSession(email, hashedPassword, user);
     let noDays = 1;
     if (rememberMe)
         noDays = 7;
@@ -34,5 +35,11 @@ loginForm.addEventListener("submit", async (e) => {
     saveUserInCookies(email, hashedPassword, noDays);
 
     alert("Login successful!");
-    redirectTo("../../../../index.html");
+
+    const intendedPage = sessionStorage.getItem('intendedPage');
+    if (intendedPage) {
+        redirectToIntendedPage();
+    } else {
+        redirectTo("../../patient/dashboard/dashboard.html");
+    }
 });

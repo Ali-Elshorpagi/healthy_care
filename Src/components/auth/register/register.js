@@ -54,6 +54,7 @@ patientForm.addEventListener("submit", async (e) => {
         fullName: fullName,
         email: email,
         password: hashedPassword,
+        profileImage: "/Src/assets/images/default-avatar.svg",
         appointments: [],
         medicalRecords: [],
         createdAt: new Date()
@@ -100,6 +101,7 @@ doctorForm.addEventListener("submit", async (e) => {
         fullName: fullName,
         email: email,
         password: hashedPassword,
+        profileImage: "/Src/assets/images/default-avatar.svg",
         medicalLicenseNo: licenseNo,
         specialization: specialization,
         isApproved: false,
