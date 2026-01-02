@@ -104,7 +104,7 @@ doctorForm.addEventListener("submit", async (e) => {
         profileImage: "/Src/assets/images/default-avatar.svg",
         medicalLicenseNo: licenseNo,
         specialization: specialization,
-        isApproved: false,
+        approved: "pending",
         schedule: [],
         appointments: [],
         patients: [],

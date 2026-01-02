@@ -7,7 +7,7 @@ class Doctor extends User {
         this.medicalLicenseNo = medicalLicenseNo;
         this.clinicId = clinicId;
         this.country = country;
-        this.isApproved = false;
+        this.approved = approved;
 
         this.schedule = []; // Array<Schedule>
         this.appointments = []; // Array<Appointment>
