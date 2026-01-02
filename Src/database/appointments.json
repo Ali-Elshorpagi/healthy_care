@@ -10,6 +10,83 @@
       "patientId": "p_1767363125225",
       "status": "cancelled",
       "createdAt": "2026-01-02T14:52:36.325Z"
+    },
+    {
+      "id": "apt_1767381990408",
+      "clinicId": "clinic1",
+      "doctorId": "d_1767370001000",
+      "date": "2026-01-20",
+      "time": "21:30",
+      "notes": "",
+      "patientId": "p_1767363105994",
+      "status": "cancelled",
+      "createdAt": "2026-01-02T19:26:30.408Z"
+    },
+    {
+      "id": "apt_1767382033568",
+      "clinicId": "clinic3",
+      "doctorId": "d_1767370004000",
+      "date": "2026-01-20",
+      "time": "21:31",
+      "notes": "",
+      "patientId": "p_1767363105994",
+      "status": "pending",
+      "createdAt": "2026-01-02T19:27:13.568Z"
+    },
+    {
+      "id": "apt_1767391915666",
+      "clinicId": "clinic1",
+      "doctorId": "d_1767370001000",
+      "date": "2026-01-22",
+      "time": "00:14",
+      "notes": "",
+      "patientId": "p_1767363105994",
+      "status": "pending",
+      "createdAt": "2026-01-02T22:11:55.666Z"
+    },
+    {
+      "id": "apt_1767392078354",
+      "clinicId": "clinic3",
+      "doctorId": "d_1767370004000",
+      "date": "2026-01-29",
+      "time": "00:18",
+      "notes": "",
+      "patientId": "p_1767363105994",
+      "status": "pending",
+      "createdAt": "2026-01-02T22:14:38.354Z"
+    },
+    {
+      "id": "apt_1767392166009",
+      "clinicId": "clinic2",
+      "doctorId": "d_1767370002000",
+      "date": "2026-01-28",
+      "time": "00:21",
+      "notes": "",
+      "patientId": "p_1767363105994",
+      "status": "pending",
+      "createdAt": "2026-01-02T22:16:06.009Z"
+    },
+    {
+      "id": "apt_1767392261569",
+      "clinicId": "clinic3",
+      "doctorId": "d_1767370004000",
+      "date": "2026-01-20",
+      "time": "00:21",
+      "notes": "",
+      "patientId": "p_1767363105994",
+      "status": "pending",
+      "createdAt": "2026-01-02T22:17:41.569Z"
+    },
+    {
+      "id": "apt_1767392600041",
+      "clinicId": "clinic1",
+      "doctorId": "d_1767370001000",
+      "date": "2026-01-28",
+      "time": "00:27",
+      "notes": "",
+      "patientId": "p_1767363105994",
+      "status": "pending",
+      "createdAt": "2026-01-02T22:23:20.041Z"
     }
   ]
 }
