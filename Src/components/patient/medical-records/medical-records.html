@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Medical Records - Healthy</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <link rel="stylesheet" href="../shared/styles.css" />
+    <link rel="stylesheet" href="medical-records.css" />
+  </head>
+  <body>
+    <div id="header" class="header"></div>
+    <div id="sidebar" class="sidebar"></div>
+
+    <div class="main-content">
+      <div class="container">
+        <div class="page-header">
+          <h1>Medical Records</h1>
+          <p>View and manage your complete medical history</p>
+        </div>
+
+        <div class="filters-bar">
+          <div class="search-box">
+            <span class="material-symbols-outlined icon">search</span>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search records..."
+            />
+          </div>
+          <div class="filter-actions">
+            <select class="form-control type-filter" id="typeFilter">
+              <option value="">All Types</option>
+              <option value="diagnosis">Diagnosis</option>
+              <option value="prescription">Prescription</option>
+              <option value="lab">Lab Results</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="recordsList">
+          <div class="doctor-section card">
+            <div class="doctor-row">
+              <div class="doctor-avatar">
+                <img
+                  src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400"
+                  alt="Dr. Sarah Johnson"
+                />
+              </div>
+              <div class="doctor-info">
+                <h3>Dr. Sarah Johnson</h3>
+                <p>Cardiology - Central Medical Center</p>
+              </div>
+              <div class="doctor-actions">
+                <span class="badge badge-blue">3 Records</span>
+              </div>
+            </div>
+            <div class="records-list">
+              <div class="list-item record-item" data-type="diagnosis">
+                <div class="icon-col">
+                  <span class="list-icon red">
+                    <span class="material-symbols-outlined">favorite</span>
+                  </span>
+                </div>
+                <div class="content-col">
+                  <p class="list-title">Hypertension - Stage 1</p>
+                  <p class="list-meta">
+                    <span>Diagnosis</span>
+                    <span>Jan 15, 2025</span>
+                  </p>
+                </div>
+                <div class="actions-col">
+                  <button class="icon-btn">
+                    <span class="material-symbols-outlined">visibility</span>
+                  </button>
+                  <button class="icon-btn">
+                    <span class="material-symbols-outlined">download</span>
+                  </button>
+                </div>
+              </div>
+              <div class="list-item record-item" data-type="prescription">
+                <div class="icon-col">
+                  <span class="list-icon blue">
+                    <span class="material-symbols-outlined">medication</span>
+                  </span>
+                </div>
+                <div class="content-col">
+                  <p class="list-title">Lisinopril 10mg</p>
+                  <p class="list-meta">
+                    <span>Prescription</span>
+                    <span>Jan 15, 2025</span>
+                  </p>
+                </div>
+                <div class="actions-col">
+                  <button class="icon-btn">
+                    <span class="material-symbols-outlined">visibility</span>
+                  </button>
+                  <button class="icon-btn">
+                    <span class="material-symbols-outlined">download</span>
+                  </button>
+                </div>
+              </div>
+              <div class="list-item record-item" data-type="lab">
+                <div class="icon-col">
+                  <span class="list-icon purple">
+                    <span class="material-symbols-outlined">science</span>
+                  </span>
+                </div>
+                <div class="content-col">
+                  <p class="list-title">Blood Pressure Monitoring</p>
+                  <p class="list-meta">
+                    <span>Lab Results</span>
+                    <span>Jan 08, 2025</span>
+                  </p>
+                </div>
+                <div class="actions-col">
+                  <button class="icon-btn">
+                    <span class="material-symbols-outlined">visibility</span>
+                  </button>
+                  <button class="icon-btn">
+                    <span class="material-symbols-outlined">download</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="doctor-section card">
+            <div class="doctor-row">
+              <div class="doctor-avatar">
+                <img
+                  src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400"
+                  alt="Dr. Michael Chen"
+                />
+              </div>
+              <div class="doctor-info">
+                <h3>Dr. Michael Chen</h3>
+                <p>General Practice - City Health Clinic</p>
+              </div>
+              <div class="doctor-actions">
+                <span class="badge badge-blue">2 Records</span>
+              </div>
+            </div>
+            <div class="records-list">
+              <div class="list-item record-item" data-type="diagnosis">
+                <div class="icon-col">
+                  <span class="list-icon green">
+                    <span class="material-symbols-outlined">coronavirus</span>
+                  </span>
+                </div>
+                <div class="content-col">
+                  <p class="list-title">Seasonal Allergies</p>
+                  <p class="list-meta">
+                    <span>Diagnosis</span>
+                    <span>Dec 20, 2024</span>
+                  </p>
+                </div>
+                <div class="actions-col">
+                  <button class="icon-btn">
+                    <span class="material-symbols-outlined">visibility</span>
+                  </button>
+                  <button class="icon-btn">
+                    <span class="material-symbols-outlined">download</span>
+                  </button>
+                </div>
+              </div>
+              <div class="list-item record-item" data-type="prescription">
+                <div class="icon-col">
+                  <span class="list-icon orange">
+                    <span class="material-symbols-outlined">medication</span>
+                  </span>
+                </div>
+                <div class="content-col">
+                  <p class="list-title">Cetirizine 10mg</p>
+                  <p class="list-meta">
+                    <span>Prescription</span>
+                    <span>Dec 20, 2024</span>
+                  </p>
+                </div>
+                <div class="actions-col">
+                  <button class="icon-btn">
+                    <span class="material-symbols-outlined">visibility</span>
+                  </button>
+                  <button class="icon-btn">
+                    <span class="material-symbols-outlined">download</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="emptyState" class="empty-state hidden">
+          <span class="material-symbols-outlined icon">description</span>
+          <h3>No records found</h3>
+          <p>No medical records match your search criteria</p>
+        </div>
+
+        <div class="page-footer">
+          <p>© 2025 Healthy. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="../shared/sidebar.js"></script>
+    <script src="medical-records.js"></script>
+  </body>
+</html>

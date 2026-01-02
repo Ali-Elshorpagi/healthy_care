@@ -1,0 +1,15 @@
+{
+  "appointments": [
+    {
+      "id": "apt_1767365556325",
+      "clinicId": "clinic1",
+      "doctorId": "d_1767370001000",
+      "date": "2026-01-24",
+      "time": "16:56",
+      "notes": "",
+      "patientId": "p_1767363125225",
+      "status": "cancelled",
+      "createdAt": "2026-01-02T14:52:36.325Z"
+    }
+  ]
+}
