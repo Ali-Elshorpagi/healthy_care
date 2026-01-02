@@ -4,6 +4,15 @@ const API_BASE = "http://localhost:3000";
 let currentAdminUser = null;
 let editingUserId = null;
 
+// User management state
+let allUsers = [];
+let filteredUsers = [];
+let currentPage = 1;
+let usersPerPage = 10;
+let sortColumn = 'createdAt';
+let sortDirection = 'desc';
+let searchQuery = '';
+
 if (typeof loadNavbar === "function") {
     loadNavbar({
         path: "../../navbar-unauth.html",
@@ -260,18 +269,141 @@ function getStatusPill(user) {
     return `<span class="pill">—</span>`;
 }
 
+async function getAllFAQs() {
+    try {
+        let faqs = await fetchJson(`${API_BASE}/faqs`);
+        return Array.isArray(faqs) ? faqs : [];
+    } catch (error) {
+        console.error('Error fetching FAQs:', error);
+        return [];
+    }
+}
+
+function renderFAQsManagement(faqs) {
+    let tbody = document.getElementById("faqs-body");
+    if (!tbody) return;
+
+    if (!Array.isArray(faqs) || faqs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="muted">No FAQs submitted yet.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = "";
+
+    faqs.forEach((faq) => {
+        let row = document.createElement("tr");
+        let isEditing = editingUserId === `faq-${faq.id}`;
+        let hasAnswer = faq.answer && faq.answer.trim();
+        let statusPill = hasAnswer
+            ? `<span class="pill ok">Answered</span>` 
+            : `<span class="pill warn">Pending</span>`;
+        let createdDate = formatDate(faq.createdAt);
+
+        if (!isEditing) {
+            row.innerHTML = `
+                <td>${faq.userId || "—"}</td>
+                <td style="max-width: 300px;">${faq.question || "—"}</td>
+                <td style="max-width: 250px;">${faq.answer || "—"}</td>
+                <td>${statusPill}</td>
+                <td>${createdDate}</td>
+                <td>
+                    <div class="actions">
+                        <button class="action-btn" data-action="edit-faq" type="button">Edit</button>
+                        <button class="action-btn danger" data-action="delete-faq" type="button">Delete</button>
+                    </div>
+                </td>
+            `;
+
+            row.querySelector("button[data-action='edit-faq']").addEventListener("click", () => {
+                editingUserId = `faq-${faq.id}`;
+                renderFAQsManagement(faqs);
+            });
+
+            row.querySelector("button[data-action='delete-faq']").addEventListener("click", async () => {
+                if (!confirm("Delete this FAQ?")) return;
+                try {
+                    await fetchJson(`${API_BASE}/faqs/${encodeURIComponent(faq.id)}`, { method: "DELETE" });
+                    await refreshData();
+                } catch (e) {
+                    console.error(e);
+                    alert("Failed to delete FAQ.");
+                }
+            });
+        } else {
+            let questionEsc = (faq.question || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            let answerEsc = (faq.answer || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            
+            row.innerHTML = `
+                <td>${faq.userId || "—"}</td>
+                <td><textarea id="edit-question-${faq.id}" rows="3">${questionEsc}</textarea></td>
+                <td><textarea id="edit-answer-${faq.id}" rows="3" placeholder="Enter answer...">${answerEsc}</textarea></td>
+                <td>${statusPill}</td>
+                <td>${createdDate}</td>
+                <td>
+                    <div class="actions">
+                        <button class="action-btn" data-action="save-faq" type="button">Save</button>
+                        <button class="action-btn secondary" data-action="cancel-faq" type="button">Cancel</button>
+                    </div>
+                </td>
+            `;
+
+            row.querySelector("button[data-action='cancel-faq']").addEventListener("click", () => {
+                editingUserId = null;
+                renderFAQsManagement(faqs);
+            });
+
+            row.querySelector("button[data-action='save-faq']").addEventListener("click", async () => {
+                let question = document.getElementById(`edit-question-${faq.id}`).value.trim();
+                let answer = document.getElementById(`edit-answer-${faq.id}`).value.trim();
+
+                if (!question) {
+                    alert("Question cannot be empty");
+                    return;
+                }
+
+                try {
+                    await fetchJson(`${API_BASE}/faqs/${encodeURIComponent(faq.id)}`, {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ question, answer })
+                    });
+                    editingUserId = null;
+                    await refreshData();
+                } catch (e) {
+                    console.error(e);
+                    alert("Failed to save FAQ.");
+                }
+            });
+        }
+
+        tbody.appendChild(row);
+    });
+}
+
 function renderUsersManagement(users) {
     const tbody = document.getElementById("users-body");
     if (!tbody) return;
 
     if (!Array.isArray(users) || users.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" class="muted">No users.</td></tr>`;
+        updatePaginationControls(0);
         return;
     }
 
+    // Calculate pagination
+    let startIndex = (currentPage - 1) * usersPerPage;
+    let endIndex = startIndex + usersPerPage;
+    let paginatedUsers = users.slice(startIndex, endIndex);
+
     tbody.innerHTML = "";
 
-    users.forEach((user) => {
+    if (paginatedUsers.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="muted">No users found.</td></tr>`;
+        updatePaginationControls(users.length);
+        return;
+    }
+
+    paginatedUsers.forEach((user) => {
         const row = document.createElement("tr");
         const isEditing = editingUserId === user.id;
         const createdAt = formatDate(user.createdAt);
@@ -396,14 +528,133 @@ function renderUsersManagement(users) {
 
         tbody.appendChild(row);
     });
+
+    updatePaginationControls(users.length);
+}
+
+function updatePaginationControls(totalUsers) {
+    let totalPages = Math.ceil(totalUsers / usersPerPage);
+    let prevBtn = document.getElementById('prev-page');
+    let nextBtn = document.getElementById('next-page');
+    let pageInfo = document.getElementById('pagination-info');
+
+    if (!prevBtn || !nextBtn || !pageInfo) return;
+
+    prevBtn.disabled = currentPage <= 1;
+    nextBtn.disabled = currentPage >= totalPages || totalPages === 0;
+
+    if (totalPages === 0) {
+        pageInfo.textContent = 'No results';
+    } else {
+        pageInfo.textContent = `Page ${currentPage} of ${totalPages} (${totalUsers} users)`;
+    }
+}
+
+function filterAndSortUsers() {
+    // Filter by search query
+    filteredUsers = allUsers.filter(user => {
+        if (!searchQuery) return true;
+        let fullName = (user.fullName || '').toLowerCase();
+        return fullName.includes(searchQuery.toLowerCase());
+    });
+
+    // Sort users
+    filteredUsers.sort((a, b) => {
+        let aVal = a[sortColumn];
+        let bVal = b[sortColumn];
+
+        // Handle null/undefined values
+        if (aVal === null || aVal === undefined) aVal = '';
+        if (bVal === null || bVal === undefined) bVal = '';
+
+        // Convert to lowercase for string comparison
+        if (typeof aVal === 'string') aVal = aVal.toLowerCase();
+        if (typeof bVal === 'string') bVal = bVal.toLowerCase();
+
+        if (sortColumn === 'createdAt') {
+            aVal = new Date(aVal).getTime() || 0;
+            bVal = new Date(bVal).getTime() || 0;
+        }
+
+        if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+        if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+    });
+    renderUsersManagement(filteredUsers);
+}
+
+function setupUserManagementControls() {
+    let searchInput = document.getElementById('user-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            currentPage = 1;
+            filterAndSortUsers();
+        });
+    }
+
+    document.querySelectorAll('.sortable-header').forEach(header => {
+        header.addEventListener('click', () => {
+            let column = header.dataset.sort;
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = 'asc';
+            }
+
+            // Update arrow indicators
+            document.querySelectorAll('.sortable-header').forEach(h => {
+                let arrow = h.querySelector('.sort-arrows');
+                if (h === header) {
+                    arrow.textContent = sortDirection === 'asc' ? '↑' : '↓';
+                    h.classList.add('active-sort');
+                } else {
+                    arrow.textContent = '⇅';
+                    h.classList.remove('active-sort');
+                }
+            });
+
+            currentPage = 1;
+            filterAndSortUsers();
+        });
+    });
+
+    // Pagination buttons
+    let prevBtn = document.getElementById('prev-page');
+    let nextBtn = document.getElementById('next-page');
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderUsersManagement(filteredUsers);
+            }
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            let totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderUsersManagement(filteredUsers);
+            }
+        });
+    }
 }
 
 async function refreshData() {
     const users = await getAllUsers();
+    allUsers = users;
+    filteredUsers = users;
     renderStats(users);
-    renderUsersManagement(users);
+    filterAndSortUsers();
     renderDonutCharts(users);
     renderPendingDoctors(users);
+    
+    let faqs = await getAllFAQs();
+    renderFAQsManagement(faqs);
 }
 
 async function bootstrap() {
@@ -434,6 +685,7 @@ async function bootstrap() {
 
         currentAdminUser = user;
 
+        setupUserManagementControls();
         await refreshData();
     } catch (e) {
         console.error(e);

@@ -10,7 +10,7 @@ if not exist "%NPX%" (
   exit /b 1
 )
 
-set "DB=%~dp0..\Src\database\users.json"
+set "DB=%~dp0..\Src\database\db.json"
 if not exist "%DB%" (
   echo [ERROR] Database file not found: "%DB%"
   echo Make sure you run this from the repo (it uses a relative path).

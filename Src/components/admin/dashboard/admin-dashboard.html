@@ -58,15 +58,39 @@
                 <h2>Users Management</h2>
                 <p class="muted">Edit or delete users (admin only).</p>
 
+                <div class="search-bar">
+                    <input type="text" id="user-search" placeholder="Search by name..." />
+                </div>
+
                 <div class="table-wrap">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Status</th>
-                                <th>Created</th>
+                                <th>
+                                    <div class="sortable-header" data-sort="fullName">
+                                        Name <span class="sort-arrows">⇅</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="sortable-header" data-sort="email">
+                                        Email <span class="sort-arrows">⇅</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="sortable-header" data-sort="role">
+                                        Role <span class="sort-arrows">⇅</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="sortable-header" data-sort="approved">
+                                        Status <span class="sort-arrows">⇅</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="sortable-header" data-sort="createdAt">
+                                        Created <span class="sort-arrows">⇅</span>
+                                    </div>
+                                </th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -127,6 +151,31 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>FAQs Management</h2>
+                <p class="muted">Manage user questions and provide answers.</p>
+
+                <div class="table-wrap">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Question</th>
+                                <th>Answer</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="faqs-body">
+                            <tr>
+                                <td colspan="6" class="muted">Loading…</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
 

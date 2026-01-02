@@ -91,6 +91,87 @@ body {
     font-size: 14px;
 }
 
+.search-bar {
+    margin: 16px 0 12px;
+}
+
+.search-bar input {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    outline: none;
+    font-size: 14px;
+}
+
+.search-bar input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.sortable-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.sortable-header:hover {
+    color: #2563eb;
+}
+
+.sortable-header.active-sort {
+    color: #2563eb;
+    font-weight: 800;
+}
+
+.sort-arrows {
+    font-size: 12px;
+    opacity: 0.5;
+}
+
+.sortable-header.active-sort .sort-arrows {
+    opacity: 1;
+    font-weight: 800;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.pagination-btn {
+    padding: 8px 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #fff;
+    color: #111827;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #f9fafb;
+    border-color: #2563eb;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.pagination-info {
+    color: #6b7280;
+    font-size: 14px;
+}
+
 .table-wrap {
     overflow: auto;
     margin-top: 12px;
@@ -193,6 +274,24 @@ body {
 
 .table input:focus,
 .table select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.table textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    outline: none;
+    background: #fff;
+    font-size: 13px;
+    font-family: Arial, sans-serif;
+    resize: vertical;
+    min-height: 60px;
+}
+
+.table textarea:focus {
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
