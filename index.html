@@ -4,60 +4,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <script src="Src/utilities/userAuth.js"></script>
-    <script src="Src/utilities/redirectTo.js"></script>
+    <title>Healthy Care - Book Trusted Rehabilitation Specialists</title>
+    <link rel="stylesheet" href="Styles/landing.css" />
+    <link rel="stylesheet" href="Src/components/navbar-unauth.css" />
+    <link rel="stylesheet" href="Src/components/footer.css" />
 </head>
 
 <body>
-    <h1>Authed Home</h1>
-    <h2 id="welcome-msg"></h2>
-    <button id="logout-btn">Logout</button>
+    <!-- Navbar -->
+    <div id="navbar-slot"></div>
 
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>
+                Book trusted<br>
+                <span class="highlight">rehabilitation</span><br>
+                specialists easily
+            </h1>
+            <p>
+                Connect with top-rated physiotherapists, chiropractors,
+                and rehabilitation clinics near you. Your recovery journey
+                starts here.
+            </p>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    😊
+                </div>
+                <div class="stat-content">
+                    <h3>10k+</h3>
+                    <p>Patients Recovered</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    🛡️
+                </div>
+                <div class="stat-content">
+                    <h3>500+</h3>
+                    <p>Verified Doctors</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon purple">
+                    🏢
+                </div>
+                <div class="stat-content">
+                    <h3>120+</h3>
+                    <p>Partner Clinics</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Clinics Section -->
+    <section class="clinics-section">
+        <div class="section-header">
+            <div>
+                <h2>Featured Clinics</h2>
+                <p>Top-rated facilities for your rehabilitation needs</p>
+            </div>
+            <a href="#" class="view-all-link">View All Clinics →</a>
+        </div>
+        <div class="clinics-grid">
+            <div class="clinic-card">
+                <div class="clinic-image-wrapper">
+                    <img src="../../Assests/images/clinic1.jpg"
+                         alt="Elite Sports Rehab" class="clinic-image" />
+                    <div class="clinic-rating">⭐ 5.0</div>
+                </div>
+                <div class="clinic-info">
+                    <h3>Elite Sports Rehab</h3>
+                    <p class="description">Specializing in athletes recovery and sports injuries treatment.</p>
+                    <div class="clinic-location">📍 Downtown Medical District</div>
+                    <button class="view-profile-btn">View Profile</button>
+                </div>
+            </div>
+
+            <div class="clinic-card">
+                <div class="clinic-image-wrapper">
+                    <img src= "../../Assests/images/clinic2.jpg"
+                         alt="City Physio Center" class="clinic-image" />
+                    <div class="clinic-rating">⭐ 4.8</div>
+                </div>
+                <div class="clinic-info">
+                    <h3>City Physio Center</h3>
+                    <p class="description">Comprehensive physiotherapy for back pain and rehabilitation.</p>
+                    <div class="clinic-location">📍 Westside Plaza</div>
+                    <button class="view-profile-btn">View Profile</button>
+                </div>
+            </div>
+
+            <div class="clinic-card">
+                <div class="clinic-image-wrapper">
+                    <img src="../../Assests/images/clinic3.jpg" 
+                         alt="Wellness Spine Clinic" class="clinic-image" />
+                    <div class="clinic-rating">⭐ 5.0</div>
+                </div>
+                <div class="clinic-info">
+                    <h3>Wellness Spine Clinic</h3>
+                    <p class="description">Expert chiropractic care for back and neck pain relief.</p>
+                    <div class="clinic-location">📍 North Hills</div>
+                    <button class="view-profile-btn">View Profile</button>
+                </div>
+            </div>
+
+            <div class="clinic-card">
+                <div class="clinic-image-wrapper">
+                    <img src="../../Assests/images/clinic4.jpg"
+                         alt="Advanced Rehab" class="clinic-image" />
+                    <div class="clinic-rating">⭐ 4.7</div>
+                </div>
+                <div class="clinic-info">
+                    <h3>Advanced Rehab</h3>
+                    <p class="description">Cutting-edge technology for faster recovery and healing.</p>
+                    <div class="clinic-location">📍 Tech Park Avenue</div>
+                    <button class="view-profile-btn">View Profile</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <div id="footer-slot"></div>
+
+    <!-- Scripts -->
+    <script src="Src/utilities/LoadFooterAndNavBar.js"></script>
     <script>
-        async function checkAuth() {
-
-            const sessionEmail = sessionStorage.getItem("email");
-            const sessionPassword = sessionStorage.getItem("password");
-
-            if (sessionEmail && sessionPassword) {
-                const isValid = await checkPassword(sessionEmail, sessionPassword);
-                if (isValid) {
-                    showWelcome(sessionEmail);
-                    return;
-                } else {
-                    clearSession();
-                }
-            }
-
-            const cookieEmail = getCookie("email");
-            const cookiePassword = getCookie("password");
-
-            if (cookieEmail && cookiePassword) {
-                const isValid = await checkPassword(cookieEmail, cookiePassword);
-                if (isValid) {
-                    showWelcome(cookieEmail);
-                    return;
-                } else {
-                    clearCookies();
-                }
-            }
-
-            redirectTo("Src/components/auth/login/login.html");
-        }
-
-        function showWelcome(email) {
-            document.getElementById("welcome-msg").textContent = `Welcome, ${email}`;
-        }
-
-        document.getElementById("logout-btn").addEventListener("click", () => {
-            clearSessionAndCookies();
-            redirectTo("Src/components/auth/login/login.html");
+        // Load navbar and footer
+        loadNavbar({ 
+            path: "Src/components/navbar-unauth.html",
+            loginPath: "Src/components/auth/login/login.html",
+            registerPath: "Src/components/auth/register/register.html"
         });
-
-        checkAuth();
+        loadFooter({ path: "Src/components/footer.html" });
     </script>
-
 </body>
 
 </html>
