@@ -15,7 +15,7 @@ if (-not (Test-Path $npxCmd)) {
 $env:Path = "$nodeBin;$env:Path"
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$dbPath = Join-Path $repoRoot 'Src\database\users.json'
+$dbPath = Join-Path $repoRoot 'Src\database\db.json'
 
 if (-not (Test-Path $dbPath)) {
     throw "Database file not found: $dbPath"

@@ -2,36 +2,39 @@
 let FAQManager = (function() {
     let faqs = [];
     let searchQuery = '';
+    let API_BASE = 'http://localhost:3000';
+    let currentUserEmail = null;
 
     async function init() {
+        currentUserEmail = getUserEmail();
         await loadFAQs();
         setupEventListeners();
         setupModalHandlers();
         renderFAQs();
     }
 
-    // Load FAQs from JSON file
+    function getUserEmail() {
+        let sessionEmail = sessionStorage.getItem('email');
+        if (sessionEmail) return sessionEmail;
+        
+        let cookieEmail = getCookie('email');
+        return cookieEmail || null;
+    }
+
+    function getCookie(name) {
+        let matches = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([\.$?*|{}\(\)\[\]\\+^])/g, '\\$1') + '=([^;]*)'));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
     async function loadFAQs() {
         try {
-            let localFAQs = loadFAQsFromLocalStorage();
-            let response = await fetch('data/FAQs.json');
-            let data = await response.json();
-            
-            if (localFAQs && localFAQs.length > 0) {
-                let jsonIds = data.faqs.map(function(faq) {
-                    return faq.id;
-                });
-                let newLocalFAQs = localFAQs.filter(function(faq) {
-                    return !jsonIds.includes(faq.id);
-                });
-                faqs = [...data.faqs, ...newLocalFAQs];
-            } else {
-                faqs = data.faqs;
-            }
+            let response = await fetch(`${API_BASE}/faqs`);
+            if (!response.ok) throw new Error('Failed to load FAQs');
+            faqs = await response.json();
+            if (!Array.isArray(faqs)) faqs = [];
         } catch (error) {
             console.error('Error loading FAQs:', error);
-            let localFAQs = loadFAQsFromLocalStorage();
-            faqs = localFAQs || [];
+            faqs = [];
         }
     }
 
@@ -88,19 +91,24 @@ let FAQManager = (function() {
             e.preventDefault();
             
             let questionInput = document.getElementById('questionInput');
+            let question = questionInput.value.trim();
+
+            if (!question) {
+                alert('Please enter a question');
+                return;
+            }
 
             let newFAQ = {
-                id: Date.now(),
+                userId: currentUserEmail || 'anonymous',
                 category: 'General',
-                question: questionInput.value.trim(),
-                answer: 'Thank you for your question! Our support team will respond shortly.',
-                isExpanded: false
+                question: question,
+                answer: '',
+                status: 'pending',
+                createdAt: new Date().toISOString()
             };
 
-            faqs.push(newFAQ);
-            saveFAQsToLocalStorage();
+            saveFAQToDatabase(newFAQ);
             showSuccessMessage('Question submitted successfully!');
-            renderFAQs();
             closeModal();
         });
     }
@@ -126,12 +134,16 @@ let FAQManager = (function() {
         }, 3000);
     }
 
-    // Filter FAQs based on search query
     function filterFAQs() {
         return faqs.filter(function(faq) {
+            let isAnswered = faq.answer && faq.answer.trim() !== '';
+            let isOwnQuestion = currentUserEmail && faq.userId === currentUserEmail;
+            
+            if (!isAnswered && !isOwnQuestion) return false;
+            
             return searchQuery === '' || 
                 faq.question.toLowerCase().includes(searchQuery) ||
-                faq.answer.toLowerCase().includes(searchQuery);
+                (faq.answer && faq.answer.toLowerCase().includes(searchQuery));
         });
     }
 
@@ -157,18 +169,20 @@ let FAQManager = (function() {
         }
     }
 
-    // Create FAQ element
     function createFAQElement(faq) {
         let faqItem = document.createElement('div');
         faqItem.className = 'faq-item';
         faqItem.dataset.id = faq.id;
 
+        let isPending = !faq.answer || faq.answer.trim() === '';
         let highlightedQuestion = highlightText(faq.question, searchQuery);
-        let highlightedAnswer = highlightText(faq.answer, searchQuery);
+        let highlightedAnswer = isPending 
+            ? 'Your question is pending review. We\'ll answer it soon!' 
+            : highlightText(faq.answer, searchQuery);
 
         faqItem.innerHTML = `
             <button class="faq-question" aria-expanded="false">
-                <span>${highlightedQuestion}</span>
+                <span>${highlightedQuestion}${isPending ? ' <em>(Pending)</em>' : ''}</span>
                 <span class="icon">▼</span>
             </button>
             <div class="faq-answer">
@@ -209,27 +223,23 @@ let FAQManager = (function() {
         return text;
     }
 
-    // Save FAQs to localStorage
-    function saveFAQsToLocalStorage() {
+    async function saveFAQToDatabase(faq) {
         try {
-            localStorage.setItem('healthycare_faqs', JSON.stringify({ faqs: faqs }));
+            let response = await fetch(`${API_BASE}/faqs`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(faq)
+            });
+            
+            if (!response.ok) throw new Error('Failed to save FAQ');
+            
+            let savedFAQ = await response.json();
+            faqs.push(savedFAQ);
+            renderFAQs();
         } catch (error) {
-            console.error('Error saving to localStorage:', error);
+            console.error('Error saving FAQ:', error);
+            alert('Failed to save question. Make sure the server is running.');
         }
-    }
-
-    // Load FAQs from localStorage
-    function loadFAQsFromLocalStorage() {
-        try {
-            let stored = localStorage.getItem('healthycare_faqs');
-            if (stored) {
-                let data = JSON.parse(stored);
-                return data.faqs;
-            }
-        } catch (error) {
-            console.error('Error loading from localStorage:', error);
-        }
-        return null;
     }
 
     // Public methods
