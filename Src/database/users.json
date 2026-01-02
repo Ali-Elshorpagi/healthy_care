@@ -1,14 +1,98 @@
 {
   "users": [
     {
-      "id": "p_1767131068065",
+      "id": "p_1767363105994",
       "role": "patient",
-      "fullName": "ali oedns",
+      "fullName": "ali od",
       "email": "ali@gmail.com",
       "password": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+      "profileImage": "/Src/assets/images/default-avatar.svg",
       "appointments": [],
       "medicalRecords": [],
-      "createdAt": "2025-12-30T21:44:28.065Z"
+      "createdAt": "2026-01-02T14:11:45.994Z"
+    },
+    {
+      "id": "p_1767363125225",
+      "role": "patient",
+      "fullName": "haxeml",
+      "email": "hazem@gmail.com",
+      "password": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+      "profileImage": "/Src/assets/images/default-avatar.svg",
+      "appointments": [
+        "apt_1767365556325"
+      ],
+      "medicalRecords": [],
+      "createdAt": "2026-01-02T14:12:05.225Z"
+    },
+    {
+      "id": "d_1767370001000",
+      "role": "doctor",
+      "fullName": "Dr. Sarah Johnson",
+      "email": "sarah.johnson@hospital.com",
+      "password": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+      "profileImage": "/Src/assets/images/default-avatar.svg",
+      "specialization": "Cardiology",
+      "medicalLicenseNo": "MD12345",
+      "clinicId": "clinic1",
+      "clinicName": "City Medical Center",
+      "isApproved": true,
+      "appointments": [
+        "apt_1767365556325"
+      ],
+      "patients": [],
+      "schedule": [],
+      "createdAt": "2026-01-02T16:00:01.000Z"
+    },
+    {
+      "id": "d_1767370002000",
+      "role": "doctor",
+      "fullName": "Dr. Michael Chen",
+      "email": "michael.chen@hospital.com",
+      "password": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+      "profileImage": "/Src/assets/images/default-avatar.svg",
+      "specialization": "General Practice",
+      "medicalLicenseNo": "MD12346",
+      "clinicId": "clinic2",
+      "clinicName": "General Hospital",
+      "isApproved": true,
+      "appointments": [],
+      "patients": [],
+      "schedule": [],
+      "createdAt": "2026-01-02T16:00:02.000Z"
+    },
+    {
+      "id": "d_1767370003000",
+      "role": "doctor",
+      "fullName": "Dr. Emily Brown",
+      "email": "emily.brown@hospital.com",
+      "password": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+      "profileImage": "/Src/assets/images/default-avatar.svg",
+      "specialization": "Dermatology",
+      "medicalLicenseNo": "MD12347",
+      "clinicId": "clinic1",
+      "clinicName": "City Medical Center",
+      "isApproved": true,
+      "appointments": [],
+      "patients": [],
+      "schedule": [],
+      "createdAt": "2026-01-02T16:00:03.000Z"
+    },
+    {
+      "id": "d_1767370004000",
+      "role": "doctor",
+      "fullName": "Dr. James Wilson",
+      "email": "james.wilson@hospital.com",
+      "password": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+      "profileImage": "/Src/assets/images/default-avatar.svg",
+      "specialization": "Orthopedics",
+      "medicalLicenseNo": "MD12348",
+      "clinicId": "clinic3",
+      "clinicName": "Health Plus Clinic",
+      "isApproved": true,
+      "appointments": [],
+      "patients": [],
+      "schedule": [],
+      "createdAt": "2026-01-02T16:00:04.000Z"
     }
   ]
 }
