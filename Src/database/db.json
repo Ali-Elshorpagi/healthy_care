@@ -1,12 +1,11 @@
 {
   "users": [
     {
-      "id": "p_1767363105994",
+      "id": "p_1767131068065",
       "role": "patient",
-      "fullName": "ali od",
+      "fullName": "ali oedns",
       "email": "ali@gmail.com",
       "password": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
-      "profileImage": "/Src/assets/images/default-avatar.svg",
       "appointments": [],
       "medicalRecords": [],
       "createdAt": "2025-12-30T21:44:28.065Z"
@@ -48,6 +47,26 @@
       "appointments": [],
       "patients": [],
       "createdAt": "2026-01-01T11:20:00.002Z"
+    }
+  ],
+  "faqs": [
+    {
+      "id": "6e09",
+      "userId": "ahmedesm416@gmail.com",
+      "category": "General",
+      "question": "test",
+      "answer": "",
+      "status": "pending",
+      "createdAt": "2026-01-02T12:47:10.033Z"
+    },
+    {
+      "id": "2d4f",
+      "userId": "ahmedesm416@gmail.com",
+      "category": "General",
+      "question": "awdawd",
+      "answer": "",
+      "status": "pending",
+      "createdAt": "2026-01-02T12:47:17.681Z"
     }
   ]
 }

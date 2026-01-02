@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Healthy Care</title>
+    <link rel="stylesheet" href="admin-dashboard.css" />
+    <link rel="stylesheet" href="../../navbar-unauth.css" />
+    <link rel="stylesheet" href="../../footer.css" />
+
+    <!-- Reuse existing auth helpers (no edits) -->
+    <script src="../../../utilities/userAuth.js"></script>
+    <script src="../../../utilities/redirectTo.js"></script>
+</head>
+
+<body>
+    <div id="navbar-slot"></div>
+    <div class="container">
+        <header class="header">
+            <div>
+                <h1>Admin Dashboard</h1>
+                <p class="subtitle" id="admin-subtitle">Loading…</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn" id="refresh-btn" type="button">Refresh</button>
+                <button class="btn danger" id="logout-btn" type="button">Logout</button>
+            </div>
+        </header>
+
+        <main class="grid">
+            <section class="card">
+                <h2>Pending Doctor Requests</h2>
+                <p class="muted">Approve doctors before they can access doctor features.</p>
+
+                <div class="table-wrap">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Specialization</th>
+                                <th>License</th>
+                                <th>Created</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pending-doctors-body">
+                            <tr>
+                                <td colspan="6" class="muted">Loading…</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Users Management</h2>
+                <p class="muted">Edit or delete users (admin only).</p>
+
+                <div class="search-bar">
+                    <input type="text" id="user-search" placeholder="Search by name..." />
+                </div>
+
+                <div class="table-wrap">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <div class="sortable-header" data-sort="fullName">
+                                        Name <span class="sort-arrows">⇅</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="sortable-header" data-sort="email">
+                                        Email <span class="sort-arrows">⇅</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="sortable-header" data-sort="role">
+                                        Role <span class="sort-arrows">⇅</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="sortable-header" data-sort="approved">
+                                        Status <span class="sort-arrows">⇅</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="sortable-header" data-sort="createdAt">
+                                        Created <span class="sort-arrows">⇅</span>
+                                    </div>
+                                </th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-body">
+                            <tr>
+                                <td colspan="6" class="muted">Loading…</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Users Status</h2>
+                <p class="muted">Quick overview of users in the system.</p>
+
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-label">Patients</div>
+                        <div class="stat-value" id="stat-patients">—</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Doctors</div>
+                        <div class="stat-value" id="stat-doctors">—</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Pending Doctors</div>
+                        <div class="stat-value" id="stat-pending">—</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Admins</div>
+                        <div class="stat-value" id="stat-admins">—</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Charts</h2>
+                <p class="muted">Visual overview based on users data.</p>
+
+                <div class="donut-grid">
+                    <div class="donut-card">
+                        <div class="donut" id="donut-roles" aria-label="Users by role" role="img"></div>
+                        <div class="donut-info">
+                            <div class="donut-title">Users by Role</div>
+                            <div class="donut-legend" id="legend-roles">
+                                <div class="muted">Loading…</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="donut-card">
+                        <div class="donut" id="donut-doctors" aria-label="Doctors approval" role="img"></div>
+                        <div class="donut-info">
+                            <div class="donut-title">Doctors Approval</div>
+                            <div class="donut-legend" id="legend-doctors">
+                                <div class="muted">Loading…</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>FAQs Management</h2>
+                <p class="muted">Manage user questions and provide answers.</p>
+
+                <div class="table-wrap">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Question</th>
+                                <th>Answer</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="faqs-body">
+                            <tr>
+                                <td colspan="6" class="muted">Loading…</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Admin Profile</h2>
+                <p class="muted">Basic profile info (view-only).</p>
+
+                <div class="profile">
+                    <div class="row"><span class="label">Email</span><span id="profile-email">—</span></div>
+                    <div class="row"><span class="label">Name</span><span id="profile-name">—</span></div>
+                    <div class="row"><span class="label">Role</span><span id="profile-role">—</span></div>
+                </div>
+            </section>
+        </main>
+
+        <div id="footer-slot"></div>
+    </div>
+
+    <script src="../../../utilities/LoadFooterAndNavBar.js"></script>
+    <script src="admin-dashboard.js"></script>
+</body>
+
+</html>
