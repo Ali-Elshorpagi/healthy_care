@@ -12,7 +12,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
     />
-    <link rel="stylesheet" href="../shared/styles.css" />
+    <link rel="stylesheet" href="../../../shared/styles.css" />
     <link rel="stylesheet" href="dashboard.css" />
   </head>
   <body>
@@ -30,7 +30,9 @@
               type="text"
               id="searchInput"
               placeholder="Search by Doctor Name..."
+              autocomplete="off"
             />
+            <div id="searchSuggestions" class="search-dropdown"></div>
           </div>
           <div class="select-wrap">
             <span class="material-symbols-outlined select-icon"
@@ -80,6 +82,18 @@
             <span class="stat-value" id="clinicsCount">86</span>
           </div>
         </div>
+      </div>
+
+      <!-- Search Results Section -->
+      <div id="searchResults" class="search-results hidden">
+        <div class="section-header">
+          <h2>
+            <span class="material-symbols-outlined icon">search</span>
+            Search Results
+          </h2>
+          <button id="clearSearch" class="link">Clear Search</button>
+        </div>
+        <div id="searchResultsContent" class="results-grid"></div>
       </div>
 
       <div class="content-grid">
@@ -200,7 +214,8 @@
       </div>
     </div>
 
-    <script src="../shared/sidebar.js"></script>
+    <script src="../../../utilities/userAuth.js"></script>
+    <script src="../../../shared/sidebar.js"></script>
     <script src="dashboard.js"></script>
   </body>
 </html>

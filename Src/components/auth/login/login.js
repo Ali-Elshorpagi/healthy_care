@@ -26,7 +26,8 @@ loginForm.addEventListener("submit", async (e) => {
         return;
     }
 
-    saveUserInSession(email, hashedPassword);
+    const user = await getUserByEmail(email);
+    saveUserInSession(email, hashedPassword, user);
     let noDays = 1;
     if (rememberMe)
         noDays = 7;
@@ -35,18 +36,10 @@ loginForm.addEventListener("submit", async (e) => {
 
     alert("Login successful!");
 
-    try {
-        const response = await fetch(`http://localhost:3000/users?email=${encodeURIComponent(email)}`);
-        const users = await response.json();
-        const user = Array.isArray(users) && users.length ? users[0] : null;
-
-        if (user && user.role === "admin") {
-            redirectTo("../../admin/dashboard/admin-dashboard.html");
-            return;
-        }
-    } catch (err) {
-        console.error("Failed to load user role for redirect:", err);
+    const intendedPage = sessionStorage.getItem('intendedPage');
+    if (intendedPage) {
+        redirectToIntendedPage();
+    } else {
+        redirectTo("../../patient/dashboard/dashboard.html");
     }
-
-    redirectTo("../../../../index.html");
 });
