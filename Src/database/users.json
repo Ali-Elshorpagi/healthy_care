@@ -39,7 +39,9 @@
       "specialization": "Cardiology",
       "approved": "approved",
       "schedule": [],
-      "appointments": [],
+      "appointments": [
+        "apt_1767462848901"
+      ],
       "patients": [],
       "createdAt": "2026-01-01T11:20:00.001Z"
     },
@@ -56,6 +58,19 @@
       "appointments": [],
       "patients": [],
       "createdAt": "2026-01-01T11:20:00.002Z"
+    },
+    {
+      "id": "p_1767462806090",
+      "role": "patient",
+      "fullName": "shaker",
+      "email": "zezo@gmail.com",
+      "password": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+      "profileImage": "/Src/assets/images/default-avatar.svg",
+      "appointments": [
+        "apt_1767462848901"
+      ],
+      "medicalRecords": [],
+      "createdAt": "2026-01-03T17:53:26.090Z"
     }
   ]
 }

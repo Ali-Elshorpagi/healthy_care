@@ -118,7 +118,18 @@
       "patientId": "p_1767450002003",
       "status": "pending",
       "createdAt": "2025-12-31T16:30:00.000Z"
-
+    },
+    {
+      "id": "apt_1767462848901",
+      "clinicId": "clinic1",
+      "doctorId": "d_1767266500001",
+      "date": "2026-01-22",
+      "time": "19:58",
+      "notes": "",
+      "patientId": "p_1767462806090",
+      "status": "pending",
+      "createdAt": "2026-01-03T17:54:08.901Z",
+      "updatedAt": "2026-01-03T17:54:17.448Z"
     }
   ]
 }

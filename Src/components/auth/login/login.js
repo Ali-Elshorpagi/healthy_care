@@ -33,11 +33,10 @@ loginForm.addEventListener("submit", async (e) => {
         noDays = 7;
 
     saveUserInCookies(email, hashedPassword, noDays);
-
+    
     alert("Login successful!");
-
     try {
-        const response = await fetch(`http://localhost:3000/users?email=${encodeURIComponent(email)}`);
+        const response = await fetch(`http://localhost:8877/users?email=${encodeURIComponent(email)}`);
         const users = await response.json();
         const user = Array.isArray(users) && users.length ? users[0] : null;
 
