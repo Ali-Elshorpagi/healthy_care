@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments - Healthy Care</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+    <link rel="stylesheet" href="../shared/styles.css">
+    <link rel="stylesheet" href="appointments.css">
+</head>
+<body>
+    <div id="header" class="header"></div>
+    <div id="sidebar" class="sidebar"></div>
+
+    <div class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1>Appointments Management</h1>
+                    <p class="page-subtitle">Manage all your patient appointments</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="refreshBtn">
+                        <span class="material-symbols-outlined btn-icon">refresh</span>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters Bar -->
+            <div class="filters-section">
+                <div class="filters-row">
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <span class="material-symbols-outlined">search</span>
+                            Search Patient
+                        </label>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search by name or ID...">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <span class="material-symbols-outlined">filter_list</span>
+                            Status
+                        </label>
+                        <select class="form-control" id="statusFilter">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="accepted">Accepted</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <span class="material-symbols-outlined">calendar_today</span>
+                            Date
+                        </label>
+                        <input type="date" class="form-control" id="dateFilter">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <span class="material-symbols-outlined">sort</span>
+                            Sort By
+                        </label>
+                        <select class="form-control" id="sortFilter">
+                            <option value="date">Date (Newest)</option>
+                            <option value="date-asc">Date (Oldest)</option>
+                            <option value="name">Patient Name</option>
+                            <option value="status">Status</option>
+                            <option value="time">Time</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="filters-actions">
+                    <button class="btn btn-secondary btn-sm" id="clearFiltersBtn">
+                        <span class="material-symbols-outlined btn-icon">clear</span>
+                        Clear Filters
+                    </button>
+                </div>
+            </div>
+
+            <!-- Appointments List -->
+            <div class="card">
+                <div class="appointments-list" id="appointmentsList">
+                    <!-- Appointments will be loaded here -->
+                </div>
+
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <span class="material-symbols-outlined">event_busy</span>
+                    <h3>No Appointments Found</h3>
+                    <p>No appointments match your search criteria.</p>
+                </div>
+
+                <div class="loading-state" id="loadingState" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Loading appointments...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Change Modal -->
+    <div class="modal" id="statusModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Change Appointment Status</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">Are you sure you want to change this appointment status?</p>
+                <div class="appointment-details" id="modalAppointmentDetails">
+                    <!-- Appointment details will be shown here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                <button class="btn btn-primary" id="confirmBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../utilities/userAuth.js"></script>
+    <script src="../shared/sidebar.js"></script>
+    <script src="appointments.js"></script>
+</body>
+</html>
