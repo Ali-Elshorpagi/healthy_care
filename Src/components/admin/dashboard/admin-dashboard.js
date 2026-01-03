@@ -13,13 +13,10 @@ let sortColumn = 'createdAt';
 let sortDirection = 'desc';
 let searchQuery = '';
 
-if (typeof loadNavbar === "function") {
-    loadNavbar({
-        path: "../../navbar-unauth.html",
-        targetId: "navbar-slot",
-        loginPath: "../../auth/login/login.html",
-        registerPath: "../../auth/register/register.html",
-        logoutRedirectPath: "../../auth/login/login.html"
+if (typeof loadHeader === "function") {
+    loadHeader({
+        path: "../../../shared/header.html",
+        targetId: "header-slot"
     });
 }
 

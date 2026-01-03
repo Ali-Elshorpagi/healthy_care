@@ -1,55 +1,203 @@
-function loadNavbar({ path, targetId } = {}) {
-  const resolvedPath = path || "../../navbar-unauth.html";
-  const resolvedTargetId = targetId || "navbar-slot";
+// ============================================
+// HEADER / NAVBAR FUNCTIONS
+// ============================================
+
+function loadHeader({ path, targetId } = {}) {
+  var resolvedPath = path || "../shared/header.html";
+  var resolvedTargetId = targetId || "header-slot";
 
   return fetch(resolvedPath)
-    .then((res) => {
-      if (!res.ok) throw new Error(`Failed to load navbar: HTTP ${res.status}`);
+    .then(function(res) {
+      if (!res.ok) throw new Error("Failed to load header: HTTP " + res.status);
       return res.text();
     })
-    .then((html) => {
-      const target = document.getElementById(resolvedTargetId);
-      if (!target) throw new Error(`Navbar target not found: #${resolvedTargetId}`);
+    .then(function(html) {
+      var target = document.getElementById(resolvedTargetId);
+      if (!target) throw new Error("Header target not found: #" + resolvedTargetId);
       target.innerHTML = html;
-
-      applyNavbarAuthUI(arguments[0]);
+      
+      // Initialize header after loading
+      initializeHeader();
     })
-    .catch((err) => {
+    .catch(function(err) {
       console.error(err);
     });
 }
 
+function initializeHeader() {
+  // Get current page path
+  var currentPath = window.location.pathname.toLowerCase();
+
+  // Determine the base path to root
+  var pathToRoot = '';
+  var pathToComponents = '';
+  var pathToAuth = '';
+
+  if (currentPath.indexOf('/src/components/') !== -1) {
+    var afterComponents = currentPath.split('/src/components/')[1] || '';
+    var slashCount = (afterComponents.match(/\//g) || []).length;
+
+    for (var i = 0; i <= slashCount; i++) {
+      pathToRoot += '../';
+    }
+    pathToRoot += '../';
+    pathToComponents = '../';
+    pathToAuth = '../auth/';
+  } else if (currentPath.indexOf('/src/shared/') !== -1) {
+    pathToRoot = '../../';
+    pathToComponents = '../components/';
+    pathToAuth = '../components/auth/';
+  } else {
+    pathToRoot = './';
+    pathToComponents = './Src/components/';
+    pathToAuth = './Src/components/auth/';
+  }
+
+  // Page routes
+  var routes = {
+    home: pathToRoot + 'index.html',
+    about: pathToComponents + 'About_us/About_Us.html',
+    faqs: pathToComponents + 'FAQs/FAQs.html',
+    contact: pathToComponents + 'Contact/Contact.html',
+    login: pathToAuth + 'login/login.html',
+    register: pathToAuth + 'register/register.html',
+    profile: pathToComponents + 'patient/profile/profile.html',
+    dashboard: pathToComponents + 'patient/dashboard/dashboard.html'
+  };
+
+  // Handle logo click
+  var logoLink = document.querySelector('.logo[data-page="home"]');
+  if (logoLink) {
+    logoLink.href = routes.home;
+  }
+
+  // Handle navigation links
+  var navLinks = document.querySelectorAll('.nav-links a[data-nav]');
+  for (var i = 0; i < navLinks.length; i++) {
+    (function(link) {
+      var page = link.getAttribute('data-nav');
+      if (routes[page]) {
+        link.href = routes[page];
+      }
+    })(navLinks[i]);
+  }
+
+  // Handle auth state
+  applyHeaderAuthState(routes);
+}
+
+function applyHeaderAuthState(routes) {
+  var navRight = document.getElementById('navbarRight');
+  if (!navRight) return;
+
+  // Check if user is authenticated
+  var email = sessionStorage.getItem('email');
+  var password = sessionStorage.getItem('password');
+  var userId = sessionStorage.getItem('userId');
+  var isAuthenticated = !!(email && password && userId);
+
+  if (isAuthenticated) {
+    // User is logged in - show profile icon
+    var profileImage = '/Src/assets/images/default-avatar.svg';
+    
+    // Try to get profile image from localStorage or cookie
+    if (userId) {
+      var tempImage = localStorage.getItem('imageFile_' + userId);
+      if (tempImage) {
+        profileImage = tempImage;
+      } else {
+        var cookieImage = getProfileImageFromCookie();
+        if (cookieImage) {
+          profileImage = cookieImage;
+        }
+      }
+    }
+
+    navRight.innerHTML = 
+      '<a href="' + routes.profile + '" class="header-avatar" title="My Profile">' +
+        '<img src="' + profileImage + '" alt="Profile">' +
+      '</a>' +
+      '<button id="navbar-logout-btn" class="btn btn-outline">Logout</button>';
+
+    // Handle logout
+    var logoutBtn = document.getElementById('navbar-logout-btn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', function() {
+        // Clear session and cookies
+        sessionStorage.clear();
+        document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "password=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "profileImage=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        
+        // Redirect to home
+        window.location.href = routes.home;
+      });
+    }
+  } else {
+    // User is not logged in - show login/register buttons
+    navRight.innerHTML = 
+      '<button id="loginBtn" class="btn btn-outline">Login</button>' +
+      '<button id="registerBtn" class="btn btn-primary">Register</button>';
+
+    // Handle login button
+    var loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) {
+      loginBtn.addEventListener('click', function() {
+        window.location.href = routes.login;
+      });
+    }
+
+    // Handle register button
+    var registerBtn = document.getElementById('registerBtn');
+    if (registerBtn) {
+      registerBtn.addEventListener('click', function() {
+        window.location.href = routes.register;
+      });
+    }
+  }
+}
+
+function getProfileImageFromCookie() {
+  var name = "profileImage=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) === ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return '';
+}
+
+// ============================================
+// FOOTER FUNCTIONS
+// ============================================
+
 function loadFooter({ path, targetId } = {}) {
-  const resolvedPath = path || "../../footer.html";
-  const resolvedTargetId = targetId || "footer-slot";
+  var resolvedPath = path || "../footer.html";
+  var resolvedTargetId = targetId || "footer-slot";
 
   return fetch(resolvedPath)
-    .then((res) => {
-      if (!res.ok) throw new Error(`Failed to load footer: HTTP ${res.status}`);
+    .then(function(res) {
+      if (!res.ok) throw new Error("Failed to load footer: HTTP " + res.status);
       return res.text();
     })
-    .then((html) => {
-      const target = document.getElementById(resolvedTargetId);
-      if (!target) throw new Error(`Footer target not found: #${resolvedTargetId}`);
+    .then(function(html) {
+      var target = document.getElementById(resolvedTargetId);
+      if (!target) throw new Error("Footer target not found: #" + resolvedTargetId);
       target.innerHTML = html;
       
       // Initialize footer after loading
       initializeFooter();
     })
-    .catch((err) => {
+    .catch(function(err) {
       console.error(err);
     });
-}
-
-// Auto-initialize footer on DOMContentLoaded for pages with embedded footer
-if (typeof document !== 'undefined') {
-  document.addEventListener('DOMContentLoaded', function() {
-    // Check if footer exists and hasn't been initialized by loadFooter
-    var footer = document.getElementById('footer');
-    if (footer && !footer.hasAttribute('data-initialized')) {
-      initializeFooter();
-    }
-  });
 }
 
 function initializeFooter() {
@@ -67,18 +215,15 @@ function initializeFooter() {
   var pathToComponents = '';
 
   if (currentPath.indexOf('/src/components/') !== -1) {
-    // Count folder depth after /src/components/
     var afterComponents = currentPath.split('/src/components/')[1] || '';
     var slashCount = (afterComponents.match(/\//g) || []).length;
 
-    // Build path back to root
     for (var i = 0; i <= slashCount; i++) {
       pathToRoot += '../';
     }
-    pathToRoot += '../'; // Extra for src folder
+    pathToRoot += '../';
     pathToComponents = '../';
   } else {
-    // At root
     pathToRoot = './';
     pathToComponents = './Src/components/';
   }
@@ -94,19 +239,21 @@ function initializeFooter() {
   // Handle navigation links
   var navLinks = document.querySelectorAll('.footer-nav-link[data-page]');
   for (var i = 0; i < navLinks.length; i++) {
-    navLinks[i].addEventListener('click', function (e) {
-      e.preventDefault();
-      var page = this.getAttribute('data-page');
-      if (routes[page]) {
-        window.location.href = routes[page];
-      }
-    });
+    (function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var page = this.getAttribute('data-page');
+        if (routes[page]) {
+          window.location.href = routes[page];
+        }
+      });
+    })(navLinks[i]);
   }
 
   // Handle coming soon links
   var comingSoonLinks = document.querySelectorAll('.coming-soon-link');
   for (var j = 0; j < comingSoonLinks.length; j++) {
-    comingSoonLinks[j].addEventListener('click', function (e) {
+    comingSoonLinks[j].addEventListener('click', function(e) {
       e.preventDefault();
       var modal = document.getElementById('comingSoonModal');
       if (modal) {
@@ -118,7 +265,7 @@ function initializeFooter() {
   // Close modal button
   var closeBtn = document.getElementById('modalCloseBtn');
   if (closeBtn) {
-    closeBtn.addEventListener('click', function () {
+    closeBtn.addEventListener('click', function() {
       var modal = document.getElementById('comingSoonModal');
       if (modal) {
         modal.style.display = 'none';
@@ -129,7 +276,7 @@ function initializeFooter() {
   // Close modal when clicking overlay
   var modal = document.getElementById('comingSoonModal');
   if (modal) {
-    modal.addEventListener('click', function (e) {
+    modal.addEventListener('click', function(e) {
       if (e.target === this) {
         this.style.display = 'none';
       }
@@ -137,95 +284,31 @@ function initializeFooter() {
   }
 }
 
-function getCookieValue(name) {
-  const cookies = document.cookie ? document.cookie.split(";") : [];
-  for (let i = 0; i < cookies.length; i++) {
-    const part = cookies[i].trim();
-    if (part.startsWith(name + "=")) {
-      return decodeURIComponent(part.substring(name.length + 1));
+// ============================================
+// AUTO-INITIALIZATION
+// ============================================
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', function() {
+    // Auto-initialize header if it exists and hasn't been initialized
+    var navbar = document.getElementById('navbar');
+    if (navbar && !navbar.hasAttribute('data-initialized')) {
+      navbar.setAttribute('data-initialized', 'true');
+      initializeHeader();
     }
-  }
-  return "";
+    
+    // Auto-initialize footer if it exists and hasn't been initialized
+    var footer = document.getElementById('footer');
+    if (footer && !footer.hasAttribute('data-initialized')) {
+      initializeFooter();
+    }
+  });
 }
 
-async function getValidAuth() {
-  const sessionEmail = sessionStorage.getItem("email");
-  const sessionPassword = sessionStorage.getItem("password");
-  if (sessionEmail && sessionPassword) {
-    if (typeof checkPassword === "function") {
-      const valid = await checkPassword(sessionEmail, sessionPassword);
-      if (valid) return { email: sessionEmail };
-      if (typeof clearSession === "function") clearSession();
-    } else {
-      return { email: sessionEmail };
-    }
-  }
+// ============================================
+// LEGACY SUPPORT (for existing code)
+// ============================================
 
-  const cookieEmail = (typeof getCookie === "function") ? getCookie("email") : getCookieValue("email");
-  const cookiePassword = (typeof getCookie === "function") ? getCookie("password") : getCookieValue("password");
-  if (cookieEmail && cookiePassword) {
-    if (typeof checkPassword === "function") {
-      const valid = await checkPassword(cookieEmail, cookiePassword);
-      if (valid) return { email: cookieEmail };
-      if (typeof clearCookies === "function") clearCookies();
-    } else {
-      return { email: cookieEmail };
-    }
-  }
-
-  return null;
-}
-
-function wireAuthButtons({ loginPath, registerPath } = {}) {
-  const loginBtn = document.getElementById("loginBtn");
-  if (loginBtn) {
-    loginBtn.addEventListener("click", () => {
-      if (loginPath) {
-        window.location.href = loginPath;
-      }
-    });
-  }
-
-  const registerBtn = document.getElementById("registerBtn");
-  if (registerBtn) {
-    registerBtn.addEventListener("click", () => {
-      if (registerPath) {
-        window.location.href = registerPath;
-      }
-    });
-  }
-}
-
-async function applyNavbarAuthUI(options) {
-  try {
-    const navRight = document.querySelector("#navbar .navbar-right") || document.querySelector("#navbar .nav-right");
-    if (!navRight) return;
-
-    wireAuthButtons(options);
-
-    const auth = await getValidAuth();
-    if (!auth) return;
-
-    navRight.innerHTML = `<button id="navbar-logout-btn" class="btn btn-outline">Logout</button>`;
-
-    const logoutBtn = document.getElementById("navbar-logout-btn");
-    logoutBtn.addEventListener("click", () => {
-      if (typeof clearSessionAndCookies === "function") {
-        clearSessionAndCookies();
-      } else {
-        try {
-          sessionStorage.removeItem("email");
-          sessionStorage.removeItem("password");
-          document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-          document.cookie = "password=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        } catch {}
-      }
-
-      if (options && options.logoutRedirectPath) {
-        window.location.href = options.logoutRedirectPath;
-      }
-    });
-  } catch (err) {
-    console.error(err);
-  }
+function loadNavbar(options) {
+  return loadHeader(options);
 }

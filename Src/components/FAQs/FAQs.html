@@ -5,36 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
-    <link rel="stylesheet" href="../navbar-unauth.css">
+    <link rel="stylesheet" href="../../shared/header.css">
     <link rel="stylesheet" href="../footer.css">
     <link rel="stylesheet" href="FAQs.css">
     <title>FAQs - Healthy Care</title>
 </head>
 <body>
 
-<!-- Navbar -->
-<nav id="navbar" class="navbar">
-    <div class="navbar-inner">
-        <div class="navbar-left">
-            <a href="../../../index.html" class="logo">
-                <span class="material-symbols-outlined logo-icon">add</span>
-                <span class="logo-text">Healthy</span>
-            </a>
-        </div>
-        <div class="navbar-center">
-            <div class="nav-links">
-                <a href="../../../index.html">Home</a>
-                <a href="../About_us/About_Us.html">About Us</a>
-                <a href="FAQs.html">FAQs</a>
-                <a href="../Contact/Contact.html">Contact Us</a>
-            </div>
-        </div>
-        <div class="navbar-right">
-            <button id="loginBtn" class="btn btn-outline">Login</button>
-            <button id="registerBtn" class="btn btn-primary">Register</button>
-        </div>
-    </div>
-</nav>
+<!-- Header -->
+<div id="header-slot"></div>
 
 <!-- Hero Section -->
 <section class="hero-section">
@@ -103,6 +82,7 @@
 
 <script src="../../utilities/LoadFooterAndNavBar.js"></script>
 <script>
+    loadHeader({ path: '../../shared/header.html' });
     loadFooter({ path: '../footer.html' });
 </script>
 <script src="FAQs.js"></script>
