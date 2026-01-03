@@ -3,22 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us</title>
+    <title>About Us - Healthy</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+    <link rel="stylesheet" href="../navbar-unauth.css">
+    <link rel="stylesheet" href="../footer.css">
     <link rel="stylesheet" href="About_Us.css">
 </head>
 <body>
-    <nav>
-        <div>
-            <img src="insurance.png" alt=""> 
-            <span><h3>Healthy(صحي)</h3></span>
+    <!-- Navbar -->
+    <nav id="navbar" class="navbar">
+        <div class="navbar-inner">
+            <div class="navbar-left">
+                <a href="../../../index.html" class="logo">
+                    <span class="material-symbols-outlined logo-icon">add</span>
+                    <span class="logo-text">Healthy</span>
+                </a>
+            </div>
+            <div class="navbar-center">
+                <div class="nav-links">
+                    <a href="../../../index.html">Home</a>
+                    <a href="About_Us.html">About Us</a>
+                    <a href="../FAQs/FAQs.html">FAQs</a>
+                    <a href="../Contact/Contact.html">Contact Us</a>
+                </div>
+            </div>
+            <div class="navbar-right">
+                <button id="loginBtn" class="btn btn-outline">Login</button>
+                <button id="registerBtn" class="btn btn-primary">Register</button>
+            </div>
         </div>
-        <ul>
-            <li><a href="">Home</a></li>
-            <li><a href="About_Us.html">About Us</a></li>
-            <li><a href="">Services</a></li>
-            <li><a href="">Contact</a></li>
-            <li><a href="" class="book">Book Now</a></li>
-        </ul>
     </nav>
     <div id="container">
         <div id="con1">
@@ -154,46 +168,31 @@ partner in wellness.
 </div>
 
     </div>
-    <footer id="footer">
-    <div class="footer-container">
-        <div class="footer-brand">
-            <div class="footer-logo">
-                <img src="assets/insurance.png" alt="Healthy Logo" class="footer-logo-img">
-                <span class="brand">Healthy</span>
-            </div>
-            <p class="footer-tagline">Connecting you with top rehabilitation specialists for a faster, better recovery.</p>
-        </div>
+    
+    <!-- Footer -->
+    <div id="footer-slot"></div>
 
-        <div class="footer-links">
-            <div class="footer-column">
-                <h4>PLATFORM</h4>
-                <ul>
-                    <li><a href="#">Find a Specialist</a></li>
-                    <li><a href="#">How it Works</a></li>
-                    <li><a href="#">Pricing</a></li>
-                </ul>
-            </div>
+    <script src="../../utilities/LoadFooterAndNavBar.js"></script>
+    <script>
+        loadFooter({ path: '../footer.html' });
+        
+        // Handle navbar button clicks
+        (function() {
+            var loginBtn = document.getElementById('loginBtn');
+            var registerBtn = document.getElementById('registerBtn');
 
-            <div class="footer-column">
-                <h4>COMPANY</h4>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Blog</a></li>
-                </ul>
-            </div>
+            if (loginBtn) {
+                loginBtn.addEventListener('click', function() {
+                    window.location.href = '../auth/login/login.html';
+                });
+            }
 
-            <div class="footer-column">
-                <h4>SUPPORT</h4>
-                <ul>
-                    <li><a href="#">Help Center</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                </ul>
-            </div>
-        </div>
-</footer>
-
-    </div>
+            if (registerBtn) {
+                registerBtn.addEventListener('click', function() {
+                    window.location.href = '../auth/register/register.html';
+                });
+            }
+        })();
+    </script>
 </body>
 </html>

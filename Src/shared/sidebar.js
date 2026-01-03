@@ -80,9 +80,9 @@ function buildHeader() {
   html += '<span class="logo-text">Healthy</span></a></div>';
   html += '<div class="header-center">';
   html += '<div class="nav-links">';
-  html += '<a href="#">About Us</a>';
+  html += '<a href="../../About_us/About_Us.html">About Us</a>';
   html += '<a href="../../FAQs/FAQs.html">FAQs</a>';
-  html += '<a href="#">Contact Us</a></div>';
+  html += '<a href="../../Contact/Contact.html">Contact Us</a></div>';
   html += '</div>';
   html += '<div class="header-right">';
   html += '<a href="../profile/profile.html" class="header-avatar">';

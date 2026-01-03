@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
     <link rel="stylesheet" href="../navbar-unauth.css">
     <link rel="stylesheet" href="../footer.css">
     <link rel="stylesheet" href="FAQs.css">
@@ -11,22 +13,26 @@
 <body>
 
 <!-- Navbar -->
-<nav id="navbar">
-    <div class="nav-left">
-        <img src="../../Assests/images/logo.png" alt="Healthy Logo" class="nav-logo">
-        <span class="brand">Healthy</span>
-    </div>
-
-    <ul class="nav-center">
-        <li><a href="../../index.html">Home</a></li>
-        <li><a href="../AboutUs/AboutUs.html">About Us</a></li>
-        <li><a href="FAQs.html">FAQs</a></li>
-        <li><a href="../Contact/Contact.html">Contact Us</a></li>
-    </ul>
-
-    <div class="nav-right">
-        <button id="loginBtn">Login</button>
-        <button id="registerBtn" class="btn-primary">Register</button>
+<nav id="navbar" class="navbar">
+    <div class="navbar-inner">
+        <div class="navbar-left">
+            <a href="../../../index.html" class="logo">
+                <span class="material-symbols-outlined logo-icon">add</span>
+                <span class="logo-text">Healthy</span>
+            </a>
+        </div>
+        <div class="navbar-center">
+            <div class="nav-links">
+                <a href="../../../index.html">Home</a>
+                <a href="../About_us/About_Us.html">About Us</a>
+                <a href="FAQs.html">FAQs</a>
+                <a href="../Contact/Contact.html">Contact Us</a>
+            </div>
+        </div>
+        <div class="navbar-right">
+            <button id="loginBtn" class="btn btn-outline">Login</button>
+            <button id="registerBtn" class="btn btn-primary">Register</button>
+        </div>
     </div>
 </nav>
 
@@ -93,47 +99,12 @@
 </div>
 
 <!-- Footer -->
-<footer id="footer">
-    <div class="footer-container">
-        <div class="footer-brand">
-            <div class="footer-logo">
-                <img src="../../Assests/images/logo.png" alt="Healthy Logo" class="footer-logo-img">
-                <span class="brand">Healthy</span>
-            </div>
-            <p class="footer-tagline">Connecting you with top rehabilitation specialists for a faster, better recovery.</p>
-        </div>
+<div id="footer-slot"></div>
 
-        <div class="footer-links">
-            <div class="footer-column">
-                <h4>PLATFORM</h4>
-                <ul>
-                    <li><a href="#">Find a Specialist</a></li>
-                    <li><a href="#">How it Works</a></li>
-                    <li><a href="#">Pricing</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-column">
-                <h4>COMPANY</h4>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Blog</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-column">
-                <h4>SUPPORT</h4>
-                <ul>
-                    <li><a href="#">Help Center</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</footer>
-
+<script src="../../utilities/LoadFooterAndNavBar.js"></script>
+<script>
+    loadFooter({ path: '../footer.html' });
+</script>
 <script src="FAQs.js"></script>
 </body>
 </html>

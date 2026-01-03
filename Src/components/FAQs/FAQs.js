@@ -249,3 +249,21 @@ let FAQManager = (function() {
 })();
 FAQManager.init();
 
+// Handle navbar button clicks
+(function() {
+    let loginBtn = document.getElementById('loginBtn');
+    let registerBtn = document.getElementById('registerBtn');
+
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function() {
+            window.location.href = '../auth/login/login.html';
+        });
+    }
+
+    if (registerBtn) {
+        registerBtn.addEventListener('click', function() {
+            window.location.href = '../auth/register/register.html';
+        });
+    }
+})();
+
