@@ -26,7 +26,8 @@ loginForm.addEventListener("submit", async (e) => {
         return;
     }
 
-    saveUserInSession(email, hashedPassword);
+    const user = await getUserByEmail(email);
+    saveUserInSession(email, hashedPassword, user);
     let noDays = 1;
     if (rememberMe)
         noDays = 7;
@@ -67,6 +68,4 @@ loginForm.addEventListener("submit", async (e) => {
     } catch (err) {
         console.error("Failed to load user role for redirect:", err);
     }
-
-    redirectTo("../../../../index.html");
 });
