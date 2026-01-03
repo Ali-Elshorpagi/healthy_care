@@ -36,10 +36,36 @@ loginForm.addEventListener("submit", async (e) => {
 
     alert("Login successful!");
 
-    const intendedPage = sessionStorage.getItem('intendedPage');
-    if (intendedPage) {
-        redirectToIntendedPage();
-    } else {
-        redirectTo("../../patient/dashboard/dashboard.html");
+    try {
+        const response = await fetch(`http://localhost:3000/users?email=${encodeURIComponent(email)}`);
+        const users = await response.json();
+        const user = Array.isArray(users) && users.length ? users[0] : null;
+
+        if (user) {
+            // Store user information in session
+            sessionStorage.setItem('userId', user.id);
+            sessionStorage.setItem('role', user.role);
+            sessionStorage.setItem('userName', user.fullName);
+
+            if (user.role === "admin") {
+                redirectTo("../../admin/dashboard/admin-dashboard.html");
+                return;
+            } else if (user.role === "doctor") {
+                // Store doctor-specific information
+                sessionStorage.setItem('doctorId', user.id);
+                sessionStorage.setItem('doctorName', user.fullName);
+                sessionStorage.setItem('doctorSpecialization', user.specialization || 'Specialist');
+                redirectTo("../../doctor/dashboard/dashboard.html");
+                return;
+            } else if (user.role === "patient") {
+                // Store patient-specific information
+                sessionStorage.setItem('patientId', user.id);
+                sessionStorage.setItem('patientName', user.fullName);
+                redirectTo("../../patient/dashboard/dashboard.html");
+                return;
+            }
+        }
+    } catch (err) {
+        console.error("Failed to load user role for redirect:", err);
     }
 });
