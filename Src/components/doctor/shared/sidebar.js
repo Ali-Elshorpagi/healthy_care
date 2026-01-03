@@ -31,8 +31,6 @@ function buildSidebar(activePage) {
 
   let html = '<div class="sidebar-menu">';
   html += '<div class="sidebar-brand">';
-  html += '<span class="material-symbols-outlined brand-icon">medical_services</span>';
-  html += '<span class="brand-text">Doctor Portal</span>';
   html += '</div>';
   html += '<p class="sidebar-label">Doctor Menu</p>';
   html += '<ul class="sidebar-nav">';
@@ -73,23 +71,56 @@ function buildHeader() {
   let header = document.getElementById('header');
   if (!header) return;
 
-  let doctorName = sessionStorage.getItem('doctorName') || 'Doctor';
-  let doctorSpecialization = sessionStorage.getItem('doctorSpecialization') || 'Specialist';
+  let name = sessionStorage.getItem('doctorName') || 'Doctor';
 
-  let html = '<div class="header-left">';
-  html += '<h2 class="page-title">Healthy Care</h2>';
+  let html = '<div class="header-inner">';
+  html += '<div class="header-left">';
+  html += '<a href="../dashboard/dashboard.html" class="logo">';
+  html += '<span class="material-symbols-outlined logo-icon">add</span>';
+  html += '<span class="logo-text">Healthy</span></a></div>';
+  html += '<div class="header-center">';
+  html += '<div class="nav-links">';
+  html += '<a href="#">About Us</a>';
+  html += '<a href="../../FAQs/FAQs.html">FAQs</a>';
+  html += '<a href="#">Contact Us</a></div>';
   html += '</div>';
   html += '<div class="header-right">';
-  html += '<div class="user-info">';
-  html += '<div class="user-details">';
-  html += '<p class="user-name">' + doctorName + '</p>';
-  html += '<p class="user-role">' + doctorSpecialization + '</p>';
-  html += '</div>';
-  html += '<div class="user-avatar">';
-  html += '<span class="material-symbols-outlined">person</span>';
-  html += '</div>';
-  html += '</div>';
-  html += '</div>';
+  html += '<a href="../profile/profile.html" class="header-avatar">';
+
+  let userId = sessionStorage.getItem('userId');
+  let imageSrc = '/Src/assets/images/default-avatar.svg';
+
+  if (userId) {
+    let tempImage = localStorage.getItem(`imageFile_${userId}`);
+    if (tempImage) {
+      imageSrc = tempImage;
+    } else {
+      let cookieImage = getProfileImageCookie();
+      if (cookieImage) {
+        imageSrc = cookieImage;
+      }
+    }
+  }
+
+  html += '<img src="' + imageSrc + '" alt="' + name + '">';
+  html += '</a></div></div>';
 
   header.innerHTML = html;
+}
+
+function getProfileImageCookie() {
+  let name = "profileImage=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+
+  for (let i = 0; i < ca.length; ++i) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
 }

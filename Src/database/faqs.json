@@ -1,0 +1,58 @@
+{
+  "faqs": [
+    {
+      "id": "6e09",
+      "userId": "ahmedesm416@gmail.com",
+      "category": "General",
+      "question": "test",
+      "answer": "",
+      "status": "pending",
+      "createdAt": "2026-01-02T12:47:10.033Z"
+    },
+    {
+      "id": "2d4f",
+      "userId": "ahmedesm416@gmail.com",
+      "category": "General",
+      "question": "awdawd",
+      "answer": "",
+      "status": "pending",
+      "createdAt": "2026-01-02T12:47:17.681Z"
+    },
+    {
+      "id": "e8ce",
+      "userId": "anonymous",
+      "category": "General",
+      "question": "awdawd",
+      "answer": "",
+      "status": "pending",
+      "createdAt": "2026-01-02T21:22:43.606Z"
+    },
+    {
+      "id": "196f",
+      "userId": "anonymous",
+      "category": "General",
+      "question": "awdawd",
+      "answer": "",
+      "status": "pending",
+      "createdAt": "2026-01-02T21:22:52.909Z"
+    },
+    {
+      "id": "077c",
+      "userId": "ahmedesm416@gmail.com",
+      "category": "General",
+      "question": "tarek",
+      "answer": "",
+      "status": "pending",
+      "createdAt": "2026-01-02T21:25:09.289Z"
+    },
+    {
+      "id": "5a66",
+      "userId": "ahmedesm416@gmail.com",
+      "category": "General",
+      "question": "ziad",
+      "answer": "",
+      "status": "pending",
+      "createdAt": "2026-01-02T21:44:59.030Z"
+    }
+  ]
+}
