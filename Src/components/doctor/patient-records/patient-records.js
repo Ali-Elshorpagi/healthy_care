@@ -1,9 +1,8 @@
-let API_URL = 'http://localhost:3000';
 let currentDoctorId = sessionStorage.getItem('userId');
 let currentPatientId = null;
 let allPatients = [];
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     loadPatients();
     setupSearchFilter();
     setupAddRecordForm();
@@ -14,10 +13,10 @@ async function loadPatients() {
         let patientsGrid = document.getElementById('patientsGrid');
         patientsGrid.innerHTML = '<div class="loading">Loading patients...</div>';
 
-        let appointmentsRes = await fetch(`${API_URL}/appointments`);
+        let appointmentsRes = await fetch('http://localhost:8876/appointments');
         let appointments = await appointmentsRes.json();
 
-        let acceptedAppointments = appointments.filter(apt => 
+        let acceptedAppointments = appointments.filter(apt =>
             apt.doctorId === currentDoctorId && apt.status === 'accepted'
         );
 
@@ -32,9 +31,9 @@ async function loadPatients() {
         }
 
         let patientIds = [...new Set(acceptedAppointments.map(apt => apt.patientId))];
-        let usersRes = await fetch(`${API_URL}/users`);
+        let usersRes = await fetch('http://localhost:8877/users');
         let users = await usersRes.json();
-        let recordsRes = await fetch(`${API_URL}/records`);
+        let recordsRes = await fetch('http://localhost:8875/records');
         let allRecords = await recordsRes.json();
         allPatients = users.filter(user => patientIds.includes(user.id));
         displayPatients(allPatients, acceptedAppointments, allRecords);
@@ -52,7 +51,7 @@ async function loadPatients() {
 
 function displayPatients(patients, appointments, allRecords) {
     let patientsGrid = document.getElementById('patientsGrid');
-    
+
     if (patients.length === 0) {
         patientsGrid.innerHTML = `
             <div class="empty-state">
@@ -104,13 +103,13 @@ function displayPatients(patients, appointments, allRecords) {
 
 function setupSearchFilter() {
     let searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', function(e) {
+    searchInput.addEventListener('input', function (e) {
         let searchTerm = e.target.value.toLowerCase();
-        let filteredPatients = allPatients.filter(patient => 
+        let filteredPatients = allPatients.filter(patient =>
             patient.fullName.toLowerCase().includes(searchTerm) ||
             patient.email.toLowerCase().includes(searchTerm)
         );
-        
+
         loadPatients().then(() => {
             let patientsGrid = document.getElementById('patientsGrid');
             if (searchTerm) {
@@ -143,7 +142,7 @@ function closeAddRecordModal() {
 
 function setupAddRecordForm() {
     let form = document.getElementById('addRecordForm');
-    form.addEventListener('submit', async function(e) {
+    form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         let recordType = document.getElementById('recordType').value;
@@ -181,7 +180,7 @@ function setupAddRecordForm() {
         };
 
         try {
-            let response = await fetch(`${API_URL}/records`, {
+            let response = await fetch('http://localhost:8875/records', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -209,9 +208,9 @@ async function viewPatientRecords(patientId, patientName) {
         document.getElementById('viewRecordsModal').classList.add('active');
         document.getElementById('recordsList').innerHTML = '<div class="loading">Loading records...</div>';
 
-        let response = await fetch(`${API_URL}/records`);
+        let response = await fetch('http://localhost:8875/records');
         let allRecords = await response.json();
-        
+
         let patientRecords = allRecords.filter(rec => rec.patientId === patientId);
 
         if (patientRecords.length === 0) {
@@ -256,7 +255,7 @@ function closeViewRecordsModal() {
     document.getElementById('viewRecordsModal').classList.remove('active');
 }
 
-window.addEventListener('click', function(e) {
+window.addEventListener('click', function (e) {
     if (e.target.classList.contains('modal')) {
         e.target.classList.remove('active');
     }

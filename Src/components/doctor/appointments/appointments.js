@@ -5,14 +5,14 @@ let currentAction = null;
 document.addEventListener('DOMContentLoaded', function () {
   // Check authentication
   checkAuthentication();
-  
+
   // Build UI
   buildHeader();
   buildSidebar('appointments');
-  
+
   // Load appointments
   loadAppointments();
-  
+
   // Setup event listeners
   setupEventListeners();
 });
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function checkAuthentication() {
   const doctorId = sessionStorage.getItem('doctorId');
   const doctorRole = sessionStorage.getItem('role');
-  
+
   if (!doctorId || doctorRole !== 'doctor') {
     window.location.href = '../../auth/login/login.html';
   }
@@ -30,28 +30,28 @@ async function loadAppointments() {
   const loadingState = document.getElementById('loadingState');
   const emptyState = document.getElementById('emptyState');
   const appointmentsList = document.getElementById('appointmentsList');
-  
+
   // Show loading
   loadingState.style.display = 'block';
   emptyState.style.display = 'none';
   appointmentsList.innerHTML = '';
-  
+
   try {
     const doctorId = sessionStorage.getItem('doctorId');
-    
+
     // Fetch appointments
     const appointmentsResponse = await fetch('http://localhost:8876/appointments');
     if (!appointmentsResponse.ok) throw new Error('Failed to fetch appointments');
-    
+
     const allAppts = await appointmentsResponse.json();
-    
+
     // Filter for this doctor
     allAppointments = allAppts.filter(apt => apt.doctorId === doctorId);
-    
+
     // Fetch all users to get patient info
     const usersResponse = await fetch('http://localhost:8877/users');
     const users = await usersResponse.json();
-    
+
     // Enrich appointments with patient data
     allAppointments = allAppointments.map(apt => {
       const patient = users.find(u => u.id === apt.patientId);
@@ -61,13 +61,13 @@ async function loadAppointments() {
         patientEmail: patient ? patient.email : ''
       };
     });
-    
+
     // Sort by date (newest first)
     sortAppointments('date');
-    
+
     // Display appointments
     displayAppointments(filteredAppointments);
-    
+
   } catch (error) {
     console.error('Error loading appointments:', error);
     loadingState.style.display = 'none';
@@ -81,18 +81,18 @@ function displayAppointments(appointments) {
   const loadingState = document.getElementById('loadingState');
   const emptyState = document.getElementById('emptyState');
   const appointmentsList = document.getElementById('appointmentsList');
-  
+
   loadingState.style.display = 'none';
-  
+
   if (appointments.length === 0) {
     appointmentsList.innerHTML = '';
     emptyState.style.display = 'block';
     return;
   }
-  
+
   emptyState.style.display = 'none';
   appointmentsList.innerHTML = '';
-  
+
   appointments.forEach(apt => {
     const item = createAppointmentItem(apt);
     appointmentsList.appendChild(item);
@@ -103,7 +103,7 @@ function createAppointmentItem(apt) {
   const div = document.createElement('div');
   div.className = 'appointment-item';
   div.dataset.appointmentId = apt.id;
-  
+
   // Date Column
   const dateDiv = document.createElement('div');
   dateDiv.className = 'appointment-date';
@@ -114,14 +114,14 @@ function createAppointmentItem(apt) {
     <span class="date-day">${day}</span>
     <span class="date-month">${month}</span>
   `;
-  
+
   // Info Column
   const infoDiv = document.createElement('div');
   infoDiv.className = 'appointment-info';
-  
+
   const initials = getInitials(apt.patientName);
   const bgClass = 'bg-' + ((apt.patientId.charCodeAt(apt.patientId.length - 1) % 6) + 1);
-  
+
   infoDiv.innerHTML = `
     <div class="appointment-header">
       <div class="patient-info-row">
@@ -147,16 +147,16 @@ function createAppointmentItem(apt) {
       </div>
     </div>
   `;
-  
+
   // Actions Column
   const actionsDiv = document.createElement('div');
   actionsDiv.className = 'appointment-actions';
-  
+
   const statusBadge = document.createElement('div');
   statusBadge.className = `status-badge-lg ${apt.status}`;
   statusBadge.textContent = apt.status.charAt(0).toUpperCase() + apt.status.slice(1);
   actionsDiv.appendChild(statusBadge);
-  
+
   // Action buttons based on status
   if (apt.status === 'pending') {
     const buttonsDiv = document.createElement('div');
@@ -167,13 +167,13 @@ function createAppointmentItem(apt) {
     acceptBtn.innerHTML = '<span class="material-symbols-outlined btn-icon">check</span>Accept';
     acceptBtn.onclick = () => changeStatus(apt, 'accepted');
     
-    const cancelBtn = document.createElement('button');
-    cancelBtn.className = 'btn btn-danger btn-sm';
-    cancelBtn.innerHTML = '<span class="material-symbols-outlined btn-icon">close</span>Cancel';
-    cancelBtn.onclick = () => changeStatus(apt, 'cancelled');
+    const rejectBtn = document.createElement('button');
+    rejectBtn.className = 'btn btn-danger btn-sm';
+    rejectBtn.innerHTML = '<span class="material-symbols-outlined btn-icon">close</span>Reject';
+    rejectBtn.onclick = () => changeStatus(apt, 'cancelled');
     
     buttonsDiv.appendChild(acceptBtn);
-    buttonsDiv.appendChild(cancelBtn);
+    buttonsDiv.appendChild(rejectBtn);
     actionsDiv.appendChild(buttonsDiv);
   } else if (apt.status === 'accepted') {
     const buttonsDiv = document.createElement('div');
@@ -187,11 +187,11 @@ function createAppointmentItem(apt) {
     buttonsDiv.appendChild(cancelBtn);
     actionsDiv.appendChild(buttonsDiv);
   }
-  
+
   div.appendChild(dateDiv);
   div.appendChild(infoDiv);
   div.appendChild(actionsDiv);
-  
+
   return div;
 }
 
@@ -204,7 +204,11 @@ function changeStatus(appointment, newStatus) {
   const modalDetails = document.getElementById('modalAppointmentDetails');
   const confirmBtn = document.getElementById('confirmBtn');
   
-  // Update modal content
+  if (!modal) {
+    alert('Error: Modal not found. Please refresh the page.');
+    return;
+  }
+  
   modalTitle.textContent = 'Change Appointment Status';
   modalMessage.textContent = `Are you sure you want to change this appointment status to "${newStatus.toUpperCase()}"?`;
   
@@ -231,11 +235,10 @@ function changeStatus(appointment, newStatus) {
     </div>
   `;
   
-  // Update confirm button style based on action
   confirmBtn.className = 'btn ';
   if (newStatus === 'accepted' || newStatus === 'completed') {
     confirmBtn.className += 'btn-success';
-  } else if (newStatus === 'denied') {
+  } else if (newStatus === 'cancelled') {
     confirmBtn.className += 'btn-danger';
   } else {
     confirmBtn.className += 'btn-primary';
@@ -246,94 +249,60 @@ function changeStatus(appointment, newStatus) {
 
 async function confirmStatusChange() {
   if (!currentAction) return;
-  
+
   const { appointment, newStatus } = currentAction;
   const modal = document.getElementById('statusModal');
-  
+
   try {
-    console.log('Updating appointment:', appointment.id, 'to status:', newStatus);
-    
-    // Update appointment status
     const response = await fetch(`http://localhost:8876/appointments/${appointment.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ status: newStatus })
+      body: JSON.stringify({ 
+        status: newStatus,
+        updatedAt: new Date().toISOString()
+      })
     });
-    
-    console.log('Response status:', response.status);
-    
+
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Error response:', errorText);
-      throw new Error('Failed to update appointment: ' + response.status);
+      throw new Error('Failed to update appointment');
     }
-    
-    const updatedAppointment = await response.json();
-    console.log('Updated appointment:', updatedAppointment);
-    
-    // Close modal
+
     modal.classList.remove('active');
     currentAction = null;
-    
-    // Reload appointments
     await loadAppointments();
-    
-    // Show success message
-    console.log('Appointment status updated successfully!');
-    
+
   } catch (error) {
     console.error('Error updating appointment:', error);
-    alert('Failed to update appointment status. Please make sure the JSON server is running on port 8876.\n\nError: ' + error.message);
+    alert('Failed to update appointment. Error: ' + error.message);
   }
 }
 
 function setupEventListeners() {
-  // Search Input
   const searchInput = document.getElementById('searchInput');
-  if (searchInput) {
-    searchInput.addEventListener('input', applyFilters);
-  }
-  
-  // Status Filter
   const statusFilter = document.getElementById('statusFilter');
-  if (statusFilter) {
-    statusFilter.addEventListener('change', applyFilters);
-  }
-  
-  // Date Filter
   const dateFilter = document.getElementById('dateFilter');
-  if (dateFilter) {
-    dateFilter.addEventListener('change', applyFilters);
-  }
-  
-  // Sort Filter
   const sortFilter = document.getElementById('sortFilter');
+  const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+  const refreshBtn = document.getElementById('refreshBtn');
+  const closeModal = document.getElementById('closeModal');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const confirmBtn = document.getElementById('confirmBtn');
+  const modal = document.getElementById('statusModal');
+  
+  if (searchInput) searchInput.addEventListener('input', applyFilters);
+  if (statusFilter) statusFilter.addEventListener('change', applyFilters);
+  if (dateFilter) dateFilter.addEventListener('change', applyFilters);
+  if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', clearFilters);
+  if (refreshBtn) refreshBtn.addEventListener('click', loadAppointments);
+  
   if (sortFilter) {
     sortFilter.addEventListener('change', function() {
       sortAppointments(this.value);
       displayAppointments(filteredAppointments);
     });
   }
-  
-  // Clear Filters Button
-  const clearFiltersBtn = document.getElementById('clearFiltersBtn');
-  if (clearFiltersBtn) {
-    clearFiltersBtn.addEventListener('click', clearFilters);
-  }
-  
-  // Refresh Button
-  const refreshBtn = document.getElementById('refreshBtn');
-  if (refreshBtn) {
-    refreshBtn.addEventListener('click', loadAppointments);
-  }
-  
-  // Modal Controls
-  const closeModal = document.getElementById('closeModal');
-  const cancelBtn = document.getElementById('cancelBtn');
-  const confirmBtn = document.getElementById('confirmBtn');
-  const modal = document.getElementById('statusModal');
   
   if (closeModal) {
     closeModal.addEventListener('click', () => {
@@ -353,7 +322,6 @@ function setupEventListeners() {
     confirmBtn.addEventListener('click', confirmStatusChange);
   }
   
-  // Close modal on background click
   if (modal) {
     modal.addEventListener('click', (e) => {
       if (e.target === modal) {
@@ -368,26 +336,26 @@ function applyFilters() {
   const searchTerm = document.getElementById('searchInput').value.toLowerCase();
   const statusValue = document.getElementById('statusFilter').value;
   const dateValue = document.getElementById('dateFilter').value;
-  
+
   filteredAppointments = allAppointments.filter(apt => {
     // Search filter
-    const matchesSearch = searchTerm === '' || 
+    const matchesSearch = searchTerm === '' ||
       apt.patientName.toLowerCase().includes(searchTerm) ||
       apt.patientId.toLowerCase().includes(searchTerm);
-    
+
     // Status filter
     const matchesStatus = statusValue === 'all' || apt.status === statusValue;
-    
+
     // Date filter
     const matchesDate = dateValue === '' || apt.date === dateValue;
-    
+
     return matchesSearch && matchesStatus && matchesDate;
   });
-  
+
   // Re-apply current sort
   const sortValue = document.getElementById('sortFilter').value;
   sortAppointments(sortValue);
-  
+
   displayAppointments(filteredAppointments);
 }
 
@@ -395,7 +363,7 @@ function sortAppointments(sortBy) {
   if (filteredAppointments.length === 0) {
     filteredAppointments = [...allAppointments];
   }
-  
+
   switch (sortBy) {
     case 'date':
       filteredAppointments.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -407,14 +375,14 @@ function sortAppointments(sortBy) {
       filteredAppointments.sort((a, b) => a.patientName.localeCompare(b.patientName));
       break;
     case 'status':
-      const statusOrder = { pending: 1, accepted: 2, completed: 3, cancelled: 4, denied: 5 };
+      const statusOrder = { pending: 1, accepted: 2, completed: 3, cancelled: 4 };
       filteredAppointments.sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
       break;
     case 'time':
       filteredAppointments.sort((a, b) => {
         const dateCompare = new Date(a.date) - new Date(b.date);
         if (dateCompare !== 0) return dateCompare;
-        
+
         const timeA = a.time.split(':').map(Number);
         const timeB = b.time.split(':').map(Number);
         return (timeA[0] * 60 + timeA[1]) - (timeB[0] * 60 + timeB[1]);
@@ -428,7 +396,7 @@ function clearFilters() {
   document.getElementById('statusFilter').value = 'all';
   document.getElementById('dateFilter').value = '';
   document.getElementById('sortFilter').value = 'date';
-  
+
   filteredAppointments = [...allAppointments];
   sortAppointments('date');
   displayAppointments(filteredAppointments);

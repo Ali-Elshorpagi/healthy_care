@@ -134,6 +134,32 @@
       "date": "2024-09-15",
       "icon": "science",
       "iconColor": "blue"
+    },
+    {
+      "id": "rec_1767466209875",
+      "patientId": "p_1767462806090",
+      "doctorId": "d_1767465016827",
+      "doctorName": "tarek",
+      "doctorSpecialization": "Orthopedics",
+      "type": "prescription",
+      "title": "Hell",
+      "description": "ekwsnpfbe",
+      "date": "2026-01-03",
+      "icon": "medication",
+      "iconColor": "blue"
+    },
+    {
+      "id": "rec_1767466270034",
+      "patientId": "p_1767462806090",
+      "doctorId": "d_1767465016827",
+      "doctorName": "tarek",
+      "doctorSpecialization": "Orthopedics",
+      "type": "prescription",
+      "title": "sadas",
+      "description": "asdsadsa",
+      "date": "2026-01-03",
+      "icon": "medication",
+      "iconColor": "blue"
     }
   ]
 }

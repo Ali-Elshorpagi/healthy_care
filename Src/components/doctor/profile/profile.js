@@ -49,7 +49,7 @@ async function loadProfile() {
 
   // Load license number from user data
   try {
-    let response = await fetch(`http://localhost:3000/users?email=${encodeURIComponent(email)}`);
+    let response = await fetch(`http://localhost:8877/users?email=${encodeURIComponent(email)}`);
     if (response.ok) {
       let users = await response.json();
       if (users.length > 0) {
@@ -140,7 +140,7 @@ async function getProfileImageUrl() {
   }
 
   try {
-    let response = await fetch(`http://localhost:3000/users/${userId}`);
+    let response = await fetch(`http://localhost:8877/users/${userId}`);
     if (response.ok) {
       let user = await response.json();
       if (user.profileImage) {
@@ -179,7 +179,7 @@ function setProfileImageCookie(imageData) {
 
 async function updateUserProfileImage(userId, imageData) {
   try {
-    let response = await fetch(`http://localhost:3000/users/${userId}`, {
+    let response = await fetch(`http://localhost:8877/users/${userId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
@@ -275,7 +275,7 @@ function setupForm() {
         }
 
         // Update user on server
-        let response = await fetch(`http://localhost:3000/users/${userId}`, {
+        let response = await fetch(`http://localhost:8877/users/${userId}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json'

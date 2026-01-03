@@ -1,135 +1,50 @@
 {
   "appointments": [
     {
-      "id": "apt_1767365556325",
-      "clinicId": "clinic1",
-      "doctorId": "d_1767370001000",
-      "date": "2026-01-24",
-      "time": "16:56",
-      "notes": "",
-      "patientId": "p_1767363125225",
-      "status": "pending",
-      "createdAt": "2026-01-02T14:52:36.325Z"
-    },
-    {
-      "id": "apt_1767450001001",
+      "id": "apt_1767464397512",
       "clinicId": "clinic1",
       "doctorId": "d_1767266500001",
-      "date": "2026-01-03",
-      "time": "09:00",
-      "type": "Post-Op Rehab",
-      "notes": "Follow-up after surgery",
-      "patientId": "p_1767131068065",
-      "status": "accepted",
-      "createdAt": "2026-01-02T15:00:00.000Z"
-    },
-    {
-      "id": "apt_1767450001002",
-      "clinicId": "clinic1",
-      "doctorId": "d_1767266500001",
-      "date": "2026-01-03",
-      "time": "10:30",
-      "type": "Sports Injury",
-      "notes": "Knee pain assessment",
-      "patientId": "p_1767450002001",
-      "status": "accepted",
-      "createdAt": "2026-01-02T15:10:00.000Z"
-    },
-    {
-      "id": "apt_1767450001003",
-      "clinicId": "clinic1",
-      "doctorId": "d_1767266500001",
-      "date": "2026-01-03",
-      "time": "13:00",
-      "type": "Initial Consultation",
-      "notes": "First visit",
-      "patientId": "p_1767450002002",
-      "status": "cancelled",
-      "createdAt": "2026-01-02T15:20:00.000Z"
-    },
-    {
-      "id": "apt_1767450001004",
-      "clinicId": "clinic1",
-      "doctorId": "d_1767266500001",
-      "date": "2026-01-03",
-      "time": "14:30",
-      "type": "Follow-up",
-      "notes": "Check progress",
-      "patientId": "p_1767450002003",
-      "status": "pending",
-      "createdAt": "2026-01-02T15:30:00.000Z"
-    },
-    {
-      "id": "apt_1767450001005",
-      "clinicId": "clinic1",
-      "doctorId": "d_1767266500001",
-      "date": "2026-01-03",
-      "time": "16:00",
-      "type": "Therapy Session",
-      "notes": "Physical therapy",
-      "patientId": "p_1767450002004",
-      "status": "pending",
-      "createdAt": "2026-01-02T15:40:00.000Z"
-    },
-    {
-      "id": "apt_1767450001006",
-      "clinicId": "clinic1",
-      "doctorId": "d_1767266500001",
-      "date": "2026-01-04",
-      "time": "09:30",
-      "type": "Consultation",
-      "notes": "Back pain treatment",
-      "patientId": "p_1767131068065",
-      "status": "pending",
-      "createdAt": "2026-01-02T16:00:00.000Z"
-    },
-    {
-      "id": "apt_1767450001007",
-      "clinicId": "clinic1",
-      "doctorId": "d_1767266500001",
-      "date": "2026-01-05",
-      "time": "11:00",
-      "type": "Review",
-      "notes": "Treatment review",
-      "patientId": "p_1767450002001",
-      "status": "accepted",
-      "createdAt": "2026-01-02T16:10:00.000Z"
-    },
-    {
-      "id": "apt_1767450001008",
-      "clinicId": "clinic1",
-      "doctorId": "d_1767266500001",
-      "date": "2026-01-02",
-      "time": "14:00",
-      "type": "Emergency",
-      "notes": "Urgent care needed",
-      "patientId": "p_1767450002002",
-      "status": "pending",
-      "createdAt": "2026-01-01T16:20:00.000Z"
-    },
-    {
-      "id": "apt_1767450001009",
-      "clinicId": "clinic1",
-      "doctorId": "d_1767266500001",
-      "date": "2026-01-01",
-      "time": "10:00",
-      "type": "Check-up",
-      "notes": "Regular check-up",
-      "patientId": "p_1767450002003",
-      "status": "pending",
-      "createdAt": "2025-12-31T16:30:00.000Z"
-    },
-    {
-      "id": "apt_1767462848901",
-      "clinicId": "clinic1",
-      "doctorId": "d_1767266500001",
-      "date": "2026-01-22",
-      "time": "19:58",
+      "date": "2026-01-27",
+      "time": "20:23",
       "notes": "",
       "patientId": "p_1767462806090",
       "status": "pending",
-      "createdAt": "2026-01-03T17:54:08.901Z",
-      "updatedAt": "2026-01-03T17:54:17.448Z"
+      "createdAt": "2026-01-03T18:19:57.512Z"
+    },
+    {
+      "id": "apt_1767464829687",
+      "clinicId": "clinic1",
+      "doctorId": "d_1767266500002",
+      "date": "2026-01-22",
+      "time": "20:31",
+      "notes": "",
+      "patientId": "p_1767462806090",
+      "status": "accepted",
+      "createdAt": "2026-01-03T18:27:09.687Z"
+    },
+    {
+      "id": "apt_1767465188590",
+      "clinicId": "clinic1",
+      "doctorId": "d_1767465016827",
+      "date": "2026-01-07",
+      "time": "20:36",
+      "notes": "",
+      "patientId": "p_1767462806090",
+      "status": "accepted",
+      "createdAt": "2026-01-03T18:33:08.590Z",
+      "updatedAt": "2026-01-03T18:33:18.801Z"
+    },
+    {
+      "id": "apt_1767466252339",
+      "clinicId": "clinic1",
+      "doctorId": "d_1767465016827",
+      "date": "2026-01-06",
+      "time": "20:54",
+      "notes": "",
+      "patientId": "p_1767462806090",
+      "status": "accepted",
+      "createdAt": "2026-01-03T18:50:52.339Z",
+      "updatedAt": "2026-01-03T18:51:01.043Z"
     }
   ]
 }

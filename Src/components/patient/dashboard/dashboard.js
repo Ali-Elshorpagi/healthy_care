@@ -6,92 +6,63 @@ document.addEventListener('DOMContentLoaded', function () {
   buildHeader();
   buildSidebar('dashboard');
   loadPatientInfo();
-  setupSearch();
+  loadDoctors();
+  loadUpcomingAppointments();
+  loadStats();
 });
 
-const allDoctors = [
-  {
-    id: 'doc1',
-    name: 'Dr. Sarah Johnson',
-    specialization: 'Cardiology',
-    clinic: 'City Medical Center',
-    rating: 4.9,
-    experience: '15 years',
-    image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200'
-  },
-  {
-    id: 'doc2',
-    name: 'Dr. Michael Chen',
-    specialization: 'General Practice',
-    clinic: 'General Hospital',
-    rating: 4.8,
-    experience: '12 years',
-    image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200'
-  },
-  {
-    id: 'doc3',
-    name: 'Dr. Emily Brown',
-    specialization: 'Dermatology',
-    clinic: 'City Medical Center',
-    rating: 4.7,
-    experience: '10 years',
-    image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=200'
-  },
-  {
-    id: 'doc4',
-    name: 'Dr. James Wilson',
-    specialization: 'Orthopedics',
-    clinic: 'Health Plus Clinic',
-    rating: 4.9,
-    experience: '18 years',
-    image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=200'
-  },
-  {
-    id: 'doc5',
-    name: 'Dr. Lisa Anderson',
-    specialization: 'Pediatrics',
-    clinic: 'General Hospital',
-    rating: 4.8,
-    experience: '14 years',
-    image: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=200'
-  },
-  {
-    id: 'doc6',
-    name: 'Dr. Robert Taylor',
-    specialization: 'Neurology',
-    clinic: 'Family Care Center',
-    rating: 4.9,
-    experience: '20 years',
-    image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=200'
-  },
-  {
-    id: 'doc7',
-    name: 'Dr. Maria Garcia',
-    specialization: 'Internal Medicine',
-    clinic: 'Health Plus Clinic',
-    rating: 4.7,
-    experience: '11 years',
-    image: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=200'
-  },
-  {
-    id: 'doc8',
-    name: 'Dr. David Lee',
-    specialization: 'Psychiatry',
-    clinic: 'Family Care Center',
-    rating: 4.8,
-    experience: '16 years',
-    image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=200'
-  }
-];
-
+let allDoctors = [];
 let selectedSuggestionIndex = -1;
 
+async function loadDoctors() {
+  try {
+    const response = await fetch('../../../database/users.json');
+    const data = await response.json();
+
+    allDoctors = data.users
+      .filter(user => user.role === 'doctor' && user.approved === 'approved')
+      .map(doctor => ({
+        id: doctor.id,
+        name: doctor.fullName,
+        specialization: doctor.specialization || 'General Practice',
+        clinic: 'City Medical Center',
+        rating: 4.8,
+        experience: '10 years',
+        image: doctor.profileImage || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200'
+      }));
+
+    setupSearch();
+  } catch (error) {
+    console.error('Error loading doctors:', error);
+    allDoctors = [];
+    setupSearch();
+  }
+}
+
 function loadPatientInfo() {
-  let name = sessionStorage.getItem('patientName') || 'Sarah';
+  const name = sessionStorage.getItem('patientName') || sessionStorage.getItem('userName') || 'Sarah';
   let firstName = name.split(' ')[0];
   let welcome = document.getElementById('welcomeText');
   if (welcome) {
     welcome.textContent = 'Welcome Back, ' + firstName;
+  }
+}
+
+async function loadStats() {
+  try {
+    const response = await fetch('../../../database/users.json');
+    const data = await response.json();
+
+    const patients = data.users.filter(user => user.role === 'patient');
+    const doctors = data.users.filter(user => user.role === 'doctor' && user.approved === 'approved');
+
+    const patientsCountEl = document.getElementById('patientsCount');
+    const doctorsCountEl = document.getElementById('doctorsCount');
+
+    if (patientsCountEl) patientsCountEl.textContent = patients.length.toLocaleString();
+    if (doctorsCountEl) doctorsCountEl.textContent = doctors.length.toLocaleString();
+  } catch (error) {
+    console.error('Error loading stats:', error);
   }
 }
 
@@ -280,9 +251,7 @@ function displaySearchResults(results) {
           <span class="material-symbols-outlined">calendar_add_on</span>
           Book Appointment
         </button>
-        <button class="btn btn-secondary" onclick="viewProfile('${doctor.id}')">
-          View Profile
-        </button>
+
       </div>
     </div>
   `).join('');
@@ -292,7 +261,177 @@ function bookAppointment(doctorId) {
   window.location.href = `../appointments/book-appointment.html?doctorId=${doctorId}`;
 }
 
-function viewProfile(doctorId) {
-  console.log('View profile for doctor:', doctorId);
-  alert('Doctor profile feature coming soon!');
+async function loadUpcomingAppointments() {
+  try {
+    const userId = sessionStorage.getItem('userId') || sessionStorage.getItem('patientId');
+
+    if (!userId) {
+      displayNoAppointments();
+      return;
+    }
+
+    const [appointmentsResponse, usersResponse] = await Promise.all([
+      fetch('../../../database/appointments.json'),
+      fetch('../../../database/users.json')
+    ]);
+
+    const appointmentsData = await appointmentsResponse.json();
+    const usersData = await usersResponse.json();
+
+    const patientAppointments = appointmentsData.appointments
+      .filter(apt => apt.patientId === userId && apt.status !== 'cancelled')
+      .map(apt => {
+        const doctor = usersData.users.find(u => u.id === apt.doctorId);
+        return {
+          ...apt,
+          doctor: doctor || {
+            id: apt.doctorId,
+            fullName: 'Doctor',
+            specialization: 'General Practice',
+            profileImage: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400'
+          }
+        };
+      });
+
+    const now = new Date();
+
+    const upcomingAppointments = patientAppointments
+      .filter(apt => {
+        const appointmentDate = new Date(apt.date + 'T' + apt.time);
+        return appointmentDate >= now;
+      })
+      .sort((a, b) => {
+        const dateA = new Date(a.date + 'T' + a.time);
+        const dateB = new Date(b.date + 'T' + b.time);
+        return dateA - dateB;
+      });
+
+    const pastAppointments = patientAppointments
+      .filter(apt => {
+        const appointmentDate = new Date(apt.date + 'T' + apt.time);
+        return appointmentDate < now;
+      })
+      .sort((a, b) => {
+        const dateA = new Date(a.date + 'T' + a.time);
+        const dateB = new Date(b.date + 'T' + b.time);
+        return dateB - dateA;
+      });
+
+    if (upcomingAppointments.length > 0) {
+      displayUpcomingAppointments(upcomingAppointments);
+    } else if (pastAppointments.length > 0) {
+      displayUpcomingAppointments([pastAppointments[0]]);
+    } else {
+      displayNoAppointments();
+    }
+
+  } catch (error) {
+    console.error('Error loading appointments:', error);
+    displayNoAppointments();
+  }
+}
+
+function displayUpcomingAppointments(appointments) {
+  const featuredAppt = document.querySelector('.featured-appt');
+  if (!featuredAppt) return;
+
+  const firstAppointment = appointments[0];
+  const doctor = firstAppointment.doctor;
+
+  // Format date and time
+  const appointmentDate = new Date(firstAppointment.date + 'T' + firstAppointment.time);
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  let dateString;
+  if (appointmentDate.toDateString() === today.toDateString()) {
+    dateString = 'Today';
+  } else if (appointmentDate.toDateString() === tomorrow.toDateString()) {
+    dateString = 'Tomorrow';
+  } else {
+    dateString = appointmentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  const timeString = appointmentDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+
+  // Determine badge class based on status
+  let statusBadgeClass = 'badge-green';
+  let statusText = 'Confirmed';
+  if (firstAppointment.status === 'pending') {
+    statusBadgeClass = 'badge-yellow';
+    statusText = 'Pending';
+  } else if (firstAppointment.status === 'accepted') {
+    statusBadgeClass = 'badge-green';
+    statusText = 'Confirmed';
+  }
+
+  featuredAppt.innerHTML = `
+    <div class="top" style="cursor: pointer;" onclick="window.location.href='../appointments/appointments.html'">
+      <div class="img-col">
+        <img
+          src="${doctor.profileImage || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400'}"
+          alt="${doctor.fullName}"
+        />
+      </div>
+      <div class="info-col">
+        <div class="badges">
+          <span class="badge ${statusBadgeClass}">${statusText}</span>
+          ${firstAppointment.type ? `<span class="badge badge-purple">${firstAppointment.type}</span>` : ''}
+        </div>
+        <h3>Appointment with ${doctor.fullName}</h3>
+        <p class="desc">${firstAppointment.notes || doctor.specialization || 'Medical consultation'}</p>
+        <div class="meta-row">
+          <span class="material-symbols-outlined icon">schedule</span>
+          ${dateString}, ${timeString}
+        </div>
+        <div class="meta-row">
+          <span class="material-symbols-outlined icon">local_hospital</span>
+          ${doctor.specialization || 'General Practice'}
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="event.stopPropagation(); window.location.href='../appointments/appointments.html'">View Details</button>
+          <button class="btn btn-secondary" onclick="event.stopPropagation(); window.location.href='../appointments/appointments.html'">Reschedule</button>
+        </div>
+      </div>
+    </div>
+    ${appointments.length > 1 ? appointments.slice(1, 2).map(apt => {
+    const aptDate = new Date(apt.date + 'T' + apt.time);
+    return `
+        <div class="simple-list-item" style="cursor: pointer;" onclick="window.location.href='../appointments/appointments.html'">
+          <div class="icon-col">
+            <span class="list-icon purple">
+              <span class="material-symbols-outlined">calendar_month</span>
+            </span>
+          </div>
+          <div class="content-col">
+            <h4>Appointment with ${apt.doctor.fullName}</h4>
+            <p>${aptDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} • ${apt.doctor.specialization || 'General Practice'}</p>
+          </div>
+          <div class="arrow-col">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </div>
+        </div>
+      `;
+  }).join('') : ''}
+  `;
+}
+
+function displayNoAppointments() {
+  const featuredAppt = document.querySelector('.featured-appt');
+  if (!featuredAppt) return;
+
+  featuredAppt.innerHTML = `
+    <div class="top" style="text-align: center; padding: 40px;">
+      <div style="opacity: 0.5;">
+        <span class="material-symbols-outlined" style="font-size: 64px; color: #6366f1;">event_busy</span>
+        <h3 style="margin-top: 16px; color: #64748b;">No Upcoming Appointments</h3>
+        <p style="color: #94a3b8; margin-bottom: 24px;">Book an appointment with a doctor to get started</p>
+        <button class="btn btn-primary" onclick="window.location.href='../appointments/book-appointment.html'">
+          <span class="material-symbols-outlined">add</span>
+          Book Appointment
+        </button>
+      </div>
+    </div>
+  `;
 }
