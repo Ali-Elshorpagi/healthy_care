@@ -6,34 +6,13 @@
     <title>About Us - Healthy</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
-    <link rel="stylesheet" href="../navbar-unauth.css">
+    <link rel="stylesheet" href="../../shared/header.css">
     <link rel="stylesheet" href="../footer.css">
     <link rel="stylesheet" href="About_Us.css">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav id="navbar" class="navbar">
-        <div class="navbar-inner">
-            <div class="navbar-left">
-                <a href="../../../index.html" class="logo">
-                    <span class="material-symbols-outlined logo-icon">add</span>
-                    <span class="logo-text">Healthy</span>
-                </a>
-            </div>
-            <div class="navbar-center">
-                <div class="nav-links">
-                    <a href="../../../index.html">Home</a>
-                    <a href="About_Us.html">About Us</a>
-                    <a href="../FAQs/FAQs.html">FAQs</a>
-                    <a href="../Contact/Contact.html">Contact Us</a>
-                </div>
-            </div>
-            <div class="navbar-right">
-                <button id="loginBtn" class="btn btn-outline">Login</button>
-                <button id="registerBtn" class="btn btn-primary">Register</button>
-            </div>
-        </div>
-    </nav>
+    <!-- Header -->
+    <div id="header-slot"></div>
     <div id="container">
         <div id="con1">
             <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfILBcm2rvBvccuI-MDWa3_YpxjyA3ty61hO95p8kobHEH-ZUjFy2hBcWlW4gfpiL5JbZxGQzcAS30DUbhRyZUKkRhDYpXFlqH7ggAZiM16bbOtYkfDOmJEGBwc3T_o8acENAMtRDCx34S3TCAVoEVAJcapxdI0OeO3fOuyYUHhSxUTqSC62pwjv6wUpLrqW5tHEt7y6hmrRU9ZXZF1eBnyl9hyJzftpTOz8wjrYfHMaDiHLMOnXh6hqIA0n2A09S-Rubz7-F1aZXy" alt="">
@@ -174,25 +153,8 @@ partner in wellness.
 
     <script src="../../utilities/LoadFooterAndNavBar.js"></script>
     <script>
+        loadHeader({ path: '../../shared/header.html' });
         loadFooter({ path: '../footer.html' });
-        
-        // Handle navbar button clicks
-        (function() {
-            var loginBtn = document.getElementById('loginBtn');
-            var registerBtn = document.getElementById('registerBtn');
-
-            if (loginBtn) {
-                loginBtn.addEventListener('click', function() {
-                    window.location.href = '../auth/login/login.html';
-                });
-            }
-
-            if (registerBtn) {
-                registerBtn.addEventListener('click', function() {
-                    window.location.href = '../auth/register/register.html';
-                });
-            }
-        })();
     </script>
 </body>
 </html>

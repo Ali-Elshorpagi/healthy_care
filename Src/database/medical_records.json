@@ -160,6 +160,19 @@
       "date": "2026-01-03",
       "icon": "medication",
       "iconColor": "blue"
+    },
+    {
+      "id": "rec_1767468248481",
+      "patientId": "p_1767363105994",
+      "doctorId": "d_1767266500002",
+      "doctorName": "Dr. Omar Adel",
+      "doctorSpecialization": "Dermatology",
+      "type": "diagnosis",
+      "title": "ado;vb",
+      "description": "ojvdba",
+      "date": "2026-01-03",
+      "icon": "favorite",
+      "iconColor": "red"
     }
   ]
 }

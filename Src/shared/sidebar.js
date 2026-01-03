@@ -1,4 +1,5 @@
-let menuItems = [
+// Patient sidebar menu items
+var patientMenuItems = [
   {
     id: 'dashboard',
     label: 'Home',
@@ -26,19 +27,21 @@ let menuItems = [
 ];
 
 function buildSidebar(activePage) {
-  let sidebar = document.getElementById('sidebar');
+  var sidebar = document.getElementById('sidebar');
   if (!sidebar) return;
 
-  let html = '<div class="sidebar-menu">';
+  var html = '<div class="sidebar-menu">';
   html += '<p class="sidebar-label">Patient Menu</p>';
   html += '<ul class="sidebar-nav">';
 
-  for (let i = 0; i < menuItems.length; ++i) {
-    let item = menuItems[i];
-    let isActive = item.id === activePage;
+  for (var i = 0; i < patientMenuItems.length; i++) {
+    var item = patientMenuItems[i];
+    var isActive = item.id === activePage;
     html += '<li>';
-    html += '<a href="' + item.href + '"' + (isActive ? ' class="active"' : '') + '>';
-    html += '<span class="material-symbols-outlined icon">' + item.icon + '</span>';
+    html +=
+      '<a href="' + item.href + '"' + (isActive ? ' class="active"' : '') + '>';
+    html +=
+      '<span class="material-symbols-outlined icon">' + item.icon + '</span>';
     html += item.label;
     html += '</a></li>';
   }
@@ -51,7 +54,7 @@ function buildSidebar(activePage) {
 
   sidebar.innerHTML = html;
 
-  let logoutBtn = document.getElementById('logoutBtn');
+  var logoutBtn = document.getElementById('logoutBtn');
   if (logoutBtn) {
     logoutBtn.onclick = function (e) {
       e.preventDefault();
@@ -68,18 +71,19 @@ function buildSidebar(activePage) {
 }
 
 function buildHeader() {
-  let header = document.getElementById('header');
+  var header = document.getElementById('header');
   if (!header) return;
 
-  let name = sessionStorage.getItem('patientName') || 'User';
+  var name = sessionStorage.getItem('patientName') || 'User';
 
-  let html = '<div class="header-inner">';
+  var html = '<div class="header-inner">';
   html += '<div class="header-left">';
   html += '<a href="../dashboard/dashboard.html" class="logo">';
   html += '<span class="material-symbols-outlined logo-icon">add</span>';
   html += '<span class="logo-text">Healthy</span></a></div>';
   html += '<div class="header-center">';
   html += '<div class="nav-links">';
+  html += '<a href="../../../../index.html">Home</a>';
   html += '<a href="../../About_us/About_Us.html">About Us</a>';
   html += '<a href="../../FAQs/FAQs.html">FAQs</a>';
   html += '<a href="../../Contact/Contact.html">Contact Us</a></div>';
@@ -87,15 +91,15 @@ function buildHeader() {
   html += '<div class="header-right">';
   html += '<a href="../profile/profile.html" class="header-avatar">';
 
-  let userId = sessionStorage.getItem('userId');
-  let imageSrc = '/Src/assets/images/default-avatar.svg';
+  var userId = sessionStorage.getItem('userId');
+  var imageSrc = '/Src/assets/images/default-avatar.svg';
 
   if (userId) {
-    let tempImage = localStorage.getItem(`imageFile_${userId}`);
+    var tempImage = localStorage.getItem('imageFile_' + userId);
     if (tempImage) {
       imageSrc = tempImage;
     } else {
-      let cookieImage = getProfileImageCookie();
+      var cookieImage = getProfileImageCookie();
       if (cookieImage) {
         imageSrc = cookieImage;
       }
@@ -109,18 +113,18 @@ function buildHeader() {
 }
 
 function getProfileImageCookie() {
-  let name = "profileImage=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(';');
+  var name = 'profileImage=';
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
 
-  for (let i = 0; i < ca.length; ++i) {
-    let c = ca[i];
-    while (c.charAt(0) == ' ') {
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) === ' ') {
       c = c.substring(1);
     }
-    if (c.indexOf(name) == 0) {
+    if (c.indexOf(name) === 0) {
       return c.substring(name.length, c.length);
     }
   }
-  return "";
+  return '';
 }
