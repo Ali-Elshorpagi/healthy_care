@@ -45,22 +45,30 @@ async function loadAppointments() {
 
     const allAppts = await appointmentsResponse.json();
 
-    // Filter for this doctor
-    allAppointments = allAppts.filter(apt => apt.doctorId === doctorId);
-
     // Fetch all users to get patient info
     const usersResponse = await fetch('http://localhost:8877/users');
     const users = await usersResponse.json();
 
-    // Enrich appointments with patient data
-    allAppointments = allAppointments.map(apt => {
-      const patient = users.find(u => u.id === apt.patientId);
-      return {
-        ...apt,
-        patientName: patient ? patient.fullName : 'Unknown Patient',
-        patientEmail: patient ? patient.email : ''
-      };
-    });
+    // Get list of existing patient IDs
+    const existingPatientIds = users
+      .filter(user => user.role === 'patient')
+      .map(p => p.id);
+
+    // Filter for this doctor, exclude deleted, and only show appointments with existing patients
+    allAppointments = allAppts
+      .filter(apt =>
+        apt.doctorId === doctorId &&
+        !apt.isDeleted &&
+        existingPatientIds.includes(apt.patientId)
+      )
+      .map(apt => {
+        const patient = users.find(u => u.id === apt.patientId);
+        return {
+          ...apt,
+          patientName: patient ? patient.fullName : 'Unknown Patient',
+          patientEmail: patient ? patient.email : ''
+        };
+      });
 
     // Sort by date (newest first)
     sortAppointments('date');

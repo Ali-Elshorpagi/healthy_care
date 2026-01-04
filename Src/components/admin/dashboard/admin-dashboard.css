@@ -261,6 +261,36 @@ body {
     color: #111827;
 }
 
+.pill.danger {
+    background: rgba(220, 38, 38, 0.08);
+    border-color: rgba(220, 38, 38, 0.25);
+    color: #dc2626;
+}
+
+.pill.success {
+    background: rgba(22, 163, 74, 0.08);
+    border-color: rgba(22, 163, 74, 0.25);
+    color: #16a34a;
+}
+
+.pill.primary {
+    background: rgba(37, 99, 235, 0.08);
+    border-color: rgba(37, 99, 235, 0.25);
+    color: #2563eb;
+}
+
+.pill.secondary {
+    background: rgba(107, 114, 128, 0.08);
+    border-color: rgba(107, 114, 128, 0.25);
+    color: #6b7280;
+}
+
+.pill.warning {
+    background: rgba(245, 158, 11, 0.08);
+    border-color: rgba(245, 158, 11, 0.25);
+    color: #d97706;
+}
+
 .table input,
 .table select {
     width: 100%;

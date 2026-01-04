@@ -16,19 +16,23 @@ let selectedSuggestionIndex = -1;
 
 async function loadDoctors() {
   try {
-    const response = await fetch('../../../database/users.json');
-    const data = await response.json();
+    const response = await fetch('http://localhost:8877/users');
+    if (!response.ok) throw new Error('Failed to fetch doctors');
 
-    allDoctors = data.users
-      .filter(user => user.role === 'doctor' && user.approved === 'approved')
-      .map(doctor => ({
+    const allUsers = await response.json();
+
+    allDoctors = allUsers
+      .filter((user) => user.role === 'doctor' && user.approved === 'approved')
+      .map((doctor) => ({
         id: doctor.id,
         name: doctor.fullName,
         specialization: doctor.specialization || 'General Practice',
-        clinic: 'City Medical Center',
+        clinic: doctor.clinicName || 'City Medical Center',
         rating: 4.8,
         experience: '10 years',
-        image: doctor.profileImage || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200'
+        image:
+          doctor.profileImage ||
+          'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200',
       }));
 
     setupSearch();
@@ -40,7 +44,10 @@ async function loadDoctors() {
 }
 
 function loadPatientInfo() {
-  const name = sessionStorage.getItem('patientName') || sessionStorage.getItem('userName') || 'Sarah';
+  const name =
+    sessionStorage.getItem('patientName') ||
+    sessionStorage.getItem('userName') ||
+    'Sarah';
   let firstName = name.split(' ')[0];
   let welcome = document.getElementById('welcomeText');
   if (welcome) {
@@ -53,14 +60,18 @@ async function loadStats() {
     const response = await fetch('../../../database/users.json');
     const data = await response.json();
 
-    const patients = data.users.filter(user => user.role === 'patient');
-    const doctors = data.users.filter(user => user.role === 'doctor' && user.approved === 'approved');
+    const patients = data.users.filter((user) => user.role === 'patient');
+    const doctors = data.users.filter(
+      (user) => user.role === 'doctor' && user.approved === 'approved'
+    );
 
     const patientsCountEl = document.getElementById('patientsCount');
     const doctorsCountEl = document.getElementById('doctorsCount');
 
-    if (patientsCountEl) patientsCountEl.textContent = patients.length.toLocaleString();
-    if (doctorsCountEl) doctorsCountEl.textContent = doctors.length.toLocaleString();
+    if (patientsCountEl)
+      patientsCountEl.textContent = patients.length.toLocaleString();
+    if (doctorsCountEl)
+      doctorsCountEl.textContent = doctors.length.toLocaleString();
   } catch (error) {
     console.error('Error loading stats:', error);
   }
@@ -72,18 +83,36 @@ function setupSearch() {
   const suggestionsContainer = document.getElementById('searchSuggestions');
   const clearSearchBtn = document.getElementById('clearSearch');
 
+  // Show all doctors when input is focused
+  searchInput.addEventListener('focus', function () {
+    const query = this.value.toLowerCase().trim();
+    if (query.length === 0) {
+      displaySearchSuggestions(allDoctors);
+    } else {
+      const matches = allDoctors.filter(
+        (doctor) =>
+          doctor.name.toLowerCase().includes(query) ||
+          doctor.specialization.toLowerCase().includes(query) ||
+          doctor.clinic.toLowerCase().includes(query)
+      );
+      displaySearchSuggestions(matches);
+    }
+  });
+
   searchInput.addEventListener('input', function () {
     const query = this.value.toLowerCase().trim();
 
+    // Show all doctors if input is empty, otherwise filter
     if (query.length === 0) {
-      suggestionsContainer.classList.remove('show');
+      displaySearchSuggestions(allDoctors);
       return;
     }
 
-    const matches = allDoctors.filter(doctor =>
-      doctor.name.toLowerCase().includes(query) ||
-      doctor.specialization.toLowerCase().includes(query) ||
-      doctor.clinic.toLowerCase().includes(query)
+    const matches = allDoctors.filter(
+      (doctor) =>
+        doctor.name.toLowerCase().includes(query) ||
+        doctor.specialization.toLowerCase().includes(query) ||
+        doctor.clinic.toLowerCase().includes(query)
     );
 
     displaySearchSuggestions(matches);
@@ -96,11 +125,16 @@ function setupSearch() {
   }
 
   searchInput.addEventListener('keydown', function (e) {
-    const suggestions = suggestionsContainer.querySelectorAll('.search-suggestion-item');
+    const suggestions = suggestionsContainer.querySelectorAll(
+      '.search-suggestion-item'
+    );
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, suggestions.length - 1);
+      selectedSuggestionIndex = Math.min(
+        selectedSuggestionIndex + 1,
+        suggestions.length - 1
+      );
       updateActiveSuggestion(suggestions);
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
@@ -128,7 +162,10 @@ function setupSearch() {
   }
 
   document.addEventListener('click', function (e) {
-    if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+    if (
+      !searchInput.contains(e.target) &&
+      !suggestionsContainer.contains(e.target)
+    ) {
       suggestionsContainer.classList.remove('show');
     }
   });
@@ -140,12 +177,14 @@ function displaySearchSuggestions(doctors) {
   selectedSuggestionIndex = -1;
 
   if (doctors.length === 0) {
-    suggestionsContainer.innerHTML = '<div class="no-suggestions">No doctors found</div>';
+    suggestionsContainer.innerHTML =
+      '<div class="no-suggestions">No doctors found</div>';
     suggestionsContainer.classList.add('show');
     return;
   }
 
-  doctors.slice(0, 5).forEach((doctor, index) => {
+  // Show all doctors (not limited to 5)
+  doctors.forEach((doctor, index) => {
     const item = document.createElement('div');
     item.className = 'search-suggestion-item';
     item.innerHTML = `
@@ -185,7 +224,10 @@ function updateActiveSuggestion(suggestions) {
 }
 
 function performSearch() {
-  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  const query = document
+    .getElementById('searchInput')
+    .value.toLowerCase()
+    .trim();
   const clinicType = document.getElementById('clinicTypeSelect').value;
 
   if (!query) {
@@ -194,14 +236,15 @@ function performSearch() {
 
   document.getElementById('searchSuggestions').classList.remove('show');
 
-  let results = allDoctors.filter(doctor =>
-    doctor.name.toLowerCase().includes(query) ||
-    doctor.specialization.toLowerCase().includes(query) ||
-    doctor.clinic.toLowerCase().includes(query)
+  let results = allDoctors.filter(
+    (doctor) =>
+      doctor.name.toLowerCase().includes(query) ||
+      doctor.specialization.toLowerCase().includes(query) ||
+      doctor.clinic.toLowerCase().includes(query)
   );
 
   if (clinicType) {
-    results = results.filter(doctor =>
+    results = results.filter((doctor) =>
       doctor.specialization.toLowerCase().includes(clinicType.toLowerCase())
     );
   }
@@ -228,7 +271,9 @@ function displaySearchResults(results) {
     return;
   }
 
-  resultsContent.innerHTML = results.map(doctor => `
+  resultsContent.innerHTML = results
+    .map(
+      (doctor) => `
     <div class="doctor-result-card">
       <div class="doctor-image">
         <img src="${doctor.image}" alt="${doctor.name}" />
@@ -254,7 +299,9 @@ function displaySearchResults(results) {
 
       </div>
     </div>
-  `).join('');
+  `
+    )
+    .join('');
 }
 
 function bookAppointment(doctorId) {
@@ -263,7 +310,8 @@ function bookAppointment(doctorId) {
 
 async function loadUpcomingAppointments() {
   try {
-    const userId = sessionStorage.getItem('userId') || sessionStorage.getItem('patientId');
+    const userId =
+      sessionStorage.getItem('userId') || sessionStorage.getItem('patientId');
 
     if (!userId) {
       displayNoAppointments();
@@ -272,31 +320,43 @@ async function loadUpcomingAppointments() {
 
     const [appointmentsResponse, usersResponse] = await Promise.all([
       fetch('../../../database/appointments.json'),
-      fetch('../../../database/users.json')
+      fetch('../../../database/users.json'),
     ]);
 
     const appointmentsData = await appointmentsResponse.json();
     const usersData = await usersResponse.json();
 
+    // Get list of existing approved doctor IDs
+    const existingDoctorIds = usersData.users
+      .filter((user) => user.role === 'doctor' && user.approved === 'approved')
+      .map((doc) => doc.id);
+
     const patientAppointments = appointmentsData.appointments
-      .filter(apt => apt.patientId === userId && apt.status !== 'cancelled')
-      .map(apt => {
-        const doctor = usersData.users.find(u => u.id === apt.doctorId);
+      .filter(
+        (apt) =>
+          apt.patientId === userId &&
+          apt.status !== 'cancelled' &&
+          !apt.isDeleted &&
+          existingDoctorIds.includes(apt.doctorId)
+      )
+      .map((apt) => {
+        const doctor = usersData.users.find((u) => u.id === apt.doctorId);
         return {
           ...apt,
           doctor: doctor || {
             id: apt.doctorId,
             fullName: 'Doctor',
             specialization: 'General Practice',
-            profileImage: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400'
-          }
+            profileImage:
+              'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400',
+          },
         };
       });
 
     const now = new Date();
 
     const upcomingAppointments = patientAppointments
-      .filter(apt => {
+      .filter((apt) => {
         const appointmentDate = new Date(apt.date + 'T' + apt.time);
         return appointmentDate >= now;
       })
@@ -307,7 +367,7 @@ async function loadUpcomingAppointments() {
       });
 
     const pastAppointments = patientAppointments
-      .filter(apt => {
+      .filter((apt) => {
         const appointmentDate = new Date(apt.date + 'T' + apt.time);
         return appointmentDate < now;
       })
@@ -324,7 +384,6 @@ async function loadUpcomingAppointments() {
     } else {
       displayNoAppointments();
     }
-
   } catch (error) {
     console.error('Error loading appointments:', error);
     displayNoAppointments();
@@ -339,7 +398,9 @@ function displayUpcomingAppointments(appointments) {
   const doctor = firstAppointment.doctor;
 
   // Format date and time
-  const appointmentDate = new Date(firstAppointment.date + 'T' + firstAppointment.time);
+  const appointmentDate = new Date(
+    firstAppointment.date + 'T' + firstAppointment.time
+  );
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -350,10 +411,18 @@ function displayUpcomingAppointments(appointments) {
   } else if (appointmentDate.toDateString() === tomorrow.toDateString()) {
     dateString = 'Tomorrow';
   } else {
-    dateString = appointmentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    dateString = appointmentDate.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
   }
 
-  const timeString = appointmentDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  const timeString = appointmentDate.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
 
   // Determine badge class based on status
   let statusBadgeClass = 'badge-green';
@@ -370,17 +439,28 @@ function displayUpcomingAppointments(appointments) {
     <div class="top" style="cursor: pointer;" onclick="window.location.href='../appointments/appointments.html'">
       <div class="img-col">
         <img
-          src="${doctor.profileImage || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400'}"
+          src="${
+            doctor.profileImage ||
+            'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400'
+          }"
           alt="${doctor.fullName}"
         />
       </div>
       <div class="info-col">
         <div class="badges">
           <span class="badge ${statusBadgeClass}">${statusText}</span>
-          ${firstAppointment.type ? `<span class="badge badge-purple">${firstAppointment.type}</span>` : ''}
+          ${
+            firstAppointment.type
+              ? `<span class="badge badge-purple">${firstAppointment.type}</span>`
+              : ''
+          }
         </div>
         <h3>Appointment with ${doctor.fullName}</h3>
-        <p class="desc">${firstAppointment.notes || doctor.specialization || 'Medical consultation'}</p>
+        <p class="desc">${
+          firstAppointment.notes ||
+          doctor.specialization ||
+          'Medical consultation'
+        }</p>
         <div class="meta-row">
           <span class="material-symbols-outlined icon">schedule</span>
           ${dateString}, ${timeString}
@@ -395,9 +475,13 @@ function displayUpcomingAppointments(appointments) {
         </div>
       </div>
     </div>
-    ${appointments.length > 1 ? appointments.slice(1, 2).map(apt => {
-    const aptDate = new Date(apt.date + 'T' + apt.time);
-    return `
+    ${
+      appointments.length > 1
+        ? appointments
+            .slice(1, 2)
+            .map((apt) => {
+              const aptDate = new Date(apt.date + 'T' + apt.time);
+              return `
         <div class="simple-list-item" style="cursor: pointer;" onclick="window.location.href='../appointments/appointments.html'">
           <div class="icon-col">
             <span class="list-icon purple">
@@ -406,14 +490,21 @@ function displayUpcomingAppointments(appointments) {
           </div>
           <div class="content-col">
             <h4>Appointment with ${apt.doctor.fullName}</h4>
-            <p>${aptDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} • ${apt.doctor.specialization || 'General Practice'}</p>
+            <p>${aptDate.toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+            })} • ${apt.doctor.specialization || 'General Practice'}</p>
           </div>
           <div class="arrow-col">
             <span class="material-symbols-outlined">chevron_right</span>
           </div>
         </div>
       `;
-  }).join('') : ''}
+            })
+            .join('')
+        : ''
+    }
   `;
 }
 

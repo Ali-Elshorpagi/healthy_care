@@ -51,34 +51,21 @@ async function loadDoctors() {
 
     const allUsers = await response.json();
 
-    // Filter only doctors
-    doctorsData = allUsers.filter(user => user.role === 'doctor').map(doctor => ({
-      id: doctor.id,
-      name: doctor.fullName,
-      specialization: doctor.specialization || 'General Practice',
-      clinicId: doctor.clinicId || 'clinic1',
-      clinicName: doctor.clinicName || 'City Medical Center'
-    }));
+    // Filter only approved doctors
+    doctorsData = allUsers
+      .filter(user => user.role === 'doctor' && user.approved === 'approved')
+      .map(doctor => ({
+        id: doctor.id,
+        name: doctor.fullName,
+        specialization: doctor.specialization || 'General Practice',
+        clinicId: doctor.clinicId || 'clinic1',
+        clinicName: doctor.clinicName || 'City Medical Center'
+      }));
 
     filteredDoctors = doctorsData;
   } catch (error) {
     console.error('Error loading doctors:', error);
-    doctorsData = [
-      {
-        id: 'doc1',
-        name: 'Dr. Sarah Johnson',
-        specialization: 'Cardiology',
-        clinicId: 'clinic1',
-        clinicName: 'City Medical Center'
-      },
-      {
-        id: 'doc2',
-        name: 'Dr. Michael Chen',
-        specialization: 'General Practice',
-        clinicId: 'clinic2',
-        clinicName: 'General Hospital'
-      }
-    ];
+    doctorsData = [];
     filteredDoctors = doctorsData;
   }
 }
@@ -114,11 +101,26 @@ function setupDoctorAutocomplete() {
   const doctorInput = document.getElementById('doctorInput');
   const suggestionsContainer = document.getElementById('doctorSuggestions');
 
+  // Show all doctors when input is focused
+  doctorInput.addEventListener('focus', function () {
+    const searchTerm = this.value.toLowerCase().trim();
+    if (searchTerm.length === 0) {
+      displaySuggestions(filteredDoctors);
+    } else {
+      const matches = filteredDoctors.filter(doctor =>
+        doctor.name.toLowerCase().includes(searchTerm) ||
+        doctor.specialization.toLowerCase().includes(searchTerm)
+      );
+      displaySuggestions(matches);
+    }
+  });
+
   doctorInput.addEventListener('input', function () {
     const searchTerm = this.value.toLowerCase().trim();
 
+    // Show all doctors if input is empty, otherwise filter
     if (searchTerm.length === 0) {
-      suggestionsContainer.classList.remove('show');
+      displaySuggestions(filteredDoctors);
       return;
     }
 
@@ -295,6 +297,7 @@ function validateForm() {
 async function saveAppointment(appointmentData) {
   try {
     appointmentData.id = 'apt_' + Date.now();
+    appointmentData.isDeleted = false;
     const appointmentResponse = await fetch('http://localhost:8876/appointments', {
       method: 'POST',
       headers: {

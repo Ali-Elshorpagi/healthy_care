@@ -9,7 +9,8 @@
       "notes": "",
       "patientId": "p_1767462806090",
       "status": "pending",
-      "createdAt": "2026-01-03T18:19:57.512Z"
+      "createdAt": "2026-01-03T18:19:57.512Z",
+      "isDeleted": false
     },
     {
       "id": "apt_1767464829687",
@@ -20,7 +21,8 @@
       "notes": "",
       "patientId": "p_1767462806090",
       "status": "accepted",
-      "createdAt": "2026-01-03T18:27:09.687Z"
+      "createdAt": "2026-01-03T18:27:09.687Z",
+      "isDeleted": false
     },
     {
       "id": "apt_1767465188590",
@@ -32,7 +34,8 @@
       "patientId": "p_1767462806090",
       "status": "accepted",
       "createdAt": "2026-01-03T18:33:08.590Z",
-      "updatedAt": "2026-01-03T18:33:18.801Z"
+      "updatedAt": "2026-01-03T18:33:18.801Z",
+      "isDeleted": false
     },
     {
       "id": "apt_1767466252339",
@@ -44,7 +47,8 @@
       "patientId": "p_1767462806090",
       "status": "accepted",
       "createdAt": "2026-01-03T18:50:52.339Z",
-      "updatedAt": "2026-01-03T18:51:01.043Z"
+      "updatedAt": "2026-01-03T18:51:01.043Z",
+      "isDeleted": false
     },
     {
       "id": "apt_1767468065385",
@@ -56,7 +60,8 @@
       "patientId": "p_1767363105994",
       "status": "cancelled",
       "createdAt": "2026-01-03T19:21:05.385Z",
-      "updatedAt": "2026-01-03T19:21:19.566Z"
+      "updatedAt": "2026-01-03T19:21:19.566Z",
+      "isDeleted": false
     },
     {
       "id": "apt_1767468119062",
@@ -68,7 +73,8 @@
       "patientId": "p_1767363105994",
       "status": "cancelled",
       "createdAt": "2026-01-03T19:21:59.062Z",
-      "updatedAt": "2026-01-03T19:37:16.924Z"
+      "updatedAt": "2026-01-04T09:01:53.643Z",
+      "isDeleted": false
     },
     {
       "id": "apt_1767470219341",
@@ -80,7 +86,8 @@
       "patientId": "p_1767462806090",
       "status": "accepted",
       "createdAt": "2026-01-03T19:56:59.341Z",
-      "updatedAt": "2026-01-03T20:01:14.790Z"
+      "updatedAt": "2026-01-03T20:01:14.790Z",
+      "isDeleted": false
     },
     {
       "id": "apt_1767470377020",
@@ -90,8 +97,37 @@
       "time": "10:22",
       "notes": "",
       "patientId": "p_1767470322080",
-      "status": "pending",
-      "createdAt": "2026-01-03T19:59:37.020Z"
+      "status": "accepted",
+      "createdAt": "2026-01-03T19:59:37.020Z",
+      "updatedAt": "2026-01-04T09:01:39.311Z",
+      "isDeleted": false
+    },
+    {
+      "id": "apt_1767519122536",
+      "clinicId": "clinic1",
+      "doctorId": "d_1767518991625",
+      "date": "2026-01-28",
+      "time": "17:21",
+      "notes": "",
+      "patientId": "p_1767519076270",
+      "status": "accepted",
+      "createdAt": "2026-01-04T09:32:02.536Z",
+      "isDeleted": false,
+      "updatedAt": "2026-01-04T09:32:29.596Z"
+    },
+    {
+      "id": "apt_1767519688566",
+      "clinicId": "clinic1",
+      "doctorId": "d_1767519626073",
+      "date": "2026-01-23",
+      "time": "14:12",
+      "notes": "e.klvn",
+      "patientId": "p_1767519076270",
+      "status": "accepted",
+      "createdAt": "2026-01-04T09:41:28.566Z",
+      "isDeleted": true,
+      "updatedAt": "2026-01-04T09:42:51.483Z",
+      "deletedAt": "2026-01-04T09:45:11.525Z"
     }
   ]
 }

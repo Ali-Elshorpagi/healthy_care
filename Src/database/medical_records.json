@@ -13,7 +13,8 @@
       "description": "Patient diagnosed with Stage 1 Hypertension. Blood pressure readings consistently above 130/80 mmHg.",
       "date": "2025-01-15",
       "icon": "favorite",
-      "iconColor": "red"
+      "iconColor": "red",
+      "isDeleted": false
     },
     {
       "id": "rec_002",
@@ -28,7 +29,8 @@
       "description": "Take once daily in the morning. Monitor blood pressure regularly.",
       "date": "2025-01-15",
       "icon": "medication",
-      "iconColor": "blue"
+      "iconColor": "blue",
+      "isDeleted": false
     },
     {
       "id": "rec_003",
@@ -43,7 +45,8 @@
       "description": "24-hour ambulatory blood pressure monitoring results. Average: 142/92 mmHg.",
       "date": "2025-01-08",
       "icon": "science",
-      "iconColor": "purple"
+      "iconColor": "purple",
+      "isDeleted": false
     },
     {
       "id": "rec_004",
@@ -58,7 +61,8 @@
       "description": "Patient presents with rhinitis, sneezing, and itchy eyes. Consistent with seasonal allergic response.",
       "date": "2024-12-20",
       "icon": "coronavirus",
-      "iconColor": "green"
+      "iconColor": "green",
+      "isDeleted": false
     },
     {
       "id": "rec_005",
@@ -73,7 +77,8 @@
       "description": "Take once daily as needed for allergy symptoms. May cause drowsiness.",
       "date": "2024-12-20",
       "icon": "medication",
-      "iconColor": "orange"
+      "iconColor": "orange",
+      "isDeleted": false
     },
     {
       "id": "rec_006",
@@ -88,7 +93,8 @@
       "description": "Patches of dry, itchy skin on forearms. Recommend moisturizing and avoiding irritants.",
       "date": "2024-11-10",
       "icon": "dermatology",
-      "iconColor": "purple"
+      "iconColor": "purple",
+      "isDeleted": false
     },
     {
       "id": "rec_007",
@@ -103,7 +109,8 @@
       "description": "Apply thin layer to affected areas twice daily for up to 2 weeks.",
       "date": "2024-11-10",
       "icon": "medication",
-      "iconColor": "blue"
+      "iconColor": "blue",
+      "isDeleted": false
     },
     {
       "id": "rec_008",
@@ -118,7 +125,8 @@
       "description": "All values within normal range. Hemoglobin: 14.2 g/dL, WBC: 7,500/mcL.",
       "date": "2024-10-05",
       "icon": "science",
-      "iconColor": "green"
+      "iconColor": "green",
+      "isDeleted": false
     },
     {
       "id": "rec_009",
@@ -133,7 +141,8 @@
       "description": "Total Cholesterol: 195 mg/dL, LDL: 120 mg/dL, HDL: 55 mg/dL, Triglycerides: 100 mg/dL.",
       "date": "2024-09-15",
       "icon": "science",
-      "iconColor": "blue"
+      "iconColor": "blue",
+      "isDeleted": false
     },
     {
       "id": "rec_1767466209875",
@@ -146,7 +155,8 @@
       "description": "ekwsnpfbe",
       "date": "2026-01-03",
       "icon": "medication",
-      "iconColor": "blue"
+      "iconColor": "blue",
+      "isDeleted": false
     },
     {
       "id": "rec_1767466270034",
@@ -159,7 +169,8 @@
       "description": "asdsadsa",
       "date": "2026-01-03",
       "icon": "medication",
-      "iconColor": "blue"
+      "iconColor": "blue",
+      "isDeleted": false
     },
     {
       "id": "rec_1767468248481",
@@ -172,7 +183,23 @@
       "description": "ojvdba",
       "date": "2026-01-03",
       "icon": "favorite",
-      "iconColor": "red"
+      "iconColor": "red",
+      "isDeleted": false
+    },
+    {
+      "id": "rec_1767519821530",
+      "patientId": "p_1767519076270",
+      "doctorId": "d_1767519626073",
+      "doctorName": "Nagy",
+      "doctorSpecialization": "General Practice",
+      "type": "diagnosis",
+      "title": "etwbwb",
+      "description": "4wtgbt4w",
+      "date": "2026-01-04",
+      "icon": "favorite",
+      "iconColor": "red",
+      "isDeleted": true,
+      "deletedAt": "2026-01-04T09:45:11.537Z"
     }
   ]
 }

@@ -1,4 +1,6 @@
 const API_BASE = 'http://localhost:8877';
+const APPOINTMENTS_API_BASE = 'http://localhost:8876';
+const MEDICAL_RECORDS_API_BASE = 'http://localhost:8875';
 
 let currentAdminUser = null;
 let editingUserId = null;
@@ -44,6 +46,197 @@ async function fetchJson(url, options) {
   }
   return response.json();
 }
+
+// ============================================
+// CASCADING DELETE BUSINESS LOGIC
+// ============================================
+
+async function getAppointmentsByPatientId(patientId) {
+  try {
+    let appointments = await fetchJson(
+      `${APPOINTMENTS_API_BASE}/appointments?patientId=${encodeURIComponent(
+        patientId
+      )}`
+    );
+    return Array.isArray(appointments) ? appointments : [];
+  } catch (error) {
+    console.error('Error fetching patient appointments:', error);
+    return [];
+  }
+}
+
+async function getAppointmentsByDoctorId(doctorId) {
+  try {
+    let appointments = await fetchJson(
+      `${APPOINTMENTS_API_BASE}/appointments?doctorId=${encodeURIComponent(
+        doctorId
+      )}`
+    );
+    return Array.isArray(appointments) ? appointments : [];
+  } catch (error) {
+    console.error('Error fetching doctor appointments:', error);
+    return [];
+  }
+}
+
+async function getMedicalRecordsByPatientId(patientId) {
+  try {
+    let records = await fetchJson(
+      `${MEDICAL_RECORDS_API_BASE}/records?patientId=${encodeURIComponent(
+        patientId
+      )}`
+    );
+    return Array.isArray(records) ? records : [];
+  } catch (error) {
+    console.error('Error fetching patient medical records:', error);
+    return [];
+  }
+}
+
+async function getMedicalRecordsByDoctorId(doctorId) {
+  try {
+    let records = await fetchJson(
+      `${MEDICAL_RECORDS_API_BASE}/records?doctorId=${encodeURIComponent(
+        doctorId
+      )}`
+    );
+    return Array.isArray(records) ? records : [];
+  } catch (error) {
+    console.error('Error fetching doctor medical records:', error);
+    return [];
+  }
+}
+
+async function softDeleteAppointmentById(appointmentId) {
+  try {
+    await fetch(
+      `${APPOINTMENTS_API_BASE}/appointments/${encodeURIComponent(
+        appointmentId
+      )}`,
+      {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          isDeleted: true,
+          deletedAt: new Date().toISOString(),
+        }),
+      }
+    );
+    return true;
+  } catch (error) {
+    console.error('Error soft deleting appointment:', error);
+    return false;
+  }
+}
+
+async function softDeleteMedicalRecordById(recordId) {
+  try {
+    await fetch(
+      `${MEDICAL_RECORDS_API_BASE}/records/${encodeURIComponent(recordId)}`,
+      {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          isDeleted: true,
+          deletedAt: new Date().toISOString(),
+        }),
+      }
+    );
+    return true;
+  } catch (error) {
+    console.error('Error soft deleting medical record:', error);
+    return false;
+  }
+}
+
+async function cascadeDeletePatient(patientId) {
+  let deletedAppointments = 0;
+  let deletedRecords = 0;
+
+  // Soft delete all patient's appointments
+  let appointments = await getAppointmentsByPatientId(patientId);
+  for (let apt of appointments) {
+    if (!apt.isDeleted && (await softDeleteAppointmentById(apt.id))) {
+      deletedAppointments++;
+    }
+  }
+
+  // Soft delete all patient's medical records
+  let records = await getMedicalRecordsByPatientId(patientId);
+  for (let record of records) {
+    if (!record.isDeleted && (await softDeleteMedicalRecordById(record.id))) {
+      deletedRecords++;
+    }
+  }
+
+  return { deletedAppointments, deletedRecords };
+}
+
+async function cascadeDeleteDoctor(doctorId) {
+  let cancelledAppointments = 0;
+  let deletedRecords = 0;
+
+  // Soft delete all doctor's appointments
+  let appointments = await getAppointmentsByDoctorId(doctorId);
+  for (let apt of appointments) {
+    if (!apt.isDeleted && (await softDeleteAppointmentById(apt.id))) {
+      cancelledAppointments++;
+    }
+  }
+
+  // Soft delete all medical records created by this doctor
+  let records = await getMedicalRecordsByDoctorId(doctorId);
+  for (let record of records) {
+    if (!record.isDeleted && (await softDeleteMedicalRecordById(record.id))) {
+      deletedRecords++;
+    }
+  }
+
+  return { cancelledAppointments, deletedRecords };
+}
+
+async function deleteUserWithCascade(user) {
+  let result = { success: false, message: '' };
+
+  try {
+    let cascadeResult = {
+      deletedAppointments: 0,
+      deletedRecords: 0,
+      cancelledAppointments: 0,
+    };
+
+    // Handle cascade based on user role
+    if (user.role === 'patient') {
+      cascadeResult = await cascadeDeletePatient(user.id);
+      result.message = `Patient deleted. Also archived ${cascadeResult.deletedAppointments} appointment(s) and ${cascadeResult.deletedRecords} medical record(s).`;
+    } else if (user.role === 'doctor') {
+      cascadeResult = await cascadeDeleteDoctor(user.id);
+      result.message = `Doctor deleted. Also archived ${cascadeResult.cancelledAppointments} appointment(s) and ${cascadeResult.deletedRecords} medical record(s).`;
+    } else {
+      result.message = 'User deleted successfully.';
+    }
+
+    // Finally delete the user
+    let deleteResponse = await fetch(
+      `${API_BASE}/users/${encodeURIComponent(user.id)}`,
+      { method: 'DELETE' }
+    );
+
+    if (!deleteResponse.ok) {
+      throw new Error('Failed to delete user from database');
+    }
+
+    result.success = true;
+  } catch (error) {
+    console.error('Error in cascade delete:', error);
+    result.message = 'Failed to delete user. Please try again.';
+    result.success = false;
+  }
+
+  return result;
+}
+
+// ============================================
 
 async function getAuthedEmailAndPassword() {
   const sessionEmail = sessionStorage.getItem('email');
@@ -478,15 +671,30 @@ function renderUsersManagement(users) {
         .querySelector("button[data-action='delete']")
         .addEventListener('click', async () => {
           if (!canDelete) return;
-          if (!confirm(`Delete user ${user.email || user.id}?`)) return;
+
+          // Build confirmation message based on role
+          let confirmMessage = `Delete user ${user.email || user.id}?`;
+          if (user.role === 'patient') {
+            confirmMessage +=
+              '\n\nThis will also ARCHIVE all their appointments and medical records (they will be hidden from users but kept in the system).';
+          } else if (user.role === 'doctor') {
+            confirmMessage +=
+              '\n\nThis will also ARCHIVE all their appointments and medical records they created (they will be hidden from users but kept in the system).';
+          }
+
+          if (!confirm(confirmMessage)) return;
 
           try {
-            await fetchJson(
-              `${API_BASE}/users/${encodeURIComponent(user.id)}`,
-              { method: 'DELETE' }
-            );
-            editingUserId = null;
-            await refreshData();
+            // Use cascading delete with business logic
+            let result = await deleteUserWithCascade(user);
+
+            if (result.success) {
+              alert(result.message);
+              editingUserId = null;
+              await refreshData();
+            } else {
+              alert(result.message);
+            }
           } catch (e) {
             console.error(e);
             alert(
@@ -501,6 +709,7 @@ function renderUsersManagement(users) {
 
     const role = user.role || 'patient';
     const isDoctor = role === 'doctor';
+    const isApproved = user.approved === 'approved';
     const approvedValue =
       user.approved === 'approved'
         ? 'approved'
@@ -530,7 +739,7 @@ function renderUsersManagement(users) {
             </td>
             <td>
                 <select id="edit-approved-${user.id}" ${
-      isDoctor ? '' : 'disabled'
+      isDoctor && !isApproved ? '' : 'disabled'
     }>
                     <option value="" ${
                       approvedValue === '' ? 'selected' : ''
@@ -561,7 +770,8 @@ function renderUsersManagement(users) {
 
     roleSelect.addEventListener('change', () => {
       const isDoc = roleSelect.value === 'doctor';
-      approvedSelect.disabled = !isDoc;
+      // Disable if not a doctor, or if doctor is already approved
+      approvedSelect.disabled = !isDoc || isApproved;
       if (!isDoc) approvedSelect.value = '';
     });
 
@@ -591,8 +801,14 @@ function renderUsersManagement(users) {
         };
 
         if (newRole === 'doctor') {
-          if (approved === 'approved') payload.approved = 'approved';
-          else if (approved === 'pending') payload.approved = 'pending';
+          // If doctor was already approved, preserve the approved status
+          if (isApproved) {
+            payload.approved = 'approved';
+          } else {
+            // Only allow changing approval status if not already approved
+            if (approved === 'approved') payload.approved = 'approved';
+            else if (approved === 'pending') payload.approved = 'pending';
+          }
         } else {
           payload.approved = undefined;
         }
@@ -732,6 +948,405 @@ function setupUserManagementControls() {
   }
 }
 
+const APPOINTMENTS_API = 'http://localhost:8876';
+
+async function getAllAppointments() {
+  try {
+    let appointments = await fetchJson(`${APPOINTMENTS_API}/appointments`);
+    return Array.isArray(appointments) ? appointments : [];
+  } catch (error) {
+    console.error('Error fetching appointments:', error);
+    return [];
+  }
+}
+
+function getUserNameById(users, id) {
+  let user = users.find((u) => u.id === id);
+  return user ? user.fullName : id || '—';
+}
+
+function getStatusPillForAppointment(status) {
+  if (status === 'accepted') return `<span class="pill ok">Accepted</span>`;
+  if (status === 'pending') return `<span class="pill warn">Pending</span>`;
+  if (status === 'cancelled')
+    return `<span class="pill danger">Cancelled</span>`;
+  return `<span class="pill">${status || '—'}</span>`;
+}
+
+function renderAppointmentsStats(appointments) {
+  let total = appointments.length;
+  let active = appointments.filter((a) => !a.isDeleted).length;
+  let pending = appointments.filter(
+    (a) => a.status === 'pending' && !a.isDeleted
+  ).length;
+  let accepted = appointments.filter(
+    (a) => a.status === 'accepted' && !a.isDeleted
+  ).length;
+  let cancelled = appointments.filter(
+    (a) => a.status === 'cancelled' && !a.isDeleted
+  ).length;
+  let archived = appointments.filter((a) => a.isDeleted).length;
+
+  setText('stat-total-appointments', String(total));
+  setText('stat-pending-appointments', String(pending));
+  setText('stat-accepted-appointments', String(accepted));
+  setText('stat-cancelled-appointments', String(cancelled));
+
+  let archivedEl = document.getElementById('stat-archived-appointments');
+  if (archivedEl) {
+    archivedEl.textContent = String(archived);
+  }
+}
+
+let editingAppointmentId = null;
+let allAppointments = [];
+
+async function updateAppointmentStatus(appointmentId, newStatus) {
+  try {
+    await fetchJson(
+      `${APPOINTMENTS_API}/appointments/${encodeURIComponent(appointmentId)}`,
+      {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          status: newStatus,
+          updatedAt: new Date().toISOString(),
+        }),
+      }
+    );
+    await refreshData();
+  } catch (error) {
+    console.error('Error updating appointment:', error);
+    alert('Failed to update appointment status.');
+  }
+}
+
+async function deleteAppointment(appointmentId) {
+  if (
+    !confirm(
+      'Are you sure you want to archive this appointment? It will be hidden from patients and doctors but kept in the system.'
+    )
+  )
+    return;
+  try {
+    await fetchJson(
+      `${APPOINTMENTS_API}/appointments/${encodeURIComponent(appointmentId)}`,
+      {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          isDeleted: true,
+          deletedAt: new Date().toISOString(),
+        }),
+      }
+    );
+    await refreshData();
+  } catch (error) {
+    console.error('Error archiving appointment:', error);
+    alert('Failed to archive appointment.');
+  }
+}
+
+async function saveAppointmentEdit(appointmentId, date, time, notes, status) {
+  try {
+    await fetchJson(
+      `${APPOINTMENTS_API}/appointments/${encodeURIComponent(appointmentId)}`,
+      {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          date,
+          time,
+          notes,
+          status,
+          updatedAt: new Date().toISOString(),
+        }),
+      }
+    );
+    editingAppointmentId = null;
+    await refreshData();
+  } catch (error) {
+    console.error('Error saving appointment:', error);
+    alert('Failed to save appointment changes.');
+  }
+}
+
+function renderAppointments(appointments, users) {
+  let tbody = document.getElementById('appointments-body');
+  if (!tbody) return;
+
+  allAppointments = appointments;
+
+  if (!Array.isArray(appointments) || appointments.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" class="muted">No appointments found.</td></tr>`;
+    return;
+  }
+
+  // Sort by date descending
+  appointments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  tbody.innerHTML = '';
+
+  appointments.forEach((apt) => {
+    let row = document.createElement('tr');
+    let patientName = getUserNameById(users, apt.patientId);
+    let doctorName = getUserNameById(users, apt.doctorId);
+    let aptDate = apt.date || '';
+    let aptTime = apt.time || '';
+    let statusPill = getStatusPillForAppointment(apt.status);
+    let notes = apt.notes || '';
+    let isEditing = editingAppointmentId === apt.id;
+    let isDeleted = apt.isDeleted === true;
+
+    // Add visual styling for deleted appointments
+    if (isDeleted) {
+      row.style.opacity = '0.6';
+      row.style.backgroundColor = '#fef2f2';
+    }
+
+    if (!isEditing) {
+      let deletedBadge = isDeleted
+        ? '<span class="pill danger" style="margin-left: 4px;">Archived</span>'
+        : '';
+
+      row.innerHTML = `
+        <td>${patientName}${
+        isDeleted
+          ? ' <span style="color:#dc2626;font-size:10px;">(archived)</span>'
+          : ''
+      }</td>
+        <td>${doctorName}</td>
+        <td>${aptDate || '—'}</td>
+        <td>${aptTime || '—'}</td>
+        <td>${statusPill}${deletedBadge}</td>
+        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;">${
+          notes || '—'
+        }</td>
+        <td>
+          <div class="actions">
+            ${
+              isDeleted
+                ? `<span class="muted" style="font-size: 12px;">—</span>`
+                : `<button class="action-btn secondary" data-action="edit" data-id="${apt.id}" type="button">Edit</button>
+                 <button class="action-btn danger" data-action="delete" data-id="${apt.id}" type="button">Archive</button>`
+            }
+          </div>
+        </td>
+      `;
+
+      if (!isDeleted) {
+        // Edit button handler
+        row
+          .querySelector('[data-action="edit"]')
+          .addEventListener('click', function () {
+            editingAppointmentId = apt.id;
+            renderAppointments(allAppointments, allUsers);
+          });
+
+        // Delete button handler
+        row
+          .querySelector('[data-action="delete"]')
+          .addEventListener('click', function () {
+            deleteAppointment(apt.id);
+          });
+      }
+    } else {
+      // Editing mode
+      row.innerHTML = `
+        <td>${patientName}</td>
+        <td>${doctorName}</td>
+        <td><input type="date" id="edit-date-${
+          apt.id
+        }" value="${aptDate}" style="padding: 4px; border-radius: 4px; border: 1px solid #e5e7eb;"></td>
+        <td><input type="time" id="edit-time-${
+          apt.id
+        }" value="${aptTime}" style="padding: 4px; border-radius: 4px; border: 1px solid #e5e7eb;"></td>
+        <td>
+          <select id="edit-status-${
+            apt.id
+          }" style="padding: 4px; border-radius: 4px; border: 1px solid #e5e7eb;">
+            <option value="pending" ${
+              apt.status === 'pending' ? 'selected' : ''
+            }>Pending</option>
+            <option value="accepted" ${
+              apt.status === 'accepted' ? 'selected' : ''
+            }>Accepted</option>
+            <option value="cancelled" ${
+              apt.status === 'cancelled' ? 'selected' : ''
+            }>Cancelled</option>
+          </select>
+        </td>
+        <td><input type="text" id="edit-notes-${
+          apt.id
+        }" value="${notes}" placeholder="Notes..." style="padding: 4px; border-radius: 4px; border: 1px solid #e5e7eb; width: 100%;"></td>
+        <td>
+          <div class="actions">
+            <button class="action-btn" data-action="save" data-id="${
+              apt.id
+            }" type="button">Save</button>
+            <button class="action-btn secondary" data-action="cancel" data-id="${
+              apt.id
+            }" type="button">Cancel</button>
+          </div>
+        </td>
+      `;
+
+      // Save button handler
+      row
+        .querySelector('[data-action="save"]')
+        .addEventListener('click', function () {
+          let newDate = document.getElementById(`edit-date-${apt.id}`).value;
+          let newTime = document.getElementById(`edit-time-${apt.id}`).value;
+          let newNotes = document.getElementById(`edit-notes-${apt.id}`).value;
+          let newStatus = document.getElementById(
+            `edit-status-${apt.id}`
+          ).value;
+          saveAppointmentEdit(apt.id, newDate, newTime, newNotes, newStatus);
+        });
+
+      // Cancel button handler
+      row
+        .querySelector('[data-action="cancel"]')
+        .addEventListener('click', function () {
+          editingAppointmentId = null;
+          renderAppointments(allAppointments, allUsers);
+        });
+    }
+
+    tbody.appendChild(row);
+  });
+}
+
+// Medical Records Management
+async function getAllMedicalRecords() {
+  try {
+    let records = await fetchJson(`${MEDICAL_RECORDS_API_BASE}/records`);
+    return Array.isArray(records) ? records : [];
+  } catch (error) {
+    console.error('Error fetching all medical records:', error);
+    return [];
+  }
+}
+
+function renderMedicalRecordsStats(records) {
+  let total = records.length;
+  let active = records.filter((r) => !r.isDeleted).length;
+  let archived = records.filter((r) => r.isDeleted).length;
+
+  setText('stat-total-records', String(total));
+  setText('stat-active-records', String(active));
+  setText('stat-archived-records', String(archived));
+}
+
+async function archiveMedicalRecord(recordId) {
+  if (
+    !confirm(
+      'Are you sure you want to archive this medical record? It will be hidden from patients and doctors but kept in the system.'
+    )
+  )
+    return;
+  try {
+    await fetchJson(
+      `${MEDICAL_RECORDS_API_BASE}/records/${encodeURIComponent(recordId)}`,
+      {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          isDeleted: true,
+          deletedAt: new Date().toISOString(),
+        }),
+      }
+    );
+    await refreshData();
+  } catch (error) {
+    console.error('Error archiving medical record:', error);
+    alert('Failed to archive medical record.');
+  }
+}
+
+function renderMedicalRecords(records, users) {
+  let tbody = document.getElementById('records-body');
+  if (!tbody) return;
+
+  if (!Array.isArray(records) || records.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" class="muted">No medical records found.</td></tr>`;
+    return;
+  }
+
+  // Sort by date descending
+  records.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  tbody.innerHTML = '';
+
+  records.forEach((record) => {
+    let row = document.createElement('tr');
+    let patientName = getUserNameById(users, record.patientId);
+    let doctorName =
+      record.doctorName || getUserNameById(users, record.doctorId);
+    let recordType = record.type || '—';
+    let recordTitle = record.title || '—';
+    let recordDate = record.date || '—';
+    let isDeleted = record.isDeleted === true;
+
+    // Add visual styling for deleted records
+    if (isDeleted) {
+      row.style.opacity = '0.6';
+      row.style.backgroundColor = '#fef2f2';
+    }
+
+    let statusBadge = isDeleted
+      ? '<span class="pill danger">Archived</span>'
+      : '<span class="pill success">Active</span>';
+
+    let typeClass = '';
+    switch (recordType) {
+      case 'diagnosis':
+        typeClass = 'warning';
+        break;
+      case 'prescription':
+        typeClass = 'primary';
+        break;
+      case 'lab':
+        typeClass = 'secondary';
+        break;
+      default:
+        typeClass = 'secondary';
+    }
+
+    row.innerHTML = `
+      <td>${patientName}${
+      isDeleted
+        ? ' <span style="color:#dc2626;font-size:10px;">(archived)</span>'
+        : ''
+    }</td>
+      <td>${doctorName}</td>
+      <td><span class="pill ${typeClass}">${recordType}</span></td>
+      <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;" title="${recordTitle}">${recordTitle}</td>
+      <td>${recordDate}</td>
+      <td>${statusBadge}</td>
+      <td>
+        <div class="actions">
+          ${
+            isDeleted
+              ? `<span class="muted" style="font-size: 12px;">—</span>`
+              : `<button class="action-btn danger" data-action="archive" data-id="${record.id}" type="button">Archive</button>`
+          }
+        </div>
+      </td>
+    `;
+
+    if (!isDeleted) {
+      row
+        .querySelector('[data-action="archive"]')
+        .addEventListener('click', function () {
+          archiveMedicalRecord(record.id);
+        });
+    }
+
+    tbody.appendChild(row);
+  });
+}
+
 async function refreshData() {
   const users = await getAllUsers();
   allUsers = users;
@@ -743,6 +1358,14 @@ async function refreshData() {
 
   let faqs = await getAllFAQs();
   renderFAQsManagement(faqs);
+
+  let appointments = await getAllAppointments();
+  renderAppointmentsStats(appointments);
+  renderAppointments(appointments, users);
+
+  let records = await getAllMedicalRecords();
+  renderMedicalRecordsStats(records);
+  renderMedicalRecords(records, users);
 }
 
 async function bootstrap() {

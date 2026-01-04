@@ -18,14 +18,28 @@ async function loadMedicalRecords() {
       return;
     }
 
-    const response = await fetch('http://localhost:8875/records');
-    if (!response.ok) {
+    const [recordsResponse, usersResponse] = await Promise.all([
+      fetch('http://localhost:8875/records'),
+      fetch('http://localhost:8877/users')
+    ]);
+
+    if (!recordsResponse.ok) {
       throw new Error('Failed to fetch medical records');
     }
 
-    const allRecords = await response.json();
+    const allRecords = await recordsResponse.json();
+    const allUsers = await usersResponse.json();
+
+    // Get list of existing doctor IDs (approved doctors)
+    const existingDoctorIds = allUsers
+      .filter(user => user.role === 'doctor' && user.approved === 'approved')
+      .map(doc => doc.id);
+
+    // Filter records: user's records, not deleted, and doctor still exists
     const userRecords = allRecords.filter(
-      (record) => record.patientId === userId
+      (record) => record.patientId === userId &&
+        !record.isDeleted &&
+        existingDoctorIds.includes(record.doctorId)
     );
 
     loadedRecords = userRecords;

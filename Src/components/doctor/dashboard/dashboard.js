@@ -83,11 +83,21 @@ async function loadTodayAppointments() {
   try {
     const doctorId = sessionStorage.getItem('doctorId');
     
-    // Fetch all appointments
-    const response = await fetch('http://localhost:8876/appointments');
-    if (!response.ok) throw new Error('Failed to fetch appointments');
+    // Fetch all appointments and users
+    const [appointmentsResponse, usersResponse] = await Promise.all([
+      fetch('http://localhost:8876/appointments'),
+      fetch('http://localhost:8877/users')
+    ]);
+
+    if (!appointmentsResponse.ok) throw new Error('Failed to fetch appointments');
     
-    const allAppointments = await response.json();
+    const allAppointments = await appointmentsResponse.json();
+    const allUsers = await usersResponse.json();
+
+    // Get list of existing patient IDs
+    const existingPatientIds = allUsers
+      .filter(user => user.role === 'patient')
+      .map(p => p.id);
     
     // Get today's date in YYYY-MM-DD format (local timezone)
     const today = new Date();
@@ -100,11 +110,13 @@ async function loadTodayAppointments() {
     console.log('All appointments:', allAppointments);
     console.log('Doctor ID:', doctorId);
     
-    // Filter appointments for this doctor, today, and accepted status
+    // Filter appointments for this doctor, today, accepted status, not deleted, and patient exists
     const todayAccepted = allAppointments.filter(apt => {
       const matches = apt.doctorId === doctorId && 
                       apt.date === todayStr && 
-                      apt.status === 'accepted';
+                      apt.status === 'accepted' &&
+                      !apt.isDeleted &&
+                      existingPatientIds.includes(apt.patientId);
       console.log('Appointment:', apt.id, 'Date:', apt.date, 'Status:', apt.status, 'Matches:', matches);
       return matches;
     });
@@ -116,13 +128,19 @@ async function loadTodayAppointments() {
       return (timeA[0] * 60 + timeA[1]) - (timeB[0] * 60 + timeB[1]);
     });
     
-    // Count appointments by status
+    // Count appointments by status (excluding deleted and with existing patients)
     const todayAll = allAppointments.filter(apt => 
-      apt.doctorId === doctorId && apt.date === todayStr
+      apt.doctorId === doctorId &&
+      apt.date === todayStr &&
+      !apt.isDeleted &&
+      existingPatientIds.includes(apt.patientId)
     );
     
     const pendingCount = allAppointments.filter(apt => 
-      apt.doctorId === doctorId && apt.status === 'pending'
+      apt.doctorId === doctorId &&
+      apt.status === 'pending' &&
+      !apt.isDeleted &&
+      existingPatientIds.includes(apt.patientId)
     ).length;
     
     const acceptedCount = todayAccepted.length;
