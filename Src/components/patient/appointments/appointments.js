@@ -62,33 +62,43 @@ async function loadAppointments() {
       return;
     }
 
-    const appointmentsResponse = await fetch('http://localhost:8876/appointments');
+    const [appointmentsResponse, usersResponse] = await Promise.all([
+      fetch('http://localhost:8876/appointments'),
+      fetch('http://localhost:8877/users')
+    ]);
+
     if (!appointmentsResponse.ok) {
       throw new Error('Failed to fetch appointments');
     }
 
     const allAppointments = await appointmentsResponse.json();
-    const userAppointments = allAppointments.filter(apt => apt.patientId === userId);
+    const allUsers = await usersResponse.json();
+
+    // Get list of existing approved doctor IDs
+    const existingDoctorIds = allUsers
+      .filter(user => user.role === 'doctor' && user.approved === 'approved')
+      .map(doc => doc.id);
+
+    // Filter appointments: user's appointments, not deleted, and doctor still exists
+    const userAppointments = allAppointments.filter(apt =>
+      apt.patientId === userId &&
+      !apt.isDeleted &&
+      existingDoctorIds.includes(apt.doctorId)
+    );
 
     if (userAppointments.length === 0) {
       showEmptyState();
       return;
     }
 
-    const appointmentsWithDetails = await Promise.all(
-      userAppointments.map(async (apt) => {
-        try {
-          const doctorResponse = await fetch(`http://localhost:8877/users/${apt.doctorId}`);
-          if (doctorResponse.ok) {
-            const doctor = await doctorResponse.json();
-            return { ...apt, doctorName: doctor.fullName, doctorSpecialization: doctor.specialization || 'General Practice' };
-          }
-          return { ...apt, doctorName: 'Unknown Doctor', doctorSpecialization: 'N/A' };
-        } catch (error) {
-          return { ...apt, doctorName: 'Unknown Doctor', doctorSpecialization: 'N/A' };
-        }
-      })
-    );
+    const appointmentsWithDetails = userAppointments.map(apt => {
+      const doctor = allUsers.find(u => u.id === apt.doctorId);
+      return {
+        ...apt,
+        doctorName: doctor ? doctor.fullName : 'Unknown Doctor',
+        doctorSpecialization: doctor ? (doctor.specialization || 'General Practice') : 'N/A'
+      };
+    });
 
     renderAppointments(appointmentsWithDetails);
     setupFilters();

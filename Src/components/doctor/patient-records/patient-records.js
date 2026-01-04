@@ -16,8 +16,9 @@ async function loadPatients() {
         let appointmentsRes = await fetch('http://localhost:8876/appointments');
         let appointments = await appointmentsRes.json();
 
+        // Filter out deleted appointments
         let acceptedAppointments = appointments.filter(apt =>
-            apt.doctorId === currentDoctorId && apt.status === 'accepted'
+            apt.doctorId === currentDoctorId && apt.status === 'accepted' && !apt.isDeleted
         );
 
         if (acceptedAppointments.length === 0) {
@@ -35,8 +36,16 @@ async function loadPatients() {
         let users = await usersRes.json();
         let recordsRes = await fetch('http://localhost:8875/records');
         let allRecords = await recordsRes.json();
-        allPatients = users.filter(user => patientIds.includes(user.id));
-        displayPatients(allPatients, acceptedAppointments, allRecords);
+
+        // Filter only existing patients (role = patient and exists in database)
+        allPatients = users.filter(user =>
+            user.role === 'patient' && patientIds.includes(user.id)
+        );
+
+        // Filter out deleted records
+        let activeRecords = allRecords.filter(rec => !rec.isDeleted);
+
+        displayPatients(allPatients, acceptedAppointments, activeRecords);
 
     } catch (error) {
         console.error('Error loading patients:', error);
@@ -63,8 +72,9 @@ function displayPatients(patients, appointments, allRecords) {
     }
 
     patientsGrid.innerHTML = patients.map(patient => {
-        let patientAppointments = appointments.filter(apt => apt.patientId === patient.id);
-        let patientRecords = allRecords.filter(rec => rec.patientId === patient.id);
+        let patientAppointments = appointments.filter(apt => apt.patientId === patient.id && !apt.isDeleted);
+        // Filter out deleted medical records
+        let patientRecords = allRecords.filter(rec => rec.patientId === patient.id && !rec.isDeleted);
         let initials = patient.fullName.split(' ').map(n => n[0]).join('');
 
         return `
@@ -176,7 +186,8 @@ function setupAddRecordForm() {
             description: recordDescription,
             date: recordDate,
             icon: iconMap[recordType],
-            iconColor: colorMap[recordType]
+            iconColor: colorMap[recordType],
+            isDeleted: false
         };
 
         try {
@@ -211,7 +222,8 @@ async function viewPatientRecords(patientId, patientName) {
         let response = await fetch('http://localhost:8875/records');
         let allRecords = await response.json();
 
-        let patientRecords = allRecords.filter(rec => rec.patientId === patientId);
+        // Filter out deleted records
+        let patientRecords = allRecords.filter(rec => rec.patientId === patientId && !rec.isDeleted);
 
         if (patientRecords.length === 0) {
             document.getElementById('recordsList').innerHTML = `

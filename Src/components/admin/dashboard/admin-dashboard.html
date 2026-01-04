@@ -197,6 +197,96 @@
         </section>
 
         <section class="card">
+          <h2>Appointments Management</h2>
+          <p class="muted">Manage all appointments between doctors and patients.</p>
+
+          <div class="stats" style="margin-bottom: 20px;">
+            <div class="stat">
+              <div class="stat-label">Total</div>
+              <div class="stat-value" id="stat-total-appointments">—</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Pending</div>
+              <div class="stat-value" id="stat-pending-appointments">—</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Accepted</div>
+              <div class="stat-value" id="stat-accepted-appointments">—</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Cancelled</div>
+              <div class="stat-value" id="stat-cancelled-appointments">—</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Archived</div>
+              <div class="stat-value" id="stat-archived-appointments">—</div>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Patient</th>
+                  <th>Doctor</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                  <th>Notes</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="appointments-body">
+                <tr>
+                  <td colspan="7" class="muted">Loading…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Medical Records Management</h2>
+          <p class="muted">View and manage all patient medical records.</p>
+
+          <div class="stats" style="margin-bottom: 20px;">
+            <div class="stat">
+              <div class="stat-label">Total</div>
+              <div class="stat-value" id="stat-total-records">—</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Active</div>
+              <div class="stat-value" id="stat-active-records">—</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Archived</div>
+              <div class="stat-value" id="stat-archived-records">—</div>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Patient</th>
+                  <th>Doctor</th>
+                  <th>Type</th>
+                  <th>Title</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="records-body">
+                <tr>
+                  <td colspan="7" class="muted">Loading…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card">
           <h2>Admin Profile</h2>
           <p class="muted">Basic profile info (view-only).</p>
 
