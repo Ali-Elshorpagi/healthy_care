@@ -76,7 +76,7 @@ function buildHeader() {
   html += '<div class="header-left">';
   html += '<a href="../dashboard/dashboard.html" class="logo">';
   html += '<span class="material-symbols-outlined logo-icon">add</span>';
-  html += '<span class="logo-text">Healthy</span></a></div>';
+  html += '<span class="logo-text">BelShefaa ISA</span></a></div>';
   html += '<div class="header-center">';
   html += '<div class="nav-links">';
   html += '<a href="../../../../index.html">Home</a>';

@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!checkAuthenticationAndRedirect()) {
     return;
   }
-  
+
   buildHeader();
   buildSidebar('medical-records');
   loadMedicalRecords();
@@ -24,7 +24,9 @@ async function loadMedicalRecords() {
     }
 
     const allRecords = await response.json();
-    const userRecords = allRecords.filter(record => record.patientId === userId);
+    const userRecords = allRecords.filter(
+      (record) => record.patientId === userId
+    );
 
     loadedRecords = userRecords;
     if (userRecords.length === 0) {
@@ -35,7 +37,9 @@ async function loadMedicalRecords() {
     renderMedicalRecords(userRecords);
   } catch (error) {
     console.error('Error loading medical records:', error);
-    showError('Failed to load medical records. Please make sure JSON Server is running.');
+    showError(
+      'Failed to load medical records. Please make sure JSON Server is running.'
+    );
   }
 }
 
@@ -44,24 +48,24 @@ function renderMedicalRecords(records) {
   container.innerHTML = '';
 
   const doctorGroups = {};
-  records.forEach(record => {
+  records.forEach((record) => {
     if (!doctorGroups[record.doctorId]) {
       doctorGroups[record.doctorId] = {
         doctorName: record.doctorName,
         doctorSpecialization: record.doctorSpecialization,
         doctorClinic: record.doctorClinic,
         doctorAvatar: record.doctorAvatar,
-        records: []
+        records: [],
       };
     }
     doctorGroups[record.doctorId].records.push(record);
   });
 
-  Object.keys(doctorGroups).forEach(doctorId => {
+  Object.keys(doctorGroups).forEach((doctorId) => {
     const group = doctorGroups[doctorId];
     const section = document.createElement('div');
     section.className = 'doctor-section card';
-    
+
     section.innerHTML = `
       <div class="doctor-row">
         <div class="doctor-avatar">
@@ -76,7 +80,7 @@ function renderMedicalRecords(records) {
         </div>
       </div>
       <div class="records-list">
-        ${group.records.map(record => renderRecordItem(record)).join('')}
+        ${group.records.map((record) => renderRecordItem(record)).join('')}
       </div>
     `;
 
@@ -116,16 +120,24 @@ function renderRecordItem(record) {
 
 function getTypeLabel(type) {
   switch (type) {
-    case 'diagnosis': return 'Diagnosis';
-    case 'prescription': return 'Prescription';
-    case 'lab': return 'Lab Results';
-    default: return type;
+    case 'diagnosis':
+      return 'Diagnosis';
+    case 'prescription':
+      return 'Prescription';
+    case 'lab':
+      return 'Lab Results';
+    default:
+      return type;
   }
 }
 
 function formatDate(dateString) {
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
 }
 
 function showEmptyState() {
@@ -152,8 +164,8 @@ let loadedRecords = [];
 
 async function viewRecord(recordId) {
   try {
-    let record = loadedRecords.find(r => r.id === recordId);
-    
+    let record = loadedRecords.find((r) => r.id === recordId);
+
     if (!record) {
       const response = await fetch(`http://localhost:8875/records/${recordId}`);
       if (!response.ok) throw new Error('Failed to fetch record');
@@ -161,15 +173,23 @@ async function viewRecord(recordId) {
     }
 
     document.getElementById('modalTitle').textContent = record.title;
-    document.getElementById('modalTypeBadge').textContent = getTypeLabel(record.type);
-    document.getElementById('modalTypeBadge').className = `record-type-badge badge-${record.type}`;
+    document.getElementById('modalTypeBadge').textContent = getTypeLabel(
+      record.type
+    );
+    document.getElementById(
+      'modalTypeBadge'
+    ).className = `record-type-badge badge-${record.type}`;
     document.getElementById('modalDate').textContent = formatDate(record.date);
     document.getElementById('modalDoctorAvatar').src = record.doctorAvatar;
     document.getElementById('modalDoctorName').textContent = record.doctorName;
-    document.getElementById('modalDoctorSpec').textContent = `${record.doctorSpecialization} - ${record.doctorClinic}`;
-    document.getElementById('modalDescription').textContent = record.description;
-    
-    document.getElementById('modalDownloadBtn').onclick = () => downloadRecord(recordId);
+    document.getElementById(
+      'modalDoctorSpec'
+    ).textContent = `${record.doctorSpecialization} - ${record.doctorClinic}`;
+    document.getElementById('modalDescription').textContent =
+      record.description;
+
+    document.getElementById('modalDownloadBtn').onclick = () =>
+      downloadRecord(recordId);
 
     document.getElementById('recordModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
@@ -184,7 +204,7 @@ function closeModal() {
   document.body.style.overflow = 'auto';
 }
 
-document.addEventListener('keydown', function(e) {
+document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') {
     closeModal();
   }
@@ -192,8 +212,8 @@ document.addEventListener('keydown', function(e) {
 
 async function downloadRecord(recordId) {
   try {
-    let record = loadedRecords.find(r => r.id === recordId);
-    
+    let record = loadedRecords.find((r) => r.id === recordId);
+
     if (!record) {
       const response = await fetch(`http://localhost:8875/records/${recordId}`);
       if (!response.ok) throw new Error('Failed to fetch record');
@@ -209,12 +229,12 @@ async function downloadRecord(recordId) {
 
     doc.setFillColor(19, 109, 236);
     doc.rect(0, 0, pageWidth, 40, 'F');
-    
+
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(24);
     doc.setFont('helvetica', 'bold');
-    doc.text('Healthy Care', margin, 25);
-    
+    doc.text('BelShefaa ISA', margin, 25);
+
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
     doc.text('Medical Record', margin, 33);
@@ -225,16 +245,24 @@ async function downloadRecord(recordId) {
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     const typeLabel = getTypeLabel(record.type);
-    doc.setFillColor(getTypeColor(record.type).r, getTypeColor(record.type).g, getTypeColor(record.type).b);
+    doc.setFillColor(
+      getTypeColor(record.type).r,
+      getTypeColor(record.type).g,
+      getTypeColor(record.type).b
+    );
     doc.roundedRect(margin, yPos, 60, 10, 2, 2, 'F');
     doc.setTextColor(255, 255, 255);
     doc.text(typeLabel, margin + 5, yPos + 7);
     doc.setTextColor(0, 0, 0);
-    
+
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.text(`Date: ${formatDate(record.date)}`, pageWidth - margin - 50, yPos + 7);
-    
+    doc.text(
+      `Date: ${formatDate(record.date)}`,
+      pageWidth - margin - 50,
+      yPos + 7
+    );
+
     yPos += 25;
 
     doc.setFontSize(18);
@@ -244,17 +272,21 @@ async function downloadRecord(recordId) {
 
     doc.setFillColor(245, 245, 245);
     doc.roundedRect(margin, yPos, pageWidth - 2 * margin, 30, 3, 3, 'F');
-    
+
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.text('Doctor Information', margin + 5, yPos + 8);
-    
+
     doc.setFont('helvetica', 'normal');
     doc.text(record.doctorName, margin + 5, yPos + 16);
     doc.setTextColor(100, 100, 100);
-    doc.text(`${record.doctorSpecialization} - ${record.doctorClinic}`, margin + 5, yPos + 24);
+    doc.text(
+      `${record.doctorSpecialization} - ${record.doctorClinic}`,
+      margin + 5,
+      yPos + 24
+    );
     doc.setTextColor(0, 0, 0);
-    
+
     yPos += 40;
 
     doc.setFontSize(12);
@@ -264,25 +296,37 @@ async function downloadRecord(recordId) {
 
     doc.setFontSize(11);
     doc.setFont('helvetica', 'normal');
-    
-    const descLines = doc.splitTextToSize(record.description, pageWidth - 2 * margin);
+
+    const descLines = doc.splitTextToSize(
+      record.description,
+      pageWidth - 2 * margin
+    );
     doc.text(descLines, margin, yPos);
     yPos += descLines.length * 6 + 15;
 
     doc.setFontSize(8);
     doc.setTextColor(150, 150, 150);
-    doc.text(`Generated on ${new Date().toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })}`, margin, 280);
-    doc.text('Healthy Care - Your Health, Our Priority', pageWidth - margin - 60, 280);
+    doc.text(
+      `Generated on ${new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })}`,
+      margin,
+      280
+    );
+    doc.text(
+      'BelShefaa ISA - Your Health, Our Priority',
+      pageWidth - margin - 60,
+      280
+    );
 
-    const fileName = `${record.title.replace(/[^a-z0-9]/gi, '_')}_${record.date}.pdf`;
+    const fileName = `${record.title.replace(/[^a-z0-9]/gi, '_')}_${
+      record.date
+    }.pdf`;
     doc.save(fileName);
-
   } catch (error) {
     console.error('Error downloading record:', error);
     alert('Failed to download record as PDF.');
@@ -291,10 +335,14 @@ async function downloadRecord(recordId) {
 
 function getTypeColor(type) {
   switch (type) {
-    case 'diagnosis': return { r: 239, g: 68, b: 68 }; // red
-    case 'prescription': return { r: 59, g: 130, b: 246 }; // blue
-    case 'lab': return { r: 139, g: 92, b: 246 }; // purple
-    default: return { r: 107, g: 114, b: 128 }; // gray
+    case 'diagnosis':
+      return { r: 239, g: 68, b: 68 }; // red
+    case 'prescription':
+      return { r: 59, g: 130, b: 246 }; // blue
+    case 'lab':
+      return { r: 139, g: 92, b: 246 }; // purple
+    default:
+      return { r: 107, g: 114, b: 128 }; // gray
   }
 }
 

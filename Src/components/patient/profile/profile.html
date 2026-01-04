@@ -1,148 +1,206 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile - BelShefaa ISA</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <link rel="stylesheet" href="../../../shared/styles.css" />
+    <link rel="stylesheet" href="profile.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Profile - Healthy</title>
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-  <link rel="stylesheet" href="../../../shared/styles.css" />
-  <link rel="stylesheet" href="profile.css" />
-</head>
+  <body>
+    <div id="header" class="header"></div>
+    <div id="sidebar" class="sidebar"></div>
 
-<body>
-  <div id="header" class="header"></div>
-  <div id="sidebar" class="sidebar"></div>
-
-  <div class="main-content">
-    <div class="container">
-      <div class="breadcrumb">
-        <a href="../dashboard/dashboard.html">Home</a>
-        <span></span>
-        <span class="current">Profile</span>
-      </div>
-
-      <div class="page-header">
-        <h1>Account Settings</h1>
-        <p>Manage your profile information and account preferences</p>
-      </div>
-
-      <div class="card">
-        <div class="profile-header">
-          <div class="avatar-col">
-            <div class="avatar-lg">
-              <img src="/Src/assets/images/default-avatar.svg" alt="Profile" id="profileAvatar" />
-              <input type="file" id="profileImageInput" accept="image/*" style="display: none;" />
-              <button type="button" class="edit-btn" id="editAvatarBtn">
-                <span class="material-symbols-outlined">edit</span>
-              </button>
-            </div>
-          </div>
-          <div class="info-col">
-            <h2 id="profileName">John Doe</h2>
-            <p class="patient-id">
-              <span class="material-symbols-outlined patient-id-icon">badge</span>
-              Patient ID: <span id="patientId">84920</span>
-            </p>
-            <span class="badge badge-green">Active</span>
-          </div>
+    <div class="main-content">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="../dashboard/dashboard.html">Home</a>
+          <span></span>
+          <span class="current">Profile</span>
         </div>
 
-        <form id="profileForm">
-          <div class="form-section">
-            <div class="form-section-title">
-              <span class="material-symbols-outlined icon">person</span>
-              <div class="text">
-                <h3>Personal Information</h3>
-                <p>Update your personal details</p>
+        <div class="page-header">
+          <h1>Account Settings</h1>
+          <p>Manage your profile information and account preferences</p>
+        </div>
+
+        <div class="card">
+          <div class="profile-header">
+            <div class="avatar-col">
+              <div class="avatar-lg">
+                <img
+                  src="/Src/assets/images/default-avatar.svg"
+                  alt="Profile"
+                  id="profileAvatar"
+                />
+                <input
+                  type="file"
+                  id="profileImageInput"
+                  accept="image/*"
+                  style="display: none"
+                />
+                <button type="button" class="edit-btn" id="editAvatarBtn">
+                  <span class="material-symbols-outlined">edit</span>
+                </button>
               </div>
             </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="firstName">First Name</label>
-                <input type="text" class="form-control" id="firstName" value="John" />
-              </div>
-              <div class="form-group">
-                <label for="lastName">Last Name</label>
-                <input type="text" class="form-control" id="lastName" value="Doe" />
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" class="form-control" id="email" value="john.doe@email.com" />
-              </div>
-              <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="tel" class="form-control" id="phone" value="+20 123 456 7890" />
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="dob">Date of Birth</label>
-                <input type="text" class="form-control" id="dob" value="1990-05-15" />
-              </div>
-              <div class="form-group">
-                <label for="gender">Gender</label>
-                <select class="form-control" id="gender">
-                  <option value="male" selected>Male</option>
-                  <option value="female">Female</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="address">Address</label>
-              <input type="text" class="form-control" id="address" value="123 Main Street, Cairo, Egypt" />
+            <div class="info-col">
+              <h2 id="profileName">John Doe</h2>
+              <p class="patient-id">
+                <span class="material-symbols-outlined patient-id-icon"
+                  >badge</span
+                >
+                Patient ID: <span id="patientId">84920</span>
+              </p>
+              <span class="badge badge-green">Active</span>
             </div>
           </div>
 
-          <div class="form-section">
-            <div class="form-section-title">
-              <span class="material-symbols-outlined icon">lock</span>
-              <div class="text">
-                <h3>Password & Security</h3>
-                <p>Manage your password and security settings</p>
+          <form id="profileForm">
+            <div class="form-section">
+              <div class="form-section-title">
+                <span class="material-symbols-outlined icon">person</span>
+                <div class="text">
+                  <h3>Personal Information</h3>
+                  <p>Update your personal details</p>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="firstName">First Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="firstName"
+                    value="John"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="lastName">Last Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="lastName"
+                    value="Doe"
+                  />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="email">Email Address</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    value="john.doe@email.com"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="phone">Phone Number</label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="phone"
+                    value="+20 123 456 7890"
+                  />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="dob">Date of Birth</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="dob"
+                    value="1990-05-15"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="gender">Gender</label>
+                  <select class="form-control" id="gender">
+                    <option value="male" selected>Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="address">Address</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="address"
+                  value="123 Main Street, Cairo, Egypt"
+                />
               </div>
             </div>
-            <div class="password-section">
-              <div class="form-group">
-                <label for="currentPassword">Current Password</label>
-                <input type="password" class="form-control" id="currentPassword" placeholder="Enter current password" />
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <span class="material-symbols-outlined icon">lock</span>
+                <div class="text">
+                  <h3>Password & Security</h3>
+                  <p>Manage your password and security settings</p>
+                </div>
               </div>
-              <div class="form-group">
-                <label for="newPassword">New Password</label>
-                <input type="password" class="form-control" id="newPassword" placeholder="Enter new password" />
-              </div>
-              <div class="form-group">
-                <label for="confirmPassword">Confirm New Password</label>
-                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm new password" />
+              <div class="password-section">
+                <div class="form-group">
+                  <label for="currentPassword">Current Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="currentPassword"
+                    placeholder="Enter current password"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="newPassword">New Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="newPassword"
+                    placeholder="Enter new password"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="confirmPassword">Confirm New Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="confirmPassword"
+                    placeholder="Confirm new password"
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="form-actions">
-            <button type="button" class="btn btn-secondary" id="cancelBtn">
-              Cancel
-            </button>
-            <button type="submit" class="btn btn-primary">
-              Save Changes
-            </button>
-          </div>
-        </form>
-      </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" id="cancelBtn">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
 
-      <div class="page-footer">
-        <p>© 2025 Healthy. All rights reserved.</p>
+        <div class="page-footer">
+          <p>© 2025 BelShefaa ISA. All rights reserved.</p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script src="../../../utilities/userAuth.js"></script>
-  <script src="../../../shared/sidebar.js"></script>
-  <script src="profile.js"></script>
-</body>
-
+    <script src="../../../utilities/userAuth.js"></script>
+    <script src="../../../shared/sidebar.js"></script>
+    <script src="profile.js"></script>
+  </body>
 </html>
