@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Join BelShefaa ISA</title>
+    <link rel="stylesheet" href="login.css" />
+    <script src="../../../utilities/userAuth.js"></script>
+    <script src="../../../utilities/redirectTo.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="form-section">
+        <h1>Join BelShefaa ISA</h1>
+        <p class="subtitle">Start your journey to recovery today.</p>
+
+        <form id="loginform">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" required />
+          </div>
+          <div class="form-group remember">
+            <input type="checkbox" id="remember" />
+            <label for="remember">Remember me</label>
+          </div>
+
+          <button type="submit" class="submit-btn">Login</button>
+        </form>
+
+        <p class="login-text">
+          Don't have an account?
+          <a href="../register/register.html">Sign up</a>
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h2>Empowering recovery,<br />one step at a time.</h2>
+        <div class="stats">
+          <div>
+            <strong>15k+</strong>
+            <span>Patients Recovered</span>
+          </div>
+          <div>
+            <strong>4.9</strong>
+            <span>User Rating</span>
+          </div>
+          <div>
+            <strong>24/7</strong>
+            <span>Support Available</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="login.js"></script>
+  </body>
+</html>

@@ -1,0 +1,236 @@
+/* Footer Styles */
+#footer {
+    font-family: 'Inter', Arial, sans-serif;
+    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    color: #fff;
+}
+
+.footer-top {
+    padding: 60px 32px 48px;
+}
+
+.footer-bottom {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 20px 32px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-row {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.footer-brand {
+    display: table-cell;
+    width: 34%;
+    vertical-align: top;
+    padding-right: 48px;
+}
+
+.footer-column {
+    display: table-cell;
+    width: 22%;
+    vertical-align: top;
+    padding-right: 24px;
+}
+
+.footer-logo {
+    margin-bottom: 20px;
+}
+
+.footer-logo-icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background: #136dec;
+    color: #fff;
+    text-align: center;
+    line-height: 40px;
+    vertical-align: middle;
+    margin-right: 12px;
+    border-radius: 10px;
+    font-size: 22px;
+}
+
+.footer-brand-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    vertical-align: middle;
+}
+
+.footer-tagline {
+    font-size: 14px;
+    color: #94a3b8;
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+
+.footer-social {
+    margin-top: 8px;
+}
+
+.social-link {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    line-height: 36px;
+    margin-right: 10px;
+    text-decoration: none;
+}
+
+.social-link:hover {
+    background: #136dec;
+    text-decoration: none;
+}
+
+.social-icon {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.footer-column h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-column li {
+    margin-bottom: 14px;
+}
+
+.footer-column a {
+    font-size: 14px;
+    color: #94a3b8;
+    text-decoration: none;
+}
+
+.footer-column a:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+.footer-nav-link {
+    color: #e2e8f0;
+}
+
+.footer-nav-link:hover {
+    color: #136dec;
+}
+
+.footer-bottom-row {
+    display: table;
+    width: 100%;
+}
+
+.copyright {
+    display: table-cell;
+    vertical-align: middle;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.footer-credits {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.heart {
+    color: #ef4444;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-icon {
+    display: inline-block;
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, #136dec 0%, #0ea5e9 100%);
+    border-radius: 50%;
+    line-height: 72px;
+    margin-bottom: 20px;
+}
+
+.modal-icon .material-symbols-outlined {
+    font-size: 36px;
+    color: #fff;
+    line-height: 72px;
+}
+
+.modal-content h3 {
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #111418;
+    margin-bottom: 12px;
+}
+
+.modal-content p {
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 15px;
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.modal-btn {
+    display: inline-block;
+    padding: 12px 32px;
+    background: #136dec;
+    color: #fff;
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.modal-btn:hover {
+    background: #1058c7;
+}

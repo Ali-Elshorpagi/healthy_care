@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appointments - BelShefaa ISA</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <link rel="stylesheet" href="../../../shared/styles.css" />
+    <link rel="stylesheet" href="appointments.css" />
+  </head>
+  <body>
+    <div id="header" class="header"></div>
+    <div id="sidebar" class="sidebar"></div>
+
+    <div class="main-content">
+      <div class="container">
+        <div class="page-header">
+          <div class="page-header-row">
+            <div>
+              <h1>My Appointments</h1>
+              <p>Manage your upcoming and past appointments</p>
+            </div>
+            <div class="right">
+              <a href="#" class="btn btn-primary" id="bookBtn">
+                <span class="material-symbols-outlined btn-icon">add</span>
+                Book Appointment
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="filters-bar">
+          <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">All</button>
+            <button class="filter-tab" data-filter="accepted">Accepted</button>
+            <button class="filter-tab" data-filter="pending">Pending</button>
+            <button class="filter-tab" data-filter="rejected">Rejected</button>
+            <button class="filter-tab" data-filter="completed">Completed</button>
+          </div>
+          <div class="filter-actions">
+            <select class="form-control sort-select" id="sortSelect">
+              <option value="date">Sort by Date</option>
+              <option value="doctor">Sort by Doctor</option>
+              <option value="status">Sort by Status</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="appointmentsList">
+          <div class="appointment-card" data-status="upcoming">
+            <div class="date-col">
+              <div class="date-box">
+                <span class="day">15</span>
+                <span class="month">Jan</span>
+              </div>
+            </div>
+            <div class="info-col">
+              <p class="list-title">Dr. Sarah Johnson</p>
+              <p class="list-meta">
+                <span
+                  ><span class="material-symbols-outlined meta-icon"
+                    >schedule</span
+                  >10:00 AM</span
+                >
+                <span
+                  ><span class="material-symbols-outlined meta-icon"
+                    >medical_services</span
+                  >Cardiology</span
+                >
+              </p>
+              <span class="badge badge-blue">Upcoming</span>
+            </div>
+            <div class="actions-col">
+              <button class="btn btn-secondary btn-sm">Reschedule</button>
+              <button class="btn btn-danger btn-sm">Cancel</button>
+            </div>
+          </div>
+
+          <div class="appointment-card" data-status="upcoming">
+            <div class="date-col">
+              <div class="date-box">
+                <span class="day">22</span>
+                <span class="month">Jan</span>
+              </div>
+            </div>
+            <div class="info-col">
+              <p class="list-title">Dr. Michael Chen</p>
+              <p class="list-meta">
+                <span
+                  ><span class="material-symbols-outlined meta-icon"
+                    >schedule</span
+                  >2:30 PM</span
+                >
+                <span
+                  ><span class="material-symbols-outlined meta-icon"
+                    >medical_services</span
+                  >General Practice</span
+                >
+              </p>
+              <span class="badge badge-blue">Upcoming</span>
+            </div>
+            <div class="actions-col">
+              <button class="btn btn-secondary btn-sm">Reschedule</button>
+              <button class="btn btn-danger btn-sm">Cancel</button>
+            </div>
+          </div>
+
+          <div class="appointment-card completed" data-status="completed">
+            <div class="date-col">
+              <div class="date-box">
+                <span class="day">08</span>
+                <span class="month">Jan</span>
+              </div>
+            </div>
+            <div class="info-col">
+              <p class="list-title">Dr. Emily Brown</p>
+              <p class="list-meta">
+                <span
+                  ><span class="material-symbols-outlined meta-icon"
+                    >schedule</span
+                  >11:00 AM</span
+                >
+                <span
+                  ><span class="material-symbols-outlined meta-icon"
+                    >medical_services</span
+                  >Dermatology</span
+                >
+              </p>
+              <span class="badge badge-green">Completed</span>
+            </div>
+            <div class="actions-col">
+              <button class="btn btn-secondary btn-sm">View Details</button>
+              <button class="btn btn-primary btn-sm">Book Again</button>
+            </div>
+          </div>
+
+          <div class="appointment-card cancelled" data-status="cancelled">
+            <div class="date-col">
+              <div class="date-box">
+                <span class="day">03</span>
+                <span class="month">Jan</span>
+              </div>
+            </div>
+            <div class="info-col">
+              <p class="list-title">Dr. James Wilson</p>
+              <p class="list-meta">
+                <span
+                  ><span class="material-symbols-outlined meta-icon"
+                    >schedule</span
+                  >4:00 PM</span
+                >
+                <span
+                  ><span class="material-symbols-outlined meta-icon"
+                    >medical_services</span
+                  >Orthopedics</span
+                >
+              </p>
+              <span class="badge badge-red">Cancelled</span>
+            </div>
+            <div class="actions-col">
+              <button class="btn btn-primary btn-sm">Rebook</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="emptyState" class="empty-state hidden">
+          <span class="material-symbols-outlined icon">calendar_month</span>
+          <h3>No appointments found</h3>
+          <p>You don't have any appointments matching this filter</p>
+        </div>
+
+        <div class="page-footer">
+          <p>© 2025 BelShefaa ISA. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rating Modal -->
+    <div id="ratingModal" class="rating-modal">
+      <div class="rating-modal-content">
+        <div class="rating-modal-header">
+          <h2>Rate Your Experience</h2>
+          <button class="close-modal" onclick="closeRatingModal()">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="rating-modal-body">
+          <div class="doctor-info">
+            <span class="material-symbols-outlined doctor-icon">person</span>
+            <div>
+              <p class="doctor-name" id="modalDoctorName"></p>
+              <p class="rate-subtitle">How was your appointment?</p>
+            </div>
+          </div>
+          
+          <div class="rating-stars">
+            <span class="star" data-rating="1" onclick="selectRating(1)">★</span>
+            <span class="star" data-rating="2" onclick="selectRating(2)">★</span>
+            <span class="star" data-rating="3" onclick="selectRating(3)">★</span>
+            <span class="star" data-rating="4" onclick="selectRating(4)">★</span>
+            <span class="star" data-rating="5" onclick="selectRating(5)">★</span>
+          </div>
+          <p class="rating-text" id="ratingText">Click a star to rate</p>
+          
+          <div class="form-group">
+            <label for="ratingComment">Share your experience (optional)</label>
+            <textarea 
+              id="ratingComment" 
+              class="form-control" 
+              rows="4" 
+              placeholder="Tell us about your appointment..."></textarea>
+          </div>
+        </div>
+        <div class="rating-modal-footer">
+          <button class="btn btn-secondary" onclick="closeRatingModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="submitRating()">Submit Rating</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Appointment Details Modal -->
+    <div id="detailsModal" class="rating-modal">
+      <div class="rating-modal-content">
+        <div class="rating-modal-header">
+          <h2>Appointment Details</h2>
+          <button class="close-modal" onclick="closeDetailsModal()">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="rating-modal-body">
+          <div class="details-section">
+            <div class="detail-row">
+              <span class="detail-label">Status</span>
+              <span class="badge" id="detailsStatusBadge"></span>
+            </div>
+          </div>
+
+          <div class="details-section">
+            <h3>Doctor Information</h3>
+            <div class="detail-row">
+              <span class="material-symbols-outlined">person</span>
+              <div>
+                <p class="detail-title" id="detailsDoctorName"></p>
+                <p class="detail-subtitle" id="detailsSpecialization"></p>
+              </div>
+            </div>
+            <div class="detail-row">
+              <span class="material-symbols-outlined">mail</span>
+              <span class="detail-value" id="detailsEmail"></span>
+            </div>
+            <div class="detail-row">
+              <span class="material-symbols-outlined">call</span>
+              <span class="detail-value" id="detailsPhone"></span>
+            </div>
+          </div>
+
+          <div class="details-section">
+            <h3>Appointment Information</h3>
+            <div class="detail-row">
+              <span class="material-symbols-outlined">calendar_today</span>
+              <span class="detail-value" id="detailsDate"></span>
+            </div>
+            <div class="detail-row">
+              <span class="material-symbols-outlined">schedule</span>
+              <span class="detail-value" id="detailsTime"></span>
+            </div>
+            <div class="detail-row">
+              <span class="material-symbols-outlined">local_hospital</span>
+              <span class="detail-value" id="detailsClinic"></span>
+            </div>
+          </div>
+
+          <div class="details-section">
+            <h3>Notes</h3>
+            <p class="details-notes" id="detailsNotes"></p>
+          </div>
+        </div>
+        <div class="rating-modal-footer">
+          <button class="btn btn-primary" onclick="closeDetailsModal()">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../../utilities/userAuth.js"></script>
+    <script src="../../../shared/sidebar.js"></script>
+    <script src="appointments.js"></script>
+  </body>
+</html>

@@ -1,0 +1,290 @@
+.welcome-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.welcome-content h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.welcome-date {
+  font-size: 16px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.welcome-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s;
+}
+
+.stat-card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-icon.blue {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.stat-icon.green {
+  background: #d1fae5;
+  color: #10b981;
+}
+
+.stat-icon.yellow {
+  background: #fef3c7;
+  color: #f59e0b;
+}
+
+.stat-icon .material-symbols-outlined {
+  font-size: 32px;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* Appointments Card */
+.appointments-card {
+  margin-bottom: 32px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.card-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.card-subtitle {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.card-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.search-input {
+  width: 300px;
+}
+
+/* Appointments Table */
+.table-container {
+  overflow-x: auto;
+}
+
+.appointments-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.appointments-table thead th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  background: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.appointments-table tbody td {
+  padding: 20px 16px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.appointments-table tbody tr {
+  transition: all 0.2s;
+}
+
+.appointments-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* Patient Cell */
+.patient-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.patient-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.patient-avatar.bg-1 { background: #3b82f6; }
+.patient-avatar.bg-2 { background: #10b981; }
+.patient-avatar.bg-3 { background: #f59e0b; }
+.patient-avatar.bg-4 { background: #ef4444; }
+.patient-avatar.bg-5 { background: #8b5cf6; }
+.patient-avatar.bg-6 { background: #ec4899; }
+
+.patient-info {
+  flex: 1;
+}
+
+.patient-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 2px;
+}
+
+.patient-id {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* Time Cell */
+.time-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.time-cell .material-symbols-outlined {
+  font-size: 18px;
+  color: #64748b;
+}
+
+/* Type Cell */
+.type-cell {
+  color: #475569;
+  font-weight: 500;
+}
+
+/* Card Footer */
+.card-footer {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+/* Loading State */
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.loading-state .spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .welcome-section {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .welcome-content h1 {
+    font-size: 24px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .appointments-table {
+    font-size: 13px;
+  }
+
+  .patient-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+}

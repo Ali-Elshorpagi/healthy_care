@@ -1,0 +1,382 @@
+/* Dashboard page styles */
+
+/* Search Dropdown */
+.input-wrap {
+  position: relative;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #d0d0d0;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  display: none;
+  margin-top: 2px;
+}
+
+.search-dropdown.show {
+  display: block;
+}
+
+.search-suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.search-suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.search-suggestion-item:hover,
+.search-suggestion-item.active {
+  background-color: #f5f5f5;
+}
+
+.suggestion-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.suggestion-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.suggestion-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.suggestion-name {
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.suggestion-details {
+  font-size: 13px;
+  color: #666;
+}
+
+.suggestion-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+.suggestion-rating .star {
+  color: #fbbf24;
+}
+
+.no-suggestions {
+  padding: 16px;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
+/* Search Results Section */
+.search-results {
+  margin-bottom: 32px;
+}
+
+.search-results.hidden {
+  display: none;
+}
+
+.content-grid.hidden {
+  display: none;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.doctor-result-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.doctor-result-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.doctor-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.doctor-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.doctor-image .rating {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.doctor-image .star {
+  color: #fbbf24;
+}
+
+.doctor-info {
+  padding: 20px;
+}
+
+.doctor-info h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.doctor-info p {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.doctor-info .specialization {
+  color: #4f46e5;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.doctor-info .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.doctor-actions {
+  padding: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.doctor-actions .btn {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.doctor-actions .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.no-results {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.no-results .icon {
+  font-size: 80px;
+  color: #d0d0d0;
+  margin-bottom: 16px;
+}
+
+.no-results h3 {
+  font-size: 20px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.no-results p {
+  font-size: 14px;
+}
+
+/* Doctors Slider Section */
+.doctors-slider-section {
+  margin-bottom: 32px;
+}
+
+.doctors-slider-wrapper {
+  overflow: hidden;
+  margin-top: 24px;
+  position: relative;
+}
+
+.doctors-slider {
+  display: flex;
+  gap: 24px;
+  transition: transform 0.3s ease;
+  padding: 4px;
+}
+
+.doctor-slider-card {
+  min-width: 320px;
+  flex-shrink: 0;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.doctor-slider-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.doctor-slider-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.doctor-slider-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.doctor-slider-image .rating {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.doctor-slider-image .star {
+  color: #fbbf24;
+}
+
+.doctor-slider-info {
+  padding: 20px;
+}
+
+.doctor-slider-info h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.doctor-slider-info p {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.doctor-slider-info .specialization {
+  color: #4f46e5;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.doctor-slider-info .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.doctor-slider-actions {
+  padding: 0 20px 20px;
+}
+
+.doctor-slider-actions .btn {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slider-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.slider-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #d0d0d0;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.slider-btn:hover {
+  background: #f5f5f5;
+  border-color: #4f46e5;
+}
+
+.slider-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.slider-btn .material-symbols-outlined {
+  font-size: 24px;
+  color: #666;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .doctor-slider-card {
+    min-width: 280px;
+  }
+}

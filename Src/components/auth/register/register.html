@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Join BelShefaa ISA</title>
+    <link rel="stylesheet" href="register.css" />
+    <script src="../../../utilities/userAuth.js"></script>
+    <script src="../../../utilities/redirectTo.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="form-section">
+        <h1>Join BelShefaa ISA</h1>
+        <p class="subtitle">Start your journey to recovery today.</p>
+
+        <div class="role-toggle">
+          <button type="button" class="active" id="patientBtn">Patient</button>
+          <button type="button" id="doctorBtn">Specialist</button>
+        </div>
+
+        <form id="patientForm">
+          <div class="form-group">
+            <label for="patientName">Full Name</label>
+            <input type="text" id="patientName" required />
+          </div>
+
+          <div class="form-group">
+            <label for="patientEmail">Email</label>
+            <input type="email" id="patientEmail" required />
+          </div>
+
+          <div class="form-group">
+            <label for="patientPassword">Password</label>
+            <input type="password" id="patientPassword" required />
+          </div>
+
+          <div class="form-group">
+            <label for="patientConfirmPassword">Confirm Password</label>
+            <input type="password" id="patientConfirmPassword" required />
+          </div>
+
+          <button type="submit" class="submit-btn">Create Account</button>
+        </form>
+
+        <form id="doctorForm">
+          <div class="form-group">
+            <label for="doctorName">Full Name</label>
+            <input type="text" id="doctorName" required />
+          </div>
+
+          <div class="form-group">
+            <label for="doctorEmail">Email</label>
+            <input type="email" id="doctorEmail" required />
+          </div>
+
+          <div class="form-group">
+            <label for="licenseDocument">Medical License Document</label>
+            <input type="file" id="licenseDocument" accept=".pdf,.jpg,.jpeg,.png" required />
+            <small style="color: #666; font-size: 0.85em;">Upload your medical license (PDF, JPG, or PNG)</small>
+          </div>
+
+          <div class="form-group">
+            <label for="specialization">Specialization</label>
+            <select id="specialization" required>
+              <option value="" disabled selected>
+                Select your specialization
+              </option>
+              <option value="Cardiology">Cardiology</option>
+              <option value="Dermatology">Dermatology</option>
+              <option value="Neurology">Neurology</option>
+              <option value="Pediatrics">Pediatrics</option>
+              <option value="Psychiatry">Psychiatry</option>
+              <option value="General Practice">General Practice</option>
+              <option value="Surgery">Surgery</option>
+              <option value="Orthopedics">Orthopedics</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="doctorPassword">Password</label>
+            <input type="password" id="doctorPassword" required />
+          </div>
+
+          <div class="form-group">
+            <label for="doctorConfirmPassword">Confirm Password</label>
+            <input type="password" id="doctorConfirmPassword" required />
+          </div>
+
+          <button type="submit" class="submit-btn">Create Account</button>
+        </form>
+
+        <p class="login-text">
+          Already have an account?
+          <a href="../login/login.html">Sign in</a>
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h2>Empowering recovery,<br />one step at a time.</h2>
+        <div class="stats">
+          <div>
+            <strong>15k+</strong>
+            <span>Patients Recovered</span>
+          </div>
+          <div>
+            <strong>4.9</strong>
+            <span>User Rating</span>
+          </div>
+          <div>
+            <strong>24/7</strong>
+            <span>Support Available</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="register.js"></script>
+  </body>
+</html>

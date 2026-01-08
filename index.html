@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BelShefaa ISA - Book Trusted Rehabilitation Specialists</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <link rel="stylesheet" href="Src/shared/header.css" />
+    <link rel="stylesheet" href="Src/components/footer.css" />
+    <link rel="stylesheet" href="Styles/landing.css" />
+  </head>
+
+  <body>
+    <!-- Header -->
+    <div id="header-slot"></div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1>
+          Book trusted<br />
+          <span class="highlight">rehabilitation</span><br />
+          specialists easily
+        </h1>
+        <p>
+          Connect with top-rated physiotherapists, chiropractors, and
+          rehabilitation clinics near you. Your recovery journey starts here.
+        </p>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue">😊</div>
+          <div class="stat-content">
+            <h3>10k+</h3>
+            <p>Patients Recovered</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green">🛡️</div>
+          <div class="stat-content">
+            <h3>500+</h3>
+            <p>Verified Doctors</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple">🏢</div>
+          <div class="stat-content">
+            <h3>120+</h3>
+            <p>Partner Clinics</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Clinics Section -->
+    <section class="clinics-section">
+      <div class="section-header">
+        <div>
+          <h2>Featured Clinics</h2>
+          <p>Top-rated facilities for your rehabilitation needs</p>
+        </div>
+        <a href="#" class="view-all-link">View All Clinics →</a>
+      </div>
+      <div class="clinics-grid">
+        <div class="clinic-card">
+          <div class="clinic-image-wrapper">
+            <img
+              src="../../Assests/images/clinic1.jpg"
+              alt="Elite Sports Rehab"
+              class="clinic-image"
+            />
+            <div class="clinic-rating">⭐ 5.0</div>
+          </div>
+          <div class="clinic-info">
+            <h3>Elite Sports Rehab</h3>
+            <p class="description">
+              Specializing in athletes recovery and sports injuries treatment.
+            </p>
+            <div class="clinic-location">📍 Downtown Medical District</div>
+            <button class="view-profile-btn">View Profile</button>
+          </div>
+        </div>
+
+        <div class="clinic-card">
+          <div class="clinic-image-wrapper">
+            <img
+              src="../../Assests/images/clinic2.jpg"
+              alt="City Physio Center"
+              class="clinic-image"
+            />
+            <div class="clinic-rating">⭐ 4.8</div>
+          </div>
+          <div class="clinic-info">
+            <h3>City Physio Center</h3>
+            <p class="description">
+              Comprehensive physiotherapy for back pain and rehabilitation.
+            </p>
+            <div class="clinic-location">📍 Westside Plaza</div>
+            <button class="view-profile-btn">View Profile</button>
+          </div>
+        </div>
+
+        <div class="clinic-card">
+          <div class="clinic-image-wrapper">
+            <img
+              src="../../Assests/images/clinic3.jpg"
+              alt="Wellness Spine Clinic"
+              class="clinic-image"
+            />
+            <div class="clinic-rating">⭐ 5.0</div>
+          </div>
+          <div class="clinic-info">
+            <h3>Wellness Spine Clinic</h3>
+            <p class="description">
+              Expert chiropractic care for back and neck pain relief.
+            </p>
+            <div class="clinic-location">📍 North Hills</div>
+            <button class="view-profile-btn">View Profile</button>
+          </div>
+        </div>
+
+        <div class="clinic-card">
+          <div class="clinic-image-wrapper">
+            <img
+              src="../../Assests/images/clinic4.jpg"
+              alt="Advanced Rehab"
+              class="clinic-image"
+            />
+            <div class="clinic-rating">⭐ 4.7</div>
+          </div>
+          <div class="clinic-info">
+            <h3>Advanced Rehab</h3>
+            <p class="description">
+              Cutting-edge technology for faster recovery and healing.
+            </p>
+            <div class="clinic-location">📍 Tech Park Avenue</div>
+            <button class="view-profile-btn">View Profile</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <div id="footer-slot"></div>
+
+    <!-- Scripts -->
+    <script src="Src/utilities/LoadFooterAndNavBar.js"></script>
+    <script>
+      // Load header and footer
+      loadHeader({ path: 'Src/shared/header.html' });
+      loadFooter({ path: 'Src/components/footer.html' });
+    </script>
+  </body>
+</html>

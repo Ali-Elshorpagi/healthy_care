@@ -1,0 +1,13 @@
+{
+  "faqs": [
+    {
+      "id": "18ee",
+      "userId": "zezo@gmail.com",
+      "category": "General",
+      "question": "When did Dr. Jones become part of the BelShefaa ISA network?",
+      "answer": "next week",
+      "status": "pending",
+      "createdAt": "2026-01-08T21:22:43.392Z"
+    }
+  ]
+}

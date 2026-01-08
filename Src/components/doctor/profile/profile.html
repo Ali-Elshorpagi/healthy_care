@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile - BelShefaa ISA</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <link rel="stylesheet" href="../../../shared/styles.css" />
+    <link rel="stylesheet" href="profile.css" />
+  </head>
+
+  <body>
+    <div id="header" class="header"></div>
+    <div id="sidebar" class="sidebar"></div>
+
+    <div class="main-content">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="../dashboard/dashboard.html">Home</a>
+          <span></span>
+          <span class="current">Profile</span>
+        </div>
+
+        <div class="page-header">
+          <h1>Doctor Profile</h1>
+          <p>Manage your profile information and account preferences</p>
+        </div>
+
+        <div class="card">
+          <div class="profile-header">
+            <div class="avatar-col">
+              <div class="avatar-lg">
+                <img
+                  src="/Src/assets/images/default-avatar.svg"
+                  alt="Profile"
+                  id="profileAvatar"
+                />
+                <input
+                  type="file"
+                  id="profileImageInput"
+                  accept="image/*"
+                  style="display: none"
+                />
+                <button type="button" class="edit-btn" id="editAvatarBtn">
+                  <span class="material-symbols-outlined">edit</span>
+                </button>
+              </div>
+            </div>
+            <div class="info-col">
+              <h2 id="profileName">Dr. John Doe</h2>
+              <span class="badge badge-green">Approved</span>
+            </div>
+          </div>
+
+          <form id="profileForm">
+            <div class="form-section">
+              <div class="form-section-title">
+                <span class="material-symbols-outlined icon">person</span>
+                <div class="text">
+                  <h3>Personal Information</h3>
+                  <p>Update your personal details</p>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="firstName">First Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="firstName"
+                    value="John"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="lastName">Last Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="lastName"
+                    value="Doe"
+                  />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="email">Email Address</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    value="john.doctor@email.com"
+                    readonly
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="phone">Phone Number</label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="phone"
+                    value="+20 123 456 7890"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <span class="material-symbols-outlined icon"
+                  >medical_services</span
+                >
+                <div class="text">
+                  <h3>Professional Information</h3>
+                  <p>Your medical credentials and specialization</p>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="specialization">Specialization</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="specialization"
+                    value="Cardiology"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="licenseDocument">Medical License Document</label>
+                  <div style="margin-bottom: 8px;">
+                    <span id="currentLicenseFile" style="color: #666; font-size: 0.9em;">No document uploaded</span>
+                    <button type="button" id="viewLicenseBtn" class="btn btn-secondary" style="display: none; margin-left: 10px; padding: 4px 12px; font-size: 0.85em;">View</button>
+                  </div>
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="licenseDocument"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                  />
+                  <small style="color: #666; font-size: 0.85em;">Upload new license document (PDF, JPG, or PNG)</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <span class="material-symbols-outlined icon">lock</span>
+                <div class="text">
+                  <h3>Password & Security</h3>
+                  <p>Manage your password and security settings</p>
+                </div>
+              </div>
+              <div class="password-section">
+                <div class="form-group">
+                  <label for="currentPassword">Current Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="currentPassword"
+                    placeholder="Enter current password"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="newPassword">New Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="newPassword"
+                    placeholder="Enter new password"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="confirmPassword">Confirm New Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="confirmPassword"
+                    placeholder="Confirm new password"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" id="cancelBtn">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="page-footer">
+          <p>© 2025 BelShefaa ISA. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../../utilities/userAuth.js"></script>
+    <script src="../shared/sidebar.js"></script>
+    <script src="profile.js"></script>
+  </body>
+</html>
