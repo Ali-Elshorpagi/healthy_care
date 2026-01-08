@@ -128,6 +128,53 @@
       "isDeleted": true,
       "updatedAt": "2026-01-04T09:42:51.483Z",
       "deletedAt": "2026-01-04T09:45:11.525Z"
+    },
+    {
+      "id": "apt_1767879602909",
+      "clinicId": "clinic1",
+      "doctorId": "d_1767266500001",
+      "date": "2026-01-21",
+      "time": "20:39",
+      "notes": "",
+      "patientId": "p_1767363105994",
+      "status": "pending",
+      "createdAt": "2026-01-08T13:40:02.908Z",
+      "isDeleted": false
+    },
+    {
+      "id": "apt_1767879793922",
+      "clinicId": "clinic1",
+      "doctorId": "d_1767266500001",
+      "date": "2025-01-29",
+      "time": "15:46",
+      "notes": "sdfgdsflkngldsfnkgldnsflgndflkljgflkdglkjfdns;jkgndsfkjngkjdsfngkjsfdgnkjs dgf\nsdfgdsflkngldsfnkgldnsflgndflkljgflkdglkjfdns;jkgndsfkjngkjdsfngkjsfdgnkjs dgf\nsdfgdsflkngldsfnkgldnsflgndflkljgflkdglkjfdns;jkgndsfkjngkjdsfngkjsfdgnkjs dgf\nsdfgdsflkngldsfnkgldnsflgndflkljgflkdglkjfdns;jkgndsfkjngkjdsfngkjsfdgnkjs dgf\nsdfg",
+      "patientId": "p_1767363105994",
+      "status": "accepted",
+      "createdAt": "2026-01-08T13:43:13.922Z",
+      "isDeleted": false
+    },
+    {
+      "id": "apt_1767881429242",
+      "clinicId": "clinic1",
+      "doctorId": "d_1767880025913",
+      "date": "2025-01-13",
+      "time": "16:12",
+      "notes": "",
+      "patientId": "p_1767363105994",
+      "status": "accepted",
+      "createdAt": "2026-01-08T14:10:29.242Z",
+      "isDeleted": false
+    }
+  ],
+  "ratings": [
+    {
+      "id": "6bc8",
+      "patientId": null,
+      "doctorId": "d_1767880025913",
+      "appointmentId": "apt_1767881429242",
+      "rating": 4,
+      "comment": "",
+      "createdAt": "2026-01-08T14:16:25.359Z"
     }
   ]
 }

@@ -54,9 +54,22 @@ async function loadProfile() {
       let users = await response.json();
       if (users.length > 0) {
         let doctor = users[0];
-        if (doctor.medicalLicenseNo) {
-          let licenseEl = document.getElementById('licenseNo');
-          if (licenseEl) licenseEl.value = doctor.medicalLicenseNo;
+        
+        // Display current license document info
+        if (doctor.licenseFileName) {
+          let currentFileEl = document.getElementById('currentLicenseFile');
+          let viewBtnEl = document.getElementById('viewLicenseBtn');
+          if (currentFileEl) {
+            currentFileEl.textContent = `Current: ${doctor.licenseFileName}`;
+          }
+          if (viewBtnEl && doctor.medicalLicenseDocument) {
+            viewBtnEl.style.display = 'inline-block';
+            viewBtnEl.onclick = function() {
+              // Open document in new window
+              let win = window.open();
+              win.document.write(`<iframe src="${doctor.medicalLicenseDocument}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
+            };
+          }
         }
       }
     }
@@ -218,6 +231,7 @@ function setupForm() {
       let lastName = document.getElementById('lastName').value.trim();
       let phone = document.getElementById('phone').value.trim();
       let specialization = document.getElementById('specialization').value.trim();
+      let licenseFile = document.getElementById('licenseDocument').files[0];
       let currentPassword = document.getElementById('currentPassword').value;
       let newPassword = document.getElementById('newPassword').value;
       let confirmPassword = document.getElementById('confirmPassword').value;
@@ -260,6 +274,25 @@ function setupForm() {
           specialization: specialization
         };
 
+        // Handle license document upload if new file is selected
+        if (licenseFile) {
+          try {
+            const licenseDocument = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = (e) => resolve(e.target.result);
+              reader.onerror = reject;
+              reader.readAsDataURL(licenseFile);
+            });
+            
+            updateData.medicalLicenseDocument = licenseDocument;
+            updateData.licenseFileName = licenseFile.name;
+          } catch (error) {
+            console.error('Error processing license document:', error);
+            alert('Failed to process license document. Please try again.');
+            return;
+          }
+        }
+
         // If password is being changed, verify current password first
         if (newPassword) {
           let storedPassword = sessionStorage.getItem('password');
@@ -296,10 +329,11 @@ function setupForm() {
 
         alert('Profile updated successfully!');
         
-        // Clear password fields
+        // Clear password fields and file input
         document.getElementById('currentPassword').value = '';
         document.getElementById('newPassword').value = '';
         document.getElementById('confirmPassword').value = '';
+        document.getElementById('licenseDocument').value = '';
         
         // Reload profile to show updated data
         loadProfile();

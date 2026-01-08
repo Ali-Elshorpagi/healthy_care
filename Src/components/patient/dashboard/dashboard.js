@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
   loadDoctors();
   loadUpcomingAppointments();
   loadStats();
+  loadDoctorsSlider();
 });
 
 let allDoctors = [];
@@ -28,8 +29,9 @@ async function loadDoctors() {
         name: doctor.fullName,
         specialization: doctor.specialization || 'General Practice',
         clinic: doctor.clinicName || 'City Medical Center',
-        rating: 4.8,
-        experience: '10 years',
+        rating: doctor.averageRating ? doctor.averageRating.toFixed(1) : 'New',
+        totalRatings: doctor.totalRatings || 0,
+        experience: doctor.experience || '5+ years',
         image:
           doctor.profileImage ||
           'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200',
@@ -525,4 +527,133 @@ function displayNoAppointments() {
       </div>
     </div>
   `;
+}
+
+let currentSlideIndex = 0;
+let slidersPerView = 3;
+
+async function loadDoctorsSlider() {
+  try {
+    const response = await fetch('http://localhost:8877/users');
+    if (!response.ok) throw new Error('Failed to fetch doctors');
+
+    const allUsers = await response.json();
+
+    const doctors = allUsers
+      .filter((user) => user.role === 'doctor' && user.approved === 'approved')
+      .map((doctor) => ({
+        id: doctor.id,
+        name: doctor.fullName,
+        specialization: doctor.specialization || 'General Practice',
+        clinic: doctor.clinicName || 'City Medical Center',
+        rating: doctor.averageRating ? doctor.averageRating.toFixed(1) : 'New',
+        totalRatings: doctor.totalRatings || 0,
+        experience: doctor.experience || '5+ years',
+        image: doctor.profileImage || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200',
+      }));
+
+    displayDoctorsSlider(doctors);
+    setupSliderControls(doctors.length);
+    updateSlidersPerView();
+    window.addEventListener('resize', updateSlidersPerView);
+  } catch (error) {
+    console.error('Error loading doctors slider:', error);
+  }
+}
+
+function displayDoctorsSlider(doctors) {
+  const slider = document.getElementById('doctorsSlider');
+  if (!slider) return;
+
+  slider.innerHTML = doctors
+    .map(
+      (doctor) => `
+    <div class="doctor-slider-card">
+      <div class="doctor-slider-image">
+        <img src="${doctor.image}" alt="${doctor.name}" />
+        <span class="rating"><span class="star">★</span> ${doctor.rating}</span>
+      </div>
+      <div class="doctor-slider-info">
+        <h3>${doctor.name}</h3>
+        <p class="specialization">${doctor.specialization}</p>
+        <p class="clinic">
+          <span class="material-symbols-outlined">local_hospital</span>
+          ${doctor.clinic}
+        </p>
+        <p class="experience">
+          <span class="material-symbols-outlined">work</span>
+          ${doctor.experience} experience
+        </p>
+      </div>
+      <div class="doctor-slider-actions">
+        <button class="btn btn-primary" onclick="bookAppointment('${doctor.id}')">
+          <span class="material-symbols-outlined">calendar_add_on</span>
+          Book Appointment
+        </button>
+      </div>
+    </div>
+  `
+    )
+    .join('');
+}
+
+function setupSliderControls(totalDoctors) {
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const slider = document.getElementById('doctorsSlider');
+
+  if (!prevBtn || !nextBtn || !slider) return;
+
+  prevBtn.addEventListener('click', () => {
+    if (currentSlideIndex > 0) {
+      currentSlideIndex--;
+      updateSliderPosition(slider);
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    const maxIndex = Math.max(0, totalDoctors - slidersPerView);
+    if (currentSlideIndex < maxIndex) {
+      currentSlideIndex++;
+      updateSliderPosition(slider);
+    }
+  });
+
+  updateSliderButtons(totalDoctors);
+}
+
+function updateSliderPosition(slider) {
+  const cardWidth = 320;
+  const gap = 24;
+  const offset = currentSlideIndex * (cardWidth + gap);
+  slider.style.transform = `translateX(-${offset}px)`;
+  
+  const totalDoctors = slider.children.length;
+  updateSliderButtons(totalDoctors);
+}
+
+function updateSliderButtons(totalDoctors) {
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  
+  if (prevBtn) prevBtn.disabled = currentSlideIndex === 0;
+  if (nextBtn) nextBtn.disabled = currentSlideIndex >= Math.max(0, totalDoctors - slidersPerView);
+}
+
+function updateSlidersPerView() {
+  const width = window.innerWidth;
+  if (width < 768) {
+    slidersPerView = 1;
+  } else if (width < 1200) {
+    slidersPerView = 2;
+  } else {
+    slidersPerView = 3;
+  }
+  
+  const slider = document.getElementById('doctorsSlider');
+  if (slider) {
+    const totalDoctors = slider.children.length;
+    currentSlideIndex = Math.min(currentSlideIndex, Math.max(0, totalDoctors - slidersPerView));
+    updateSliderPosition(slider);
+  }
 }

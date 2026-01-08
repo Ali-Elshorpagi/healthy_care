@@ -185,6 +185,116 @@
       </div>
     </div>
 
+    <!-- Rating Modal -->
+    <div id="ratingModal" class="rating-modal">
+      <div class="rating-modal-content">
+        <div class="rating-modal-header">
+          <h2>Rate Your Experience</h2>
+          <button class="close-modal" onclick="closeRatingModal()">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="rating-modal-body">
+          <div class="doctor-info">
+            <span class="material-symbols-outlined doctor-icon">person</span>
+            <div>
+              <p class="doctor-name" id="modalDoctorName"></p>
+              <p class="rate-subtitle">How was your appointment?</p>
+            </div>
+          </div>
+          
+          <div class="rating-stars">
+            <span class="star" data-rating="1" onclick="selectRating(1)">★</span>
+            <span class="star" data-rating="2" onclick="selectRating(2)">★</span>
+            <span class="star" data-rating="3" onclick="selectRating(3)">★</span>
+            <span class="star" data-rating="4" onclick="selectRating(4)">★</span>
+            <span class="star" data-rating="5" onclick="selectRating(5)">★</span>
+          </div>
+          <p class="rating-text" id="ratingText">Click a star to rate</p>
+          
+          <div class="form-group">
+            <label for="ratingComment">Share your experience (optional)</label>
+            <textarea 
+              id="ratingComment" 
+              class="form-control" 
+              rows="4" 
+              placeholder="Tell us about your appointment..."></textarea>
+          </div>
+        </div>
+        <div class="rating-modal-footer">
+          <button class="btn btn-secondary" onclick="closeRatingModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="submitRating()">Submit Rating</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Appointment Details Modal -->
+    <div id="detailsModal" class="rating-modal">
+      <div class="rating-modal-content">
+        <div class="rating-modal-header">
+          <h2>Appointment Details</h2>
+          <button class="close-modal" onclick="closeDetailsModal()">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="rating-modal-body">
+          <div class="details-section">
+            <div class="detail-row">
+              <span class="detail-label">Appointment ID</span>
+              <span class="detail-value" id="detailsAppointmentId"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Status</span>
+              <span class="badge" id="detailsStatusBadge"></span>
+            </div>
+          </div>
+
+          <div class="details-section">
+            <h3>Doctor Information</h3>
+            <div class="detail-row">
+              <span class="material-symbols-outlined">person</span>
+              <div>
+                <p class="detail-title" id="detailsDoctorName"></p>
+                <p class="detail-subtitle" id="detailsSpecialization"></p>
+              </div>
+            </div>
+            <div class="detail-row">
+              <span class="material-symbols-outlined">mail</span>
+              <span class="detail-value" id="detailsEmail"></span>
+            </div>
+            <div class="detail-row">
+              <span class="material-symbols-outlined">call</span>
+              <span class="detail-value" id="detailsPhone"></span>
+            </div>
+          </div>
+
+          <div class="details-section">
+            <h3>Appointment Information</h3>
+            <div class="detail-row">
+              <span class="material-symbols-outlined">calendar_today</span>
+              <span class="detail-value" id="detailsDate"></span>
+            </div>
+            <div class="detail-row">
+              <span class="material-symbols-outlined">schedule</span>
+              <span class="detail-value" id="detailsTime"></span>
+            </div>
+            <div class="detail-row">
+              <span class="material-symbols-outlined">local_hospital</span>
+              <span class="detail-value" id="detailsClinic"></span>
+            </div>
+          </div>
+
+          <div class="details-section">
+            <h3>Notes</h3>
+            <p class="details-notes" id="detailsNotes"></p>
+          </div>
+        </div>
+        <div class="rating-modal-footer">
+          <button class="btn btn-primary" onclick="closeDetailsModal()">Close</button>
+        </div>
+      </div>
+    </div>
+
     <script src="../../../utilities/userAuth.js"></script>
     <script src="../../../shared/sidebar.js"></script>
     <script src="appointments.js"></script>

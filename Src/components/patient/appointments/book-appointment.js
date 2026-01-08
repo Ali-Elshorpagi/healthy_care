@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
   loadClinics();
   loadDoctors().then(() => {
     checkForReschedule();
+    checkForPreselectedDoctor();
   });
   setupDoctorAutocomplete();
   setupDateRestrictions();
@@ -239,10 +240,11 @@ function setupDateRestrictions() {
 function setupFormSubmit() {
   const form = document.getElementById('bookingForm');
 
-  form.addEventListener('submit', function (e) {
+  form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    if (!validateForm()) {
+    const isValid = await validateForm();
+    if (!isValid) {
       return;
     }
 
@@ -265,7 +267,7 @@ function setupFormSubmit() {
   });
 }
 
-function validateForm() {
+async function validateForm() {
   const clinicId = document.getElementById('clinicSelect').value;
   const doctorId = document.getElementById('selectedDoctorId').value;
   const date = document.getElementById('appointmentDate').value;
@@ -291,7 +293,42 @@ function validateForm() {
     return false;
   }
 
+  // Check for conflicting appointments
+  const patientId = sessionStorage.getItem('userId');
+  const hasConflict = await checkTimeConflict(patientId, date, time);
+  if (hasConflict) {
+    showMessage('You already have an appointment at this time. Please choose a different time slot.', 'error');
+    return false;
+  }
+
   return true;
+}
+
+async function checkTimeConflict(patientId, date, time) {
+  try {
+    // Fetch all appointments for the patient
+    const response = await fetch(`http://localhost:8876/appointments?patientId=${patientId}&isDeleted=false`);
+    if (!response.ok) {
+      console.error('Failed to fetch appointments');
+      return false;
+    }
+
+    const appointments = await response.json();
+
+    // If rescheduling, exclude the current appointment from conflict check
+    const conflictingAppointment = appointments.find(apt => {
+      const isSameDateTime = apt.date === date && apt.time === time;
+      const isActiveAppointment = apt.status !== 'cancelled' && apt.status !== 'rejected';
+      const isNotCurrentReschedule = !isRescheduling || apt.id !== rescheduleAppointmentId;
+      
+      return isSameDateTime && isActiveAppointment && isNotCurrentReschedule;
+    });
+
+    return !!conflictingAppointment;
+  } catch (error) {
+    console.error('Error checking time conflict:', error);
+    return false;
+  }
 }
 
 async function saveAppointment(appointmentData) {
@@ -387,6 +424,31 @@ async function checkForReschedule() {
     const submitBtn = document.querySelector('button[type="submit"]');
     if (submitBtn) {
       submitBtn.textContent = 'Update Appointment';
+    }
+  }
+}
+
+async function checkForPreselectedDoctor() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const doctorId = urlParams.get('doctorId');
+
+  if (doctorId && !isRescheduling) {
+    const doctor = doctorsData.find(doc => doc.id === doctorId);
+    if (doctor) {
+      // Set clinic if doctor has one
+      if (doctor.clinicId) {
+        const clinicSelect = document.getElementById('clinicSelect');
+        if (clinicSelect) {
+          clinicSelect.value = doctor.clinicId;
+          clinicSelect.dispatchEvent(new Event('change'));
+        }
+      }
+      
+      // Select the doctor
+      selectDoctor(doctor);
+      
+      // Show info message
+      showMessage(`Booking appointment with ${doctor.name}`, 'info');
     }
   }
 }

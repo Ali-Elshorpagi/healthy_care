@@ -9,6 +9,10 @@ echo Starting Appointments Database on port 8876...
 start "Appointments DB (Port 8876)" cmd /k "json-server --watch Src/database/appointments.json --port 8876"
 timeout /t 2 /nobreak >nul
 
+echo Starting Ratings Database on port 8874...
+start "Ratings DB (Port 8874)" cmd /k "json-server --watch Src/database/ratings.json --port 8874"
+timeout /t 2 /nobreak >nul
+
 echo Starting Medical Records Database on port 8875...
 start "Medical Records DB (Port 8875)" cmd /k "json-server --watch Src/database/medical_records.json --port 8875"
 
@@ -18,6 +22,7 @@ echo All JSON Servers are starting...
 echo.
 echo Users API: http://localhost:8877/users
 echo Appointments API: http://localhost:8876/appointments
+echo Ratings API: http://localhost:8874/ratings
 echo Medical Records API: http://localhost:8875/records
 echo.
 echo Press any key to stop all servers...
@@ -26,6 +31,7 @@ pause >nul
 
 taskkill /FI "WINDOWTITLE eq Users DB (Port 8877)*" /T /F >nul 2>&1
 taskkill /FI "WINDOWTITLE eq Appointments DB (Port 8876)*" /T /F >nul 2>&1
+taskkill /FI "WINDOWTITLE eq Ratings DB (Port 8874)*" /T /F >nul 2>&1
 taskkill /FI "WINDOWTITLE eq Medical Records DB (Port 8875)*" /T /F >nul 2>&1
 
 echo.

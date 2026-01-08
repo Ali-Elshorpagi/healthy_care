@@ -73,11 +73,11 @@ doctorForm.addEventListener("submit", async (e) => {
     const password = document.getElementById("doctorPassword").value.trim();
     const confirmPassword = document.getElementById("doctorConfirmPassword").value.trim();
     const email = document.getElementById("doctorEmail").value.trim();
-    const licenseNo = document.getElementById("licenseNo").value.trim();
+    const licenseFile = document.getElementById("licenseDocument").files[0];
     const specialization = document.getElementById("specialization").value.trim();
     const fullName = document.getElementById("doctorName").value.trim();
 
-    if (fullName === "" || email === "" || password === "" || confirmPassword === "" || licenseNo === "" || specialization === "") {
+    if (fullName === "" || email === "" || password === "" || confirmPassword === "" || !licenseFile || specialization === "") {
         alert("All fields are required!");
         return;
     }
@@ -95,6 +95,14 @@ doctorForm.addEventListener("submit", async (e) => {
 
     const hashedPassword = await hashPassword(password);
 
+    // Convert license file to base64
+    const licenseDocument = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(licenseFile);
+    });
+
     const doctor = {
         id: `d_${Date.now()}`,
         role: "doctor",
@@ -102,7 +110,8 @@ doctorForm.addEventListener("submit", async (e) => {
         email: email,
         password: hashedPassword,
         profileImage: "/Src/assets/images/default-avatar.svg",
-        medicalLicenseNo: licenseNo,
+        medicalLicenseDocument: licenseDocument,
+        licenseFileName: licenseFile.name,
         specialization: specialization,
         approved: "pending",
         schedule: [],

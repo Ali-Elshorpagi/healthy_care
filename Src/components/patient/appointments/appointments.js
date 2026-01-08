@@ -112,13 +112,30 @@ function renderAppointments(appointments) {
   const container = document.getElementById('appointmentsList');
   container.innerHTML = '';
 
-  appointments.forEach(apt => {
+  appointments.forEach(async apt => {
     const date = new Date(apt.date);
     const day = date.getDate();
     const month = date.toLocaleString('en-US', { month: 'short' });
 
     const status = getAppointmentStatus(apt);
     const badgeClass = getStatusBadgeClass(status);
+
+    // Check if already rated
+    const userId = sessionStorage.getItem('userId');
+    let alreadyRated = false;
+    
+    if (status === 'Completed' && userId) {
+      try {
+        const ratingsResponse = await fetch('http://localhost:8876/ratings');
+        const ratings = await ratingsResponse.json();
+        alreadyRated = ratings.some(r => 
+          r.appointmentId === apt.id && 
+          r.patientId === parseInt(userId)
+        );
+      } catch (error) {
+        console.error('Error checking rating status:', error);
+      }
+    }
 
     const card = document.createElement('div');
     card.className = 'appointment-card';
@@ -136,7 +153,7 @@ function renderAppointments(appointments) {
           <span><span class="material-symbols-outlined meta-icon">schedule</span>${apt.time}</span>
           <span><span class="material-symbols-outlined meta-icon">medical_services</span>${apt.doctorSpecialization}</span>
         </p>
-        ${apt.notes ? `<p class="appointment-notes">${apt.notes}</p>` : ''}
+        ${apt.notes ? `<p class="appointment-notes">${truncateText(apt.notes, 80)}</p>` : ''}
         <span class="badge ${badgeClass}">${status}</span>
       </div>
       <div class="actions-col">
@@ -146,12 +163,29 @@ function renderAppointments(appointments) {
         ` : ''}
         ${status === 'Completed' ? `
           <button class="btn btn-secondary btn-sm" onclick="viewDetails('${apt.id}')">View Details</button>
+          ${!alreadyRated ? `
+            <button class="btn btn-primary btn-sm" onclick="openRatingModal('${apt.id}', '${apt.doctorName}', '${apt.doctorId}')">
+              <span class="material-symbols-outlined" style="font-size: 16px;">star</span>
+              Rate Doctor
+            </button>
+          ` : `
+            <button class="btn btn-secondary btn-sm" disabled style="opacity: 0.6;">
+              <span class="material-symbols-outlined" style="font-size: 16px;">check_circle</span>
+              Rated
+            </button>
+          `}
         ` : ''}
       </div>
     `;
 
     container.appendChild(card);
   });
+}
+
+function truncateText(text, maxLength = 80) {
+  if (!text) return '';
+  if (text.length <= maxLength) return text;
+  return text.substring(0, maxLength) + '...';
 }
 
 function getAppointmentStatus(appointment) {
@@ -237,8 +271,48 @@ async function rescheduleAppointment(appointmentId) {
   window.location.href = `book-appointment.html?reschedule=${appointmentId}`;
 }
 
-function viewDetails(appointmentId) {
-  alert('View details functionality - to be implemented');
+async function viewDetails(appointmentId) {
+  try {
+    const aptResponse = await fetch(`http://localhost:8876/appointments/${appointmentId}`);
+    if (!aptResponse.ok) throw new Error('Failed to fetch appointment');
+    const appointment = await aptResponse.json();
+
+    const doctorResponse = await fetch(`http://localhost:8877/users/${appointment.doctorId}`);
+    if (!doctorResponse.ok) throw new Error('Failed to fetch doctor');
+    const doctor = await doctorResponse.json();
+
+    const date = new Date(appointment.date);
+    const formattedDate = date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    document.getElementById('detailsAppointmentId').textContent = `#${appointment.id}`;
+    document.getElementById('detailsDoctorName').textContent = doctor.fullName;
+    document.getElementById('detailsSpecialization').textContent = doctor.specialization || 'General Practice';
+    document.getElementById('detailsDate').textContent = formattedDate;
+    document.getElementById('detailsTime').textContent = appointment.time;
+    document.getElementById('detailsClinic').textContent = doctor.clinic || 'BelShefaa ISA';
+    
+    const statusBadge = document.getElementById('detailsStatusBadge');
+    statusBadge.textContent = appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1);
+    statusBadge.className = 'badge ' + getStatusBadgeClass(getAppointmentStatus(appointment));
+    
+    document.getElementById('detailsNotes').textContent = appointment.notes || 'No notes provided';
+    document.getElementById('detailsEmail').textContent = doctor.email || 'N/A';
+    document.getElementById('detailsPhone').textContent = doctor.phoneNumber || 'N/A';
+
+    document.getElementById('detailsModal').classList.add('show');
+  } catch (error) {
+    console.error('Error loading appointment details:', error);
+    alert('Failed to load appointment details. Please try again.');
+  }
+}
+
+function closeDetailsModal() {
+  document.getElementById('detailsModal').classList.remove('show');
 }
 
 function setupSortSelect() {
@@ -287,3 +361,177 @@ function sortAppointments(sortBy) {
 
   cards.forEach(card => container.appendChild(card));
 }
+// Rating functionality
+let currentRatingData = {
+  appointmentId: null,
+  doctorName: '',
+  doctorId: null,
+  rating: 0
+};
+
+function openRatingModal(appointmentId, doctorName, doctorId) {
+  currentRatingData = {
+    appointmentId,
+    doctorName,
+    doctorId: typeof doctorId === 'string' ? doctorId : String(doctorId),
+    rating: 0
+  };
+
+  document.getElementById('modalDoctorName').textContent = doctorName;
+  document.getElementById('ratingComment').value = '';
+  document.getElementById('ratingText').textContent = 'Click a star to rate';
+  
+  // Reset stars
+  document.querySelectorAll('.star').forEach(star => {
+    star.classList.remove('active');
+  });
+
+  const modal = document.getElementById('ratingModal');
+  modal.classList.add('show');
+}
+
+function closeRatingModal() {
+  const modal = document.getElementById('ratingModal');
+  modal.classList.remove('show');
+  currentRatingData = {
+    appointmentId: null,
+    doctorName: '',
+    doctorId: null,
+    rating: 0
+  };
+}
+
+function selectRating(rating) {
+  currentRatingData.rating = rating;
+  
+  const ratingTexts = {
+    1: 'Poor - Not satisfied',
+    2: 'Fair - Could be better',
+    3: 'Good - Satisfied',
+    4: 'Very Good - Highly satisfied',
+    5: 'Excellent - Extremely satisfied'
+  };
+  
+  document.getElementById('ratingText').textContent = ratingTexts[rating];
+  
+  // Update star visuals
+  document.querySelectorAll('.star').forEach((star, index) => {
+    if (index < rating) {
+      star.classList.add('active');
+    } else {
+      star.classList.remove('active');
+    }
+  });
+}
+
+async function submitRating() {
+  if (currentRatingData.rating === 0) {
+    alert('Please select a rating before submitting.');
+    return;
+  }
+
+  const comment = document.getElementById('ratingComment').value.trim();
+  const userId = sessionStorage.getItem('userId');
+
+  if (!userId) {
+    alert('User not logged in.');
+    return;
+  }
+
+  try {
+    // Check if already rated
+    const existingRatingsResponse = await fetch('http://localhost:8876/ratings');
+    const existingRatings = await existingRatingsResponse.json();
+    
+    const alreadyRated = existingRatings.find(r => 
+      r.appointmentId === currentRatingData.appointmentId && 
+      r.patientId === parseInt(userId)
+    );
+
+    if (alreadyRated) {
+      alert('You have already rated this appointment.');
+      closeRatingModal();
+      return;
+    }
+
+    // Create new rating
+    const newRating = {
+      patientId: parseInt(userId),
+      doctorId: currentRatingData.doctorId,
+      appointmentId: currentRatingData.appointmentId,
+      rating: currentRatingData.rating,
+      comment: comment,
+      createdAt: new Date().toISOString()
+    };
+
+    const ratingResponse = await fetch('http://localhost:8876/ratings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newRating)
+    });
+
+    if (!ratingResponse.ok) {
+      throw new Error('Failed to submit rating');
+    }
+
+    // Update doctor's average rating
+    await updateDoctorRating(currentRatingData.doctorId);
+
+    alert('Thank you for your feedback!');
+    closeRatingModal();
+    loadAppointments(); // Refresh to hide the rate button
+
+  } catch (error) {
+    console.error('Error submitting rating:', error);
+    alert('Failed to submit rating. Please try again.');
+  }
+}
+
+async function updateDoctorRating(doctorId) {
+  try {
+    // Get all ratings for this doctor
+    const ratingsResponse = await fetch('http://localhost:8876/ratings');
+    const allRatings = await ratingsResponse.json();
+    const doctorRatings = allRatings.filter(r => r.doctorId === doctorId);
+
+    if (doctorRatings.length === 0) return;
+
+    // Calculate average
+    const sum = doctorRatings.reduce((acc, r) => acc + r.rating, 0);
+    const average = sum / doctorRatings.length;
+
+    // Update doctor record
+    const doctorResponse = await fetch(`http://localhost:8877/users/${doctorId}`);
+    const doctor = await doctorResponse.json();
+    
+    doctor.averageRating = parseFloat(average.toFixed(1));
+    doctor.totalRatings = doctorRatings.length;
+
+    await fetch(`http://localhost:8877/users/${doctorId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(doctor)
+    });
+
+  } catch (error) {
+    console.error('Error updating doctor rating:', error);
+  }
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+  const ratingModal = document.getElementById('ratingModal');
+  const detailsModal = document.getElementById('detailsModal');
+  
+  if (event.target === ratingModal) {
+    closeRatingModal();
+  }
+  
+  if (event.target === detailsModal) {
+    closeDetailsModal();
+  }
+});

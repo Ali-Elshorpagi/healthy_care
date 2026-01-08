@@ -138,14 +138,18 @@
                   />
                 </div>
                 <div class="form-group">
-                  <label for="licenseNo">Medical License Number</label>
+                  <label for="licenseDocument">Medical License Document</label>
+                  <div style="margin-bottom: 8px;">
+                    <span id="currentLicenseFile" style="color: #666; font-size: 0.9em;">No document uploaded</span>
+                    <button type="button" id="viewLicenseBtn" class="btn btn-secondary" style="display: none; margin-left: 10px; padding: 4px 12px; font-size: 0.85em;">View</button>
+                  </div>
                   <input
-                    type="text"
+                    type="file"
                     class="form-control"
-                    id="licenseNo"
-                    value="LIC-EG-1001"
-                    readonly
+                    id="licenseDocument"
+                    accept=".pdf,.jpg,.jpeg,.png"
                   />
+                  <small style="color: #666; font-size: 0.85em;">Upload new license document (PDF, JPG, or PNG)</small>
                 </div>
               </div>
             </div>
