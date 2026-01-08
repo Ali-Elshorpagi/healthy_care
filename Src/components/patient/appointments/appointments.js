@@ -157,10 +157,6 @@ function renderAppointments(appointments) {
         <span class="badge ${badgeClass}">${status}</span>
       </div>
       <div class="actions-col">
-        ${status === 'Upcoming' ? `
-          <button class="btn btn-secondary btn-sm" onclick="rescheduleAppointment('${apt.id}')">Reschedule</button>
-          <button class="btn btn-danger btn-sm" onclick="cancelAppointment('${apt.id}')">Cancel</button>
-        ` : ''}
         ${status === 'Completed' ? `
           <button class="btn btn-secondary btn-sm" onclick="viewDetails('${apt.id}')">View Details</button>
           ${!alreadyRated ? `
@@ -189,27 +185,29 @@ function truncateText(text, maxLength = 80) {
 }
 
 function getAppointmentStatus(appointment) {
+  // Return the actual status from the appointment
+  if (appointment.status === 'accepted') return 'Accepted';
+  if (appointment.status === 'pending') return 'Pending';
+  if (appointment.status === 'rejected') return 'Rejected';
   if (appointment.status === 'cancelled') return 'Cancelled';
   if (appointment.status === 'completed') return 'Completed';
 
-  const appointmentDate = new Date(appointment.date + 'T' + appointment.time);
-  const now = new Date();
-
-  if (appointmentDate < now) {
-    return 'Completed';
-  }
-
-  return 'Upcoming';
+  // Default to pending if no status
+  return 'Pending';
 }
 
 function getStatusBadgeClass(status) {
   switch (status.toLowerCase()) {
-    case 'upcoming':
-      return 'badge-blue';
-    case 'completed':
+    case 'accepted':
       return 'badge-green';
-    case 'cancelled':
+    case 'pending':
+      return 'badge-yellow';
+    case 'rejected':
       return 'badge-red';
+    case 'completed':
+      return 'badge-blue';
+    case 'cancelled':
+      return 'badge-gray';
     default:
       return 'badge-gray';
   }
@@ -289,7 +287,6 @@ async function viewDetails(appointmentId) {
       day: 'numeric'
     });
 
-    document.getElementById('detailsAppointmentId').textContent = `#${appointment.id}`;
     document.getElementById('detailsDoctorName').textContent = doctor.fullName;
     document.getElementById('detailsSpecialization').textContent = doctor.specialization || 'General Practice';
     document.getElementById('detailsDate').textContent = formattedDate;

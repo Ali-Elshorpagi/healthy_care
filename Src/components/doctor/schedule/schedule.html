@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Schedule - BelShefaa ISA</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <link rel="stylesheet" href="../../../shared/styles.css" />
+    <link rel="stylesheet" href="schedule.css" />
+  </head>
+  <body>
+    <div id="header" class="header"></div>
+    <div id="sidebar" class="sidebar"></div>
+
+    <div class="main-content">
+      <div class="container">
+        <!-- Header Section -->
+        <div class="page-header">
+          <div class="page-header-content">
+            <h1 class="page-title">My Schedule</h1>
+            <p class="page-description">Manage your availability for patient appointments</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-primary" id="addScheduleBtn">
+              <span class="material-symbols-outlined btn-icon">add</span>
+              Add Availability
+            </button>
+          </div>
+        </div>
+
+        <!-- Schedule Grid -->
+        <div class="schedule-grid">
+          <div class="day-column" data-day="Monday">
+            <div class="day-header">Monday</div>
+            <div class="time-slots" id="slots-Monday"></div>
+          </div>
+          <div class="day-column" data-day="Tuesday">
+            <div class="day-header">Tuesday</div>
+            <div class="time-slots" id="slots-Tuesday"></div>
+          </div>
+          <div class="day-column" data-day="Wednesday">
+            <div class="day-header">Wednesday</div>
+            <div class="time-slots" id="slots-Wednesday"></div>
+          </div>
+          <div class="day-column" data-day="Thursday">
+            <div class="day-header">Thursday</div>
+            <div class="time-slots" id="slots-Thursday"></div>
+          </div>
+          <div class="day-column" data-day="Friday">
+            <div class="day-header">Friday</div>
+            <div class="time-slots" id="slots-Friday"></div>
+          </div>
+          <div class="day-column" data-day="Saturday">
+            <div class="day-header">Saturday</div>
+            <div class="time-slots" id="slots-Saturday"></div>
+          </div>
+          <div class="day-column" data-day="Sunday">
+            <div class="day-header">Sunday</div>
+            <div class="time-slots" id="slots-Sunday"></div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state" style="display: none;">
+          <span class="material-symbols-outlined empty-icon">event_busy</span>
+          <h3>No Schedule Set</h3>
+          <p>Add your availability to let patients book appointments</p>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading schedule...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add/Edit Schedule Modal -->
+    <div id="scheduleModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalTitle">Add Availability</h2>
+          <button class="modal-close" id="closeModal">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <form id="scheduleForm">
+          <div class="form-group">
+            <label for="dayOfWeek" class="form-label">
+              <span class="material-symbols-outlined">calendar_today</span>
+              Day of Week
+            </label>
+            <select id="dayOfWeek" class="form-control" required>
+              <option value="">Select day</option>
+              <option value="Monday">Monday</option>
+              <option value="Tuesday">Tuesday</option>
+              <option value="Wednesday">Wednesday</option>
+              <option value="Thursday">Thursday</option>
+              <option value="Friday">Friday</option>
+              <option value="Saturday">Saturday</option>
+              <option value="Sunday">Sunday</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="startTime" class="form-label">
+                <span class="material-symbols-outlined">schedule</span>
+                Start Time
+              </label>
+              <input
+                type="time"
+                id="startTime"
+                class="form-control"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="endTime" class="form-label">
+                <span class="material-symbols-outlined">schedule</span>
+                End Time
+              </label>
+              <input
+                type="time"
+                id="endTime"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="saveBtn">Save Schedule</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Message Container -->
+    <div id="messageContainer" class="message-container"></div>
+
+    <script src="../shared/sidebar.js"></script>
+    <script src="schedule.js"></script>
+  </body>
+</html>

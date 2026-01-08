@@ -12,6 +12,12 @@ var doctorMenuItems = [
     icon: 'calendar_month',
   },
   {
+    id: 'schedule',
+    label: 'My Schedule',
+    href: '../schedule/schedule.html',
+    icon: 'event_available',
+  },
+  {
     id: 'patient-records',
     label: 'Patient Records',
     href: '../patient-records/patient-records.html',

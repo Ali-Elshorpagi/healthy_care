@@ -1,0 +1,52 @@
+{
+  "schedules": [
+    {
+      "id": "sch_1767896221930",
+      "doctorId": "d_1767880025913",
+      "dayOfWeek": "Monday",
+      "startTime": "13:30",
+      "endTime": "22:16",
+      "isAvailable": true
+    },
+    {
+      "id": "sch_1767900279700",
+      "doctorId": "d_1767880025913",
+      "dayOfWeek": "Tuesday",
+      "startTime": "22:24",
+      "endTime": "12:24",
+      "isAvailable": true
+    },
+    {
+      "id": "sch_1767906142602",
+      "doctorId": "d_1767906093515",
+      "dayOfWeek": "Monday",
+      "startTime": "10:00",
+      "endTime": "17:00",
+      "isAvailable": true
+    },
+    {
+      "id": "sch_1767906270982",
+      "doctorId": "d_1767266500001",
+      "dayOfWeek": "Monday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "isAvailable": true
+    },
+    {
+      "id": "sch_1767906637792",
+      "doctorId": "d_1767266500002",
+      "dayOfWeek": "Monday",
+      "startTime": "09:00",
+      "endTime": "18:00",
+      "isAvailable": true
+    },
+    {
+      "id": "sch_1767907107944",
+      "doctorId": "d_1767907039157",
+      "dayOfWeek": "Monday",
+      "startTime": "10:00",
+      "endTime": "17:00",
+      "isAvailable": true
+    }
+  ]
+}

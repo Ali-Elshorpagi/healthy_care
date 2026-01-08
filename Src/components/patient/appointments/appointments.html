@@ -39,13 +39,10 @@
         <div class="filters-bar">
           <div class="filter-tabs">
             <button class="filter-tab active" data-filter="all">All</button>
-            <button class="filter-tab" data-filter="upcoming">Upcoming</button>
-            <button class="filter-tab" data-filter="completed">
-              Completed
-            </button>
-            <button class="filter-tab" data-filter="cancelled">
-              Cancelled
-            </button>
+            <button class="filter-tab" data-filter="accepted">Accepted</button>
+            <button class="filter-tab" data-filter="pending">Pending</button>
+            <button class="filter-tab" data-filter="rejected">Rejected</button>
+            <button class="filter-tab" data-filter="completed">Completed</button>
           </div>
           <div class="filter-actions">
             <select class="form-control sort-select" id="sortSelect">
@@ -239,10 +236,6 @@
         </div>
         <div class="rating-modal-body">
           <div class="details-section">
-            <div class="detail-row">
-              <span class="detail-label">Appointment ID</span>
-              <span class="detail-value" id="detailsAppointmentId"></span>
-            </div>
             <div class="detail-row">
               <span class="detail-label">Status</span>
               <span class="badge" id="detailsStatusBadge"></span>

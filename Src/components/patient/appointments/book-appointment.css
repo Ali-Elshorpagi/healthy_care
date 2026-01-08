@@ -244,3 +244,240 @@ textarea.form-control {
   color: #1e40af;
   border: 1px solid #3b82f6;
 }
+
+/* Available Times Styling */
+.available-times-container {
+  background: #f0f9ff;
+  border: 2px solid #0ea5e9;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.available-times-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #0c4a6e;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.available-times-header .material-symbols-outlined {
+  font-size: 20px;
+  color: #0ea5e9;
+}
+
+.available-times-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.time-slot-badge {
+  background: white;
+  color: #0c4a6e;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid #0ea5e9;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.time-slot-badge.clickable {
+  cursor: pointer;
+}
+
+.time-slot-badge.clickable:hover {
+  background: #0ea5e9;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(14, 165, 233, 0.3);
+}
+
+.time-slot-badge.selected {
+  background: #0ea5e9;
+  color: white;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+}
+
+.time-slot-badge .material-symbols-outlined {
+  font-size: 16px;
+}
+
+/* Info Message */
+.info-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #78350f;
+}
+
+.info-message .material-symbols-outlined {
+  font-size: 20px;
+  color: #f59e0b;
+}
+
+/* View Schedule Button */
+.btn-view-schedule {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 2px solid #667eea;
+  color: #667eea;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 12px;
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-view-schedule:hover {
+  background: #667eea;
+  color: white;
+}
+
+.btn-view-schedule .material-symbols-outlined {
+  font-size: 20px;
+}
+
+/* Weekly Schedule Modal */
+.schedule-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.schedule-modal.show {
+  display: flex;
+}
+
+.schedule-modal-content {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.schedule-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.schedule-modal-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.schedule-modal-header .material-symbols-outlined {
+  font-size: 28px;
+  color: #667eea;
+}
+
+.schedule-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.schedule-modal-close:hover {
+  background: #f3f4f6;
+}
+
+.schedule-modal-close .material-symbols-outlined {
+  font-size: 24px;
+  color: #6b7280;
+}
+
+.schedule-modal-body {
+  padding: 24px;
+}
+
+.schedule-day-section {
+  margin-bottom: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.schedule-day-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.schedule-day-slots {
+  padding: 16px;
+  background: #f9fafb;
+}
+
+.schedule-slot {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.schedule-slot:last-child {
+  margin-bottom: 0;
+}
+
+.schedule-slot .material-symbols-outlined {
+  color: #667eea;
+  font-size: 20px;
+}
+
+.no-schedule {
+  color: #9ca3af;
+  font-size: 14px;
+  font-style: italic;
+  padding: 12px 0;
+  text-align: center;
+}

@@ -32,11 +32,6 @@ async function loadProfile() {
   let email = sessionStorage.getItem('email');
   let specialization = sessionStorage.getItem('doctorSpecialization') || 'Cardiology';
 
-  if (userId) {
-    let doctorIdEl = document.getElementById('doctorId');
-    if (doctorIdEl) doctorIdEl.textContent = userId;
-  }
-
   if (email) {
     let emailEl = document.getElementById('email');
     if (emailEl) emailEl.value = email;

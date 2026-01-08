@@ -220,6 +220,327 @@ function selectDoctor(doctor) {
   if (!clinicSelect.value) {
     clinicSelect.value = doctor.clinicId;
   }
+  
+  // Setup date change listener to validate against doctor's schedule
+  setupDateChangeListener();
+  
+  // Setup view schedule button
+  setupViewScheduleButton(doctor);
+}
+
+function setupDateChangeListener() {
+  const dateInput = document.getElementById('appointmentDate');
+  const timeInput = document.getElementById('appointmentTime');
+  
+  // Remove existing listener if any
+  const newDateInput = dateInput.cloneNode(true);
+  dateInput.parentNode.replaceChild(newDateInput, dateInput);
+  
+  newDateInput.addEventListener('change', async function() {
+    const selectedDoctorId = document.getElementById('selectedDoctorId').value;
+    if (selectedDoctorId && this.value) {
+      await validateDateAgainstSchedule(this.value, selectedDoctorId);
+    }
+  });
+  
+  // Also add listener to time input
+  const newTimeInput = timeInput.cloneNode(true);
+  timeInput.parentNode.replaceChild(newTimeInput, timeInput);
+  
+  newTimeInput.addEventListener('blur', async function() {
+    const selectedDoctorId = document.getElementById('selectedDoctorId').value;
+    const selectedDate = document.getElementById('appointmentDate').value;
+    if (selectedDoctorId && selectedDate && this.value) {
+      await validateTimeAgainstSchedule(selectedDate, this.value, selectedDoctorId);
+    }
+  });
+}
+
+async function validateDateAgainstSchedule(date, doctorId) {
+  try {
+    const selectedDate = new Date(date);
+    const dayOfWeek = selectedDate.toLocaleDateString('en-US', { weekday: 'long' });
+    
+    const response = await fetch(`http://localhost:8873/schedules?doctorId=${doctorId}&dayOfWeek=${dayOfWeek}&isAvailable=true`);
+    
+    if (!response.ok) {
+      console.error('Failed to fetch doctor schedule');
+      return;
+    }
+    
+    const schedules = await response.json();
+    
+    if (schedules.length === 0) {
+      showMessage(`Doctor is not available on ${dayOfWeek}s. Please select another date.`, 'error');
+      document.getElementById('appointmentDate').value = '';
+      hideAvailableTimes();
+    } else {
+      // Show available time slots
+      displayAvailableTimes(schedules, dayOfWeek);
+    }
+  } catch (error) {
+    console.error('Error validating date:', error);
+    hideAvailableTimes();
+  }
+}
+
+function displayAvailableTimes(schedules, dayOfWeek) {
+  const container = document.getElementById('availableTimesContainer');
+  const list = document.getElementById('availableTimesList');
+  const dayDisplay = document.getElementById('selectedDayDisplay');
+  
+  if (schedules.length === 0) {
+    hideAvailableTimes();
+    return;
+  }
+  
+  list.innerHTML = '';
+  dayDisplay.textContent = `Click a time slot to select it`;
+  
+  // Generate 30-minute time slots for each schedule
+  schedules.forEach(schedule => {
+    const slots = generate30MinuteSlots(schedule.startTime, schedule.endTime);
+    
+    slots.forEach(slot => {
+      const badge = document.createElement('div');
+      badge.className = 'time-slot-badge clickable';
+      badge.innerHTML = `
+        <span class="material-symbols-outlined">schedule</span>
+        ${slot}
+      `;
+      
+      // Make slots clickable to auto-fill time input
+      badge.onclick = function() {
+        selectTimeSlot(slot);
+      };
+      
+      list.appendChild(badge);
+    });
+  });
+  
+  container.style.display = 'block';
+}
+
+function generate30MinuteSlots(startTime, endTime) {
+  const slots = [];
+  const [startHour, startMinute] = startTime.split(':').map(Number);
+  const [endHour, endMinute] = endTime.split(':').map(Number);
+  
+  let currentHour = startHour;
+  let currentMinute = startMinute;
+  
+  // Handle overnight schedules
+  const isOvernight = startTime > endTime;
+  const maxHour = isOvernight ? 24 + endHour : endHour;
+  
+  while (currentHour < maxHour || (currentHour === maxHour && currentMinute <= endMinute)) {
+    const displayHour = currentHour >= 24 ? currentHour - 24 : currentHour;
+    const timeString = `${String(displayHour).padStart(2, '0')}:${String(currentMinute).padStart(2, '0')}`;
+    slots.push(formatTime(timeString));
+    
+    // Add 30 minutes
+    currentMinute += 30;
+    if (currentMinute >= 60) {
+      currentMinute = 0;
+      currentHour += 1;
+    }
+    
+    // Safety limit - max 48 slots (24 hours)
+    if (slots.length > 48) break;
+  }
+  
+  return slots;
+}
+
+function selectTimeSlot(timeSlot) {
+  // Convert 12-hour format back to 24-hour for input
+  const time24 = convertTo24Hour(timeSlot);
+  document.getElementById('appointmentTime').value = time24;
+  
+  // Remove previous selection highlight
+  document.querySelectorAll('.time-slot-badge').forEach(badge => {
+    badge.classList.remove('selected');
+  });
+  
+  // Highlight selected slot
+  event.target.closest('.time-slot-badge').classList.add('selected');
+  
+  showMessage('Time slot selected: ' + timeSlot, 'success');
+}
+
+function convertTo24Hour(time12h) {
+  const [time, modifier] = time12h.split(' ');
+  let [hours, minutes] = time.split(':');
+  
+  if (hours === '12') {
+    hours = '00';
+  }
+  
+  if (modifier === 'PM') {
+    hours = parseInt(hours, 10) + 12;
+  }
+  
+  return `${String(hours).padStart(2, '0')}:${minutes}`;
+}
+
+function hideAvailableTimes() {
+  const container = document.getElementById('availableTimesContainer');
+  container.style.display = 'none';
+}
+
+function setupViewScheduleButton(doctor) {
+  const viewScheduleBtn = document.getElementById('viewScheduleBtn');
+  
+  viewScheduleBtn.onclick = async function() {
+    await showWeeklySchedule(doctor);
+  };
+}
+
+async function showWeeklySchedule(doctor) {
+  const modal = document.getElementById('scheduleModal');
+  const modalBody = document.getElementById('scheduleModalBody');
+  const modalDoctorName = document.getElementById('modalDoctorName');
+  
+  modalDoctorName.textContent = `${doctor.name}'s Weekly Schedule`;
+  modalBody.innerHTML = '<div style="text-align: center; padding: 20px;">Loading schedule...</div>';
+  
+  modal.classList.add('show');
+  
+  try {
+    const response = await fetch(`http://localhost:8873/schedules?doctorId=${doctor.id}&isAvailable=true`);
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch schedule');
+    }
+    
+    const schedules = await response.json();
+    
+    displayWeeklySchedule(schedules);
+  } catch (error) {
+    console.error('Error loading schedule:', error);
+    modalBody.innerHTML = `
+      <div style="text-align: center; padding: 40px; color: #ef4444;">
+        <span class="material-symbols-outlined" style="font-size: 48px;">error</span>
+        <p style="margin-top: 16px;">Failed to load schedule. Make sure servers are running.</p>
+      </div>
+    `;
+  }
+}
+
+function displayWeeklySchedule(schedules) {
+  const modalBody = document.getElementById('scheduleModalBody');
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  
+  if (schedules.length === 0) {
+    modalBody.innerHTML = `
+      <div style="text-align: center; padding: 40px; color: #6b7280;">
+        <span class="material-symbols-outlined" style="font-size: 48px;">event_busy</span>
+        <p style="margin-top: 16px;">No schedule set yet. This doctor hasn't added their availability.</p>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  
+  days.forEach(day => {
+    const daySchedules = schedules.filter(s => s.dayOfWeek === day);
+    
+    html += `<div class="schedule-day-section">`;
+    html += `<div class="schedule-day-header">${day}</div>`;
+    html += `<div class="schedule-day-slots">`;
+    
+    if (daySchedules.length === 0) {
+      html += `<div class="no-schedule">Not available</div>`;
+    } else {
+      daySchedules.sort((a, b) => a.startTime.localeCompare(b.startTime));
+      daySchedules.forEach(schedule => {
+        html += `
+          <div class="schedule-slot">
+            <span class="material-symbols-outlined">schedule</span>
+            <span>${formatTime(schedule.startTime)} - ${formatTime(schedule.endTime)}</span>
+          </div>
+        `;
+      });
+    }
+    
+    html += `</div></div>`;
+  });
+  
+  modalBody.innerHTML = html;
+}
+
+// Setup close modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const closeBtn = document.getElementById('closeScheduleModal');
+  const modal = document.getElementById('scheduleModal');
+  
+  if (closeBtn) {
+    closeBtn.onclick = function() {
+      modal.classList.remove('show');
+    };
+  }
+  
+  if (modal) {
+    modal.onclick = function(e) {
+      if (e.target === modal) {
+        modal.classList.remove('show');
+      }
+    };
+  }
+});
+
+async function validateTimeAgainstSchedule(date, time, doctorId) {
+  try {
+    const selectedDate = new Date(date);
+    const dayOfWeek = selectedDate.toLocaleDateString('en-US', { weekday: 'long' });
+    
+    const response = await fetch(`http://localhost:8873/schedules?doctorId=${doctorId}&dayOfWeek=${dayOfWeek}&isAvailable=true`);
+    
+    if (!response.ok) {
+      console.error('Failed to fetch doctor schedule');
+      return false;
+    }
+    
+    const schedules = await response.json();
+    
+    if (schedules.length === 0) {
+      showMessage(`Doctor is not available on ${dayOfWeek}s.`, 'error');
+      return false;
+    }
+    
+    // Check if the selected time falls within any available schedule
+    // Handle overnight schedules (e.g., 17:00 to 00:00)
+    const isWithinSchedule = schedules.some(schedule => {
+      if (schedule.startTime <= schedule.endTime) {
+        // Normal schedule (e.g., 09:00 to 17:00)
+        return time >= schedule.startTime && time <= schedule.endTime;
+      } else {
+        // Overnight schedule (e.g., 17:00 to 00:00)
+        return time >= schedule.startTime || time <= schedule.endTime;
+      }
+    });
+    
+    if (!isWithinSchedule) {
+      const availableTimes = schedules.map(s => `${formatTime(s.startTime)} - ${formatTime(s.endTime)}`).join(', ');
+      showMessage(`Selected time is outside doctor's availability. Available times: ${availableTimes}`, 'error');
+      document.getElementById('appointmentTime').value = '';
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error validating time:', error);
+    return false;
+  }
+}
+
+function formatTime(time) {
+  const [hours, minutes] = time.split(':');
+  const hour = parseInt(hours);
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  const hour12 = hour % 12 || 12;
+  return `${hour12}:${minutes} ${ampm}`;
 }
 
 function setupDateRestrictions() {
@@ -293,15 +614,66 @@ async function validateForm() {
     return false;
   }
 
-  // Check for conflicting appointments
+  // Check doctor's availability for the selected date and time
+  const isAvailable = await checkDoctorAvailability(doctorId, date, time);
+  if (!isAvailable) {
+    showMessage('The selected time is not within the doctor\'s available hours. Please choose another time.', 'error');
+    return false;
+  }
+
+  // Check if patient already has appointment with same doctor on same day
   const patientId = sessionStorage.getItem('userId');
-  const hasConflict = await checkTimeConflict(patientId, date, time);
-  if (hasConflict) {
-    showMessage('You already have an appointment at this time. Please choose a different time slot.', 'error');
+  const hasSameDoctorSameDay = await checkSameDoctorSameDay(patientId, doctorId, date);
+  if (hasSameDoctorSameDay) {
+    showMessage('You already have an appointment with this doctor on this date. Please choose a different date.', 'error');
+    return false;
+  }
+
+  // Check for time conflicts with any doctor
+  const hasTimeConflict = await checkTimeConflict(patientId, date, time);
+  if (hasTimeConflict) {
+    showMessage('You already have an appointment at this time with another doctor. Please choose a different time.', 'error');
     return false;
   }
 
   return true;
+}
+
+async function checkDoctorAvailability(doctorId, date, time) {
+  try {
+    const selectedDate = new Date(date);
+    const dayOfWeek = selectedDate.toLocaleDateString('en-US', { weekday: 'long' });
+    
+    const response = await fetch(`http://localhost:8873/schedules?doctorId=${doctorId}&dayOfWeek=${dayOfWeek}&isAvailable=true`);
+    
+    if (!response.ok) {
+      console.error('Failed to fetch doctor schedule');
+      return false;
+    }
+    
+    const schedules = await response.json();
+    
+    if (schedules.length === 0) {
+      return false;
+    }
+    
+    // Check if the selected time falls within any available schedule
+    // Handle overnight schedules (e.g., 17:00 to 00:00)
+    const isWithinSchedule = schedules.some(schedule => {
+      if (schedule.startTime <= schedule.endTime) {
+        // Normal schedule (e.g., 09:00 to 17:00)
+        return time >= schedule.startTime && time <= schedule.endTime;
+      } else {
+        // Overnight schedule (e.g., 17:00 to 00:00)
+        return time >= schedule.startTime || time <= schedule.endTime;
+      }
+    });
+    
+    return isWithinSchedule;
+  } catch (error) {
+    console.error('Error checking doctor availability:', error);
+    return false;
+  }
 }
 
 async function checkTimeConflict(patientId, date, time) {
@@ -315,7 +687,7 @@ async function checkTimeConflict(patientId, date, time) {
 
     const appointments = await response.json();
 
-    // If rescheduling, exclude the current appointment from conflict check
+    // Check if patient has any appointment at this exact time (regardless of doctor)
     const conflictingAppointment = appointments.find(apt => {
       const isSameDateTime = apt.date === date && apt.time === time;
       const isActiveAppointment = apt.status !== 'cancelled' && apt.status !== 'rejected';
@@ -327,6 +699,34 @@ async function checkTimeConflict(patientId, date, time) {
     return !!conflictingAppointment;
   } catch (error) {
     console.error('Error checking time conflict:', error);
+    return false;
+  }
+}
+
+async function checkSameDoctorSameDay(patientId, doctorId, date) {
+  try {
+    // Fetch all appointments for the patient
+    const response = await fetch(`http://localhost:8876/appointments?patientId=${patientId}&isDeleted=false`);
+    if (!response.ok) {
+      console.error('Failed to fetch appointments');
+      return false;
+    }
+
+    const appointments = await response.json();
+
+    // Check if patient has any appointment with same doctor on same date
+    const sameDoctorSameDay = appointments.find(apt => {
+      const isSameDoctor = apt.doctorId === doctorId;
+      const isSameDate = apt.date === date;
+      const isActiveAppointment = apt.status !== 'cancelled' && apt.status !== 'rejected';
+      const isNotCurrentReschedule = !isRescheduling || apt.id !== rescheduleAppointmentId;
+      
+      return isSameDoctor && isSameDate && isActiveAppointment && isNotCurrentReschedule;
+    });
+
+    return !!sameDoctorSameDay;
+  } catch (error) {
+    console.error('Error checking same doctor same day:', error);
     return false;
   }
 }

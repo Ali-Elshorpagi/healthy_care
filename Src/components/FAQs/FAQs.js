@@ -2,7 +2,7 @@
 let FAQManager = (function () {
   let faqs = [];
   let searchQuery = '';
-  let API_BASE = 'http://localhost:3000';
+  let API_BASE = 'http://localhost:8872';
   let currentUserEmail = null;
 
   async function init() {
@@ -144,6 +144,7 @@ let FAQManager = (function () {
       let isAnswered = faq.answer && faq.answer.trim() !== '';
       let isOwnQuestion = currentUserEmail && faq.userId === currentUserEmail;
 
+      // Show answered questions OR user's own pending questions
       if (!isAnswered && !isOwnQuestion) return false;
 
       return (

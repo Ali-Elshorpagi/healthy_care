@@ -81,6 +81,14 @@
                       <p id="doctorClinic"></p>
                     </div>
                   </div>
+                  <div class="info-message">
+                    <span class="material-symbols-outlined">info</span>
+                    <span>Select a date below to see available appointment times</span>
+                  </div>
+                  <button type="button" class="btn-view-schedule" id="viewScheduleBtn">
+                    <span class="material-symbols-outlined">calendar_month</span>
+                    View Weekly Schedule
+                  </button>
                 </div>
               </div>
             </div>
@@ -107,6 +115,19 @@
                   />
                 </div>
               </div>
+              
+              <!-- Available Time Slots Display -->
+              <div id="availableTimesContainer" class="available-times-container" style="display: none;">
+                <div class="available-times-header">
+                  <span class="material-symbols-outlined">schedule</span>
+                  <div>
+                    <strong>Available Time Slots (30-minute intervals)</strong>
+                    <p id="selectedDayDisplay" style="font-size: 12px; margin: 4px 0 0 0; opacity: 0.8;"></p>
+                  </div>
+                </div>
+                <div id="availableTimesList" class="available-times-list"></div>
+              </div>
+              
               <div class="form-group">
                 <label for="appointmentNotes">Notes (Optional)</label>
                 <textarea
@@ -136,6 +157,24 @@
 
         <div class="page-footer">
           <p>© 2025 BelShefaa ISA. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weekly Schedule Modal -->
+    <div id="scheduleModal" class="schedule-modal">
+      <div class="schedule-modal-content">
+        <div class="schedule-modal-header">
+          <h2>
+            <span class="material-symbols-outlined">calendar_month</span>
+            <span id="modalDoctorName">Doctor's Weekly Schedule</span>
+          </h2>
+          <button class="schedule-modal-close" id="closeScheduleModal">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="schedule-modal-body" id="scheduleModalBody">
+          <!-- Schedule will be loaded here -->
         </div>
       </div>
     </div>

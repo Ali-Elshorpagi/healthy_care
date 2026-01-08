@@ -156,7 +156,8 @@
       "date": "2026-01-03",
       "icon": "medication",
       "iconColor": "blue",
-      "isDeleted": false
+      "isDeleted": true,
+      "deletedAt": "2026-01-08T21:15:00.841Z"
     },
     {
       "id": "rec_1767466270034",
@@ -184,7 +185,8 @@
       "date": "2026-01-03",
       "icon": "favorite",
       "iconColor": "red",
-      "isDeleted": false
+      "isDeleted": true,
+      "deletedAt": "2026-01-08T21:00:27.782Z"
     },
     {
       "id": "rec_1767519821530",
@@ -200,6 +202,20 @@
       "iconColor": "red",
       "isDeleted": true,
       "deletedAt": "2026-01-04T09:45:11.537Z"
+    },
+    {
+      "id": "rec_1767906395500",
+      "patientId": "p_1767462806090",
+      "doctorId": "d_1767266500002",
+      "doctorName": "Dr. Omar Adel",
+      "doctorSpecialization": "Dermatology",
+      "type": "diagnosis",
+      "title": "hhhh",
+      "description": "kdkdkdkd",
+      "date": "2026-01-08",
+      "icon": "favorite",
+      "iconColor": "red",
+      "isDeleted": false
     }
   ]
 }

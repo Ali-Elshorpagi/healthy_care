@@ -1,6 +1,7 @@
 const API_BASE = 'http://localhost:8877';
 const APPOINTMENTS_API_BASE = 'http://localhost:8876';
 const MEDICAL_RECORDS_API_BASE = 'http://localhost:8875';
+const FAQS_API_BASE = 'http://localhost:8872';
 
 let currentAdminUser = null;
 let editingUserId = null;
@@ -479,7 +480,7 @@ function getStatusPill(user) {
 
 async function getAllFAQs() {
   try {
-    let faqs = await fetchJson(`${API_BASE}/faqs`);
+    let faqs = await fetchJson(`${FAQS_API_BASE}/faqs`);
     return Array.isArray(faqs) ? faqs : [];
   } catch (error) {
     console.error('Error fetching FAQs:', error);
@@ -534,7 +535,7 @@ function renderFAQsManagement(faqs) {
         .addEventListener('click', async () => {
           if (!confirm('Delete this FAQ?')) return;
           try {
-            await fetchJson(`${API_BASE}/faqs/${encodeURIComponent(faq.id)}`, {
+            await fetchJson(`${FAQS_API_BASE}/faqs/${encodeURIComponent(faq.id)}`, {
               method: 'DELETE',
             });
             await refreshData();
@@ -592,7 +593,7 @@ function renderFAQsManagement(faqs) {
           }
 
           try {
-            await fetchJson(`${API_BASE}/faqs/${encodeURIComponent(faq.id)}`, {
+            await fetchJson(`${FAQS_API_BASE}/faqs/${encodeURIComponent(faq.id)}`, {
               method: 'PATCH',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ question, answer }),

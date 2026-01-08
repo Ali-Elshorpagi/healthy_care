@@ -136,7 +136,6 @@ function createAppointmentItem(apt) {
         <div class="patient-avatar-sm ${bgClass}">${initials}</div>
         <div>
           <div class="patient-name-lg">${apt.patientName}</div>
-          <div class="patient-id-sm">${apt.patientId}</div>
         </div>
       </div>
     </div>
