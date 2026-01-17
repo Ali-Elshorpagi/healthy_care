@@ -314,13 +314,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Version:** 1.0.0
 - **Last Updated:** January 2026
 
-## 📞 Support
-
-For support and queries:
-- 📧 Email: support@belshefaa.com
-- 🌐 Website: www.belshefaa.com
-- 📱 Phone: +1234567890
-
 ## 🙏 Acknowledgments
 
 - Icons from Material Symbols
