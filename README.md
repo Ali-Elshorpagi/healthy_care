@@ -314,12 +314,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Version:** 1.0.0
 - **Last Updated:** January 2026
 
-## 🙏 Acknowledgments
-
-- Icons from Material Symbols
-- Fonts from Google Fonts (Inter)
-- Inspiration from modern healthcare platforms
-
 ---
 
 **Note:** This is a learning project using JSON Server as a mock backend. For production use, implement a proper backend with a real database and enhanced security features.
